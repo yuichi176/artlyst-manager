@@ -23,7 +23,7 @@ export function AppSidebar() {
                 <SidebarMenuButton asChild>
                   <Link href="/">
                     <LayoutDashboard />
-                    <span>展覧会情報管理</span>
+                    <span>展覧会管理</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
