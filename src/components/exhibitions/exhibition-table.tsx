@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { EditExhibitionModal } from './edit-exhibition-modal'
 import { DeleteExhibitionModal } from './delete-exhibition-modal'
 
@@ -27,38 +27,172 @@ interface ExhibitionTableProps {
   exhibitions: Exhibition[]
 }
 
+type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status'
+type SortOrder = 'asc' | 'desc' | null
+
 export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   const [editingExhibition, setEditingExhibition] = useState<Exhibition | undefined>(undefined)
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'pending'>('all')
+  const [sortField, setSortField] = useState<SortField | null>(null)
+  const [sortOrder, setSortOrder] = useState<SortOrder>(null)
 
   const truncateTitle = (title: string, maxLength: number = 40) => {
     if (title.length <= maxLength) return title
     return title.slice(0, maxLength) + '...'
   }
 
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Cycle through: asc -> desc -> null
+      if (sortOrder === 'asc') {
+        setSortOrder('desc')
+      } else if (sortOrder === 'desc') {
+        setSortOrder(null)
+        setSortField(null)
+      }
+    } else {
+      setSortField(field)
+      setSortOrder('asc')
+    }
+  }
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="ml-2 h-4 w-4" />
+    }
+    if (sortOrder === 'asc') {
+      return <ArrowUp className="ml-2 h-4 w-4" />
+    }
+    if (sortOrder === 'desc') {
+      return <ArrowDown className="ml-2 h-4 w-4" />
+    }
+    return <ArrowUpDown className="ml-2 h-4 w-4" />
+  }
+
+  const filteredExhibitions = exhibitions.filter((exhibition) => {
+    if (statusFilter === 'all') return true
+    return exhibition.status === statusFilter
+  })
+
+  const sortedExhibitions = [...filteredExhibitions].sort((a, b) => {
+    if (!sortField || !sortOrder) return 0
+
+    let comparison = 0
+
+    switch (sortField) {
+      case 'title':
+        comparison = a.title.localeCompare(b.title)
+        break
+      case 'venue':
+        comparison = a.venue.localeCompare(b.venue)
+        break
+      case 'startDate':
+        comparison = a.startDate.localeCompare(b.startDate)
+        break
+      case 'endDate':
+        comparison = a.endDate.localeCompare(b.endDate)
+        break
+      case 'status':
+        comparison = a.status.localeCompare(b.status)
+        break
+    }
+
+    return sortOrder === 'asc' ? comparison : -comparison
+  })
+
   return (
     <>
+      <div className="mb-4 flex gap-2">
+        <Button
+          variant={statusFilter === 'all' ? 'default' : 'outline'}
+          onClick={() => setStatusFilter('all')}
+          size="sm"
+        >
+          すべて
+        </Button>
+        <Button
+          variant={statusFilter === 'active' ? 'default' : 'outline'}
+          onClick={() => setStatusFilter('active')}
+          size="sm"
+        >
+          Active
+        </Button>
+        <Button
+          variant={statusFilter === 'pending' ? 'default' : 'outline'}
+          onClick={() => setStatusFilter('pending')}
+          size="sm"
+        >
+          Pending
+        </Button>
+      </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>展覧会名</TableHead>
-              <TableHead>会場</TableHead>
-              <TableHead>開始日</TableHead>
-              <TableHead>終了日</TableHead>
-              <TableHead>ステータス</TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('title')}
+                  className="h-8 px-2 lg:px-3"
+                >
+                  展覧会名
+                  {getSortIcon('title')}
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('venue')}
+                  className="h-8 px-2 lg:px-3"
+                >
+                  会場
+                  {getSortIcon('venue')}
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('startDate')}
+                  className="h-8 px-2 lg:px-3"
+                >
+                  開始日
+                  {getSortIcon('startDate')}
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('endDate')}
+                  className="h-8 px-2 lg:px-3"
+                >
+                  終了日
+                  {getSortIcon('endDate')}
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('status')}
+                  className="h-8 px-2 lg:px-3"
+                >
+                  ステータス
+                  {getSortIcon('status')}
+                </Button>
+              </TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {exhibitions.length === 0 ? (
+            {sortedExhibitions.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-24 text-center">
                   No exhibitions found.
                 </TableCell>
               </TableRow>
             ) : (
-              exhibitions.map((exhibition) => (
+              sortedExhibitions.map((exhibition) => (
                 <TableRow key={exhibition.id}>
                   <TableCell>
                     {exhibition.title.length > 40 ? (
