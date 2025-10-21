@@ -3,6 +3,8 @@ import db from '@/lib/firestore'
 import { Timestamp } from '@google-cloud/firestore'
 import { Exhibition } from '@/types/exhibition'
 
+export const dynamic = 'force-dynamic'
+
 export default async function ExhibitionTableSection() {
   const exhibitionCollectionRef = db.collection('exhibition')
   const existingDocumentsSnapshot = await exhibitionCollectionRef.get()
