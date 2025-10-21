@@ -194,7 +194,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
             ) : (
               sortedExhibitions.map((exhibition) => (
                 <TableRow key={exhibition.id}>
-                  <TableCell>
+                  <TableCell className="pl-5">
                     {exhibition.title.length > 40 ? (
                       <TooltipProvider>
                         <Tooltip>
@@ -212,10 +212,10 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                       exhibition.title
                     )}
                   </TableCell>
-                  <TableCell>{exhibition.venue}</TableCell>
-                  <TableCell>{exhibition.startDate}</TableCell>
-                  <TableCell>{exhibition.endDate}</TableCell>
-                  <TableCell>
+                  <TableCell className="pl-5">{exhibition.venue}</TableCell>
+                  <TableCell className="pl-5">{exhibition.startDate}</TableCell>
+                  <TableCell className="pl-5">{exhibition.endDate}</TableCell>
+                  <TableCell className="pl-5">
                     <Badge variant={exhibition.status === 'active' ? 'default' : 'secondary'}>
                       {exhibition.status === 'active' ? 'Active' : 'Pending'}
                     </Badge>
