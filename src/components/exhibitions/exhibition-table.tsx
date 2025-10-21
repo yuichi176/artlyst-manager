@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { EditExhibitionModal } from './edit-exhibition-modal'
 import { DeleteExhibitionModal } from './delete-exhibition-modal'
@@ -29,6 +30,11 @@ interface ExhibitionTableProps {
 export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   const [editingExhibition, setEditingExhibition] = useState<Exhibition | undefined>(undefined)
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
+
+  const truncateTitle = (title: string, maxLength: number = 40) => {
+    if (title.length <= maxLength) return title
+    return title.slice(0, maxLength) + '...'
+  }
 
   return (
     <>
@@ -54,7 +60,24 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
             ) : (
               exhibitions.map((exhibition) => (
                 <TableRow key={exhibition.id}>
-                  <TableCell>{exhibition.title}</TableCell>
+                  <TableCell>
+                    {exhibition.title.length > 40 ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-default">
+                              {truncateTitle(exhibition.title)}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-md">{exhibition.title}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      exhibition.title
+                    )}
+                  </TableCell>
                   <TableCell>{exhibition.venue}</TableCell>
                   <TableCell>{exhibition.startDate}</TableCell>
                   <TableCell>{exhibition.endDate}</TableCell>
