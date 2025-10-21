@@ -20,8 +20,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
-import { EditExhibitionModal } from './edit-exhibition-modal'
-import { DeleteExhibitionModal } from './delete-exhibition-modal'
+import { EditExhibitionModal } from '@/app/(top-page)/_components/exhibition-table/modal/EditExhibitionModal'
+import { DeleteExhibitionModal } from '@/app/(top-page)/_components/exhibition-table/modal/DeleteExhibitionModal'
 
 interface ExhibitionTableProps {
   exhibitions: Exhibition[]
