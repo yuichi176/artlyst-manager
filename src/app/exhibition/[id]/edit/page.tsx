@@ -1,6 +1,6 @@
 import { ExhibitionEditFormSection } from '@/app/exhibition/[id]/edit/_components/ExhibitionEditFormSection'
 import { Suspense } from 'react'
-import { ExhibitionTableSkeleton } from '@/app/exhibition/_components/exhibition-table/ExhibitionTableSkeleton'
+import { ExhibitionEditFormSkeleton } from '@/app/exhibition/[id]/edit/_components/ExhibitionEditFormSkeleton'
 import Link from 'next/link'
 import { Home } from 'lucide-react'
 import {
@@ -46,7 +46,7 @@ export default async function ExhibitionEdit({ params }: { params: Promise<{ id:
           <h1 className="text-3xl font-bold tracking-tight">展覧会編集</h1>
         </div>
 
-        <Suspense fallback={<ExhibitionTableSkeleton />}>
+        <Suspense fallback={<ExhibitionEditFormSkeleton />}>
           <ExhibitionEditFormSection id={id} />
         </Suspense>
       </div>
