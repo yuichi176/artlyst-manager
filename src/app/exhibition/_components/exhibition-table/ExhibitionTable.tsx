@@ -20,8 +20,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
-import { EditExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/EditExhibitionModal'
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
+import Link from 'next/link'
 
 interface ExhibitionTableProps {
   exhibitions: Exhibition[]
@@ -31,7 +31,6 @@ type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status'
 type SortOrder = 'asc' | 'desc' | null
 
 export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
-  const [editingExhibition, setEditingExhibition] = useState<Exhibition | undefined>(undefined)
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'pending'>('all')
   const [sortField, setSortField] = useState<SortField | null>(null)
@@ -229,10 +228,12 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setEditingExhibition(exhibition)}>
-                          <Pencil className="mr-2 h-4 w-4" />
-                          編集
-                        </DropdownMenuItem>
+                        <Link href={`/exhibition/${exhibition.id}/edit`}>
+                          <DropdownMenuItem>
+                            <Pencil className="mr-2 h-4 w-4" />
+                            編集
+                          </DropdownMenuItem>
+                        </Link>
                         <DropdownMenuItem
                           onClick={() => setDeletingExhibition(exhibition)}
                           className="text-destructive"
@@ -249,14 +250,6 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
           </TableBody>
         </Table>
       </div>
-
-      <EditExhibitionModal
-        exhibition={editingExhibition}
-        open={editingExhibition !== undefined}
-        onOpenChange={(open) => {
-          if (!open) setEditingExhibition(undefined)
-        }}
-      />
 
       <DeleteExhibitionModal
         exhibition={deletingExhibition}
