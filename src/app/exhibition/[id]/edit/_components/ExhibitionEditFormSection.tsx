@@ -1,5 +1,5 @@
 import db from '@/lib/firestore'
-import type { Exhibition } from '@/types/exhibition'
+import type { Exhibition } from '@/schema/exhibition'
 import { ExhibitionEditForm } from './ExhibitionEditForm'
 import { notFound } from 'next/navigation'
 import { Timestamp } from '@google-cloud/firestore'

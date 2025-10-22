@@ -1,4 +1,28 @@
 import { z } from 'zod'
+import { Timestamp } from '@google-cloud/firestore'
+
+const statusSchema = z.enum(['pending', 'active'])
+type Status = z.infer<typeof statusSchema>
+
+export type RawExhibition = {
+  title: string
+  venue: string
+  startDate?: Timestamp
+  endDate?: Timestamp
+  status: Status
+  updatedAt: Timestamp
+  createdAt: Timestamp
+}
+
+export const exhibitionSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  venue: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  status: statusSchema,
+})
+export type Exhibition = z.infer<typeof exhibitionSchema>
 
 export const exhibitionFormDataSchema = z.object({
   id: z.string(),
@@ -10,5 +34,5 @@ export const exhibitionFormDataSchema = z.object({
   endDate: z
     .string()
     .refine((v) => !Number.isNaN(Date.parse(v)), '終了日は有効な日付を入力してください。'),
-  status: z.enum(['pending', 'active']),
+  status: statusSchema,
 })

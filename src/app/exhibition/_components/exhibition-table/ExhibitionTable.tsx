@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Exhibition } from '@/types/exhibition'
+import type { Exhibition } from '@/schema/exhibition'
 import {
   Table,
   TableBody,

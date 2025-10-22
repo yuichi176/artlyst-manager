@@ -1,22 +1,13 @@
 import { ExhibitionTable } from '@/app/exhibition/_components/exhibition-table/ExhibitionTable'
 import db from '@/lib/firestore'
-import { Timestamp } from '@google-cloud/firestore'
-import { Exhibition } from '@/types/exhibition'
+import { RawExhibition, Exhibition } from '@/schema/exhibition'
 
 export default async function ExhibitionTableSection() {
   const exhibitionCollectionRef = db.collection('exhibition')
   const existingDocumentsSnapshot = await exhibitionCollectionRef.get()
 
   const exhibitions = existingDocumentsSnapshot.docs.map((doc) => {
-    const data = doc.data() as {
-      title: string
-      venue: string
-      startDate?: Timestamp
-      endDate?: Timestamp
-      status: 'pending' | 'active'
-      updatedAt: Timestamp
-      createdAt: Timestamp
-    }
+    const data = doc.data() as RawExhibition
 
     return {
       id: doc.id,

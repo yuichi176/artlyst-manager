@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
-import type { Exhibition } from '@/types/exhibition'
+import type { Exhibition } from '@/schema/exhibition'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'

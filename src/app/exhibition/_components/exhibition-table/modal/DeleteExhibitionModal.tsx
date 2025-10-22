@@ -1,6 +1,6 @@
 'use client'
 
-import type { Exhibition } from '@/types/exhibition'
+import type { Exhibition } from '@/schema/exhibition'
 import {
   Dialog,
   DialogContent,

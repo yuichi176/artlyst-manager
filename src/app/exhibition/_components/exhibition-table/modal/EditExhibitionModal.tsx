@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import type { Exhibition } from '@/types/exhibition'
+import type { Exhibition } from '@/schema/exhibition'
 import {
   Dialog,
   DialogContent,
