@@ -10,8 +10,8 @@ export default async function ExhibitionEdit({ params }: { params: Promise<{ id:
   const { id } = await params
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto max-w-4xl space-y-6 p-6 pb-16">
+    <div>
+      <div className="mx-auto max-w-4xl space-y-6 px-6 py-4 pb-16">
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
           <Link href="/" className="flex items-center hover:text-foreground transition-colors">
             <Home className="h-4 w-4" />

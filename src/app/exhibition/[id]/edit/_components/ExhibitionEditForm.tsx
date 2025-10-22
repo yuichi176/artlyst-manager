@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 
 interface ExhibitionEditFormProps {
   exhibition: Exhibition
@@ -36,11 +37,11 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
 
   return (
     <form action={formAction} className="space-y-6">
-      <div className="rounded-lg border bg-card shadow-sm">
-        <div className="border-b bg-muted/50 px-6 py-4">
-          <h2 className="text-lg font-semibold">基本情報</h2>
-        </div>
-        <div className="p-6 space-y-6">
+      <Card className="py-0 gap-8">
+        <CardHeader className="border-b bg-muted/50 px-6 py-6 gap-0">
+          <CardTitle className="text-lg font-semibold">基本情報</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
           {/* Title */}
           <div className="space-y-2">
             <label htmlFor="title" className="flex items-center text-sm font-medium">
@@ -131,33 +132,33 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
               </Select>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-3 sticky bottom-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 rounded-lg border shadow-lg">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push('/exhibition')}
-          disabled={isPending}
-          className="w-full sm:w-auto"
-        >
-          キャンセル
-        </Button>
-        <Button type="submit" disabled={isPending} className="w-full sm:w-auto min-w-[120px]">
-          {isPending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              保存中...
-            </>
-          ) : (
-            <>
-              <CheckCircle2 className="mr-2 h-4 w-4" />
-              変更を保存
-            </>
-          )}
-        </Button>
-      </div>
+        <CardFooter className="flex flex-col sm:flex-row justify-between gap-3 py-5 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.push('/exhibition')}
+            disabled={isPending}
+            className="w-full sm:w-auto"
+          >
+            キャンセル
+          </Button>
+          <Button type="submit" disabled={isPending} className="w-full sm:w-auto min-w-[120px]">
+            {isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                保存中...
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="h-4 w-4" />
+                変更を保存
+              </>
+            )}
+          </Button>
+        </CardFooter>
+      </Card>
     </form>
   )
 }
