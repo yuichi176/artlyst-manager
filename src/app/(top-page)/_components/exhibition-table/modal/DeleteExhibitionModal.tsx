@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { deleteExhibition } from '@/lib/actions/exhibition'
 
 interface DeleteExhibitionModalProps {
   exhibition: Exhibition | undefined
@@ -22,11 +23,6 @@ export function DeleteExhibitionModal({
   open,
   onOpenChange,
 }: DeleteExhibitionModalProps) {
-  const handleDelete = () => {
-    console.log('Delete confirmed (UI only):', exhibition?.id)
-    onOpenChange(false)
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -50,7 +46,15 @@ export function DeleteExhibitionModal({
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             キャンセル
           </Button>
-          <Button type="button" variant="destructive" onClick={handleDelete}>
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={async () => {
+              if (!exhibition) return
+              await deleteExhibition(exhibition.id)
+              onOpenChange(false)
+            }}
+          >
             削除
           </Button>
         </DialogFooter>
