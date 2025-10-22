@@ -2,6 +2,8 @@ import ExhibitionTableSection from '@/app/(top-page)/_components/exhibition-tabl
 import { ExhibitionTableSkeleton } from '@/app/(top-page)/_components/exhibition-table/ExhibitionTableSkeleton'
 import { Suspense } from 'react'
 
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   return (
     <div className="space-y-6">
