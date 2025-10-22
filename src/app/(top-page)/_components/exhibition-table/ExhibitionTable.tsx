@@ -137,7 +137,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                   onClick={() => handleSort('title')}
                   className="h-8 px-2 lg:px-3"
                 >
-                  展覧会名
+                  展覧会
                   {getSortIcon('title')}
                 </Button>
               </TableHead>

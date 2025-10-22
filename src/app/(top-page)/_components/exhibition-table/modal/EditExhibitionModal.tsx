@@ -59,7 +59,7 @@ export function EditExhibitionModal({ exhibition, open, onOpenChange }: EditExhi
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <label htmlFor="title" className="text-sm font-medium">
-                展覧会名
+                展覧会
               </label>
               <Input
                 id="title"
