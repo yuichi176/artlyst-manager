@@ -21,7 +21,7 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/">
+                  <Link href="/exhibition">
                     <LayoutDashboard />
                     <span>展覧会管理</span>
                   </Link>
