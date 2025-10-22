@@ -23,20 +23,10 @@ interface ExhibitionEditFormProps {
 export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
   const router = useRouter()
 
-  const [, formAction, isPending] = useActionState(async (_prev: null, formData: FormData) => {
-    await updateExhibition(exhibition.id, {
-      title: formData.get('title') as string,
-      venue: formData.get('venue') as string,
-      startDate: formData.get('startDate') as string,
-      endDate: formData.get('endDate') as string,
-      status: formData.get('status') as 'pending' | 'active',
-    })
-
-    return null
-  }, null)
+  const [formState, update, isPending] = useActionState(updateExhibition, undefined)
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={update} className="space-y-6">
       <Card className="py-0 gap-8">
         <CardHeader className="border-b bg-muted/50 px-6 py-6 gap-0">
           <CardTitle className="text-lg font-semibold">基本情報</CardTitle>
@@ -57,6 +47,11 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
               required
               className="text-base"
             />
+            {formState?.errors?.title && (
+              <p aria-label="polite" className="text-sm text-destructive">
+                {formState.errors.title}
+              </p>
+            )}
           </div>
 
           {/* Venue */}
@@ -74,6 +69,11 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
               required
               className="text-base"
             />
+            {formState?.errors?.venue && (
+              <p aria-label="polite" className="text-sm text-destructive">
+                {formState.errors.venue}
+              </p>
+            )}
           </div>
 
           {/* Dates */}
@@ -111,6 +111,11 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
                 />
               </div>
             </div>
+            {(formState?.errors?.startDate || formState?.errors?.endDate) && (
+              <p aria-label="polite" className="text-sm text-destructive">
+                {formState.errors.startDate || formState.errors.endDate}
+              </p>
+            )}
           </div>
 
           {/* Status */}
@@ -132,6 +137,8 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
               </Select>
             </div>
           </div>
+
+          <input type="hidden" name="id" value={exhibition.id} />
         </CardContent>
 
         <CardFooter className="flex flex-col sm:flex-row justify-between gap-3 py-5 border-t">
