@@ -1,4 +1,4 @@
-import { ExhibitionTable } from '@/app/(top-page)/_components/exhibition-table/ExhibitionTable'
+import { ExhibitionTable } from '@/app/exhibition/_components/exhibition-table/ExhibitionTable'
 import db from '@/lib/firestore'
 import { Timestamp } from '@google-cloud/firestore'
 import { Exhibition } from '@/types/exhibition'
