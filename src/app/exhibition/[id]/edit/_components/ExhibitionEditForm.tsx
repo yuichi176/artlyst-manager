@@ -47,11 +47,9 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
               required
               className="text-base"
             />
-            {formState?.errors?.title && (
-              <p aria-label="polite" className="text-sm text-destructive">
-                {formState.errors.title}
-              </p>
-            )}
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.title}
+            </p>
           </div>
 
           {/* Venue */}
@@ -69,11 +67,9 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
               required
               className="text-base"
             />
-            {formState?.errors?.venue && (
-              <p aria-label="polite" className="text-sm text-destructive">
-                {formState.errors.venue}
-              </p>
-            )}
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.venue}
+            </p>
           </div>
 
           {/* Dates */}
@@ -111,11 +107,9 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
                 />
               </div>
             </div>
-            {(formState?.errors?.startDate || formState?.errors?.endDate) && (
-              <p aria-label="polite" className="text-sm text-destructive">
-                {formState.errors.startDate || formState.errors.endDate}
-              </p>
-            )}
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.startDate || formState?.errors?.endDate}
+            </p>
           </div>
 
           {/* Status */}
