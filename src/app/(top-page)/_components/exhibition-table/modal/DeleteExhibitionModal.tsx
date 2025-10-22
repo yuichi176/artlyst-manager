@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { deleteExhibition } from '@/lib/actions/exhibition'
 import { useActionState } from 'react'
+import { Loader2 } from 'lucide-react'
 
 interface DeleteExhibitionModalProps {
   exhibition: Exhibition | undefined
@@ -58,7 +59,14 @@ export function DeleteExhibitionModal({
           <form action={formAction}>
             <input type="hidden" name="id" value={exhibition?.id ?? ''} />
             <Button variant="destructive" type="submit" disabled={isPending}>
-              {isPending ? '削除中...' : '削除'}
+              {isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  削除中...
+                </>
+              ) : (
+                '削除'
+              )}
             </Button>
           </form>
         </DialogFooter>
