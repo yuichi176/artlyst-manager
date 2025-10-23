@@ -39,6 +39,7 @@ export async function updateExhibition(prev: FormSubmitState, formData: FormData
       venue: data.venue,
       startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
       endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
+      officialUrl: data.officialUrl || '',
       status: data.status,
     })
   console.log('Successfully updated exhibition with ID:', data.id)

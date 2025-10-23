@@ -5,7 +5,7 @@ import { Exhibition } from '@/schema/exhibition'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'
-import { Loader2, Calendar, MapPin, FileText, CheckCircle2 } from 'lucide-react'
+import { Loader2, Calendar, MapPin, FileText, CheckCircle2, Link as LinkIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import {
   Select,
@@ -124,6 +124,25 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
             </div>
             <p aria-live="polite" className="text-sm text-destructive">
               {formState?.errors?.startDate || formState?.errors?.endDate}
+            </p>
+          </div>
+
+          {/* Official URL */}
+          <div className="space-y-2">
+            <label htmlFor="officialUrl" className="flex items-center text-sm font-medium">
+              <LinkIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+              公式サイトURL
+            </label>
+            <Input
+              id="officialUrl"
+              name="officialUrl"
+              type="url"
+              defaultValue={exhibition.officialUrl}
+              placeholder="https://example.com"
+              className="text-base"
+            />
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.officialUrl}
             </p>
           </div>
 

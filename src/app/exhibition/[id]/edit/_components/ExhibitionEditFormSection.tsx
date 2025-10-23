@@ -1,8 +1,7 @@
 import db from '@/lib/firestore'
-import type { Exhibition } from '@/schema/exhibition'
+import { Exhibition, RawExhibition } from '@/schema/exhibition'
 import { ExhibitionEditForm } from './ExhibitionEditForm'
 import { notFound } from 'next/navigation'
-import { Timestamp } from '@google-cloud/firestore'
 
 interface ExhibitionEditFormSectionProps {
   id: string
@@ -16,15 +15,7 @@ export const ExhibitionEditFormSection = async ({ id }: ExhibitionEditFormSectio
     notFound()
   }
 
-  const data = existingDocumentsSnapshot.data() as {
-    title: string
-    venue: string
-    startDate?: Timestamp
-    endDate?: Timestamp
-    status: 'pending' | 'active'
-    updatedAt: Timestamp
-    createdAt: Timestamp
-  }
+  const data = existingDocumentsSnapshot.data() as RawExhibition
 
   const exhibition: Exhibition = {
     id: id,
@@ -32,6 +23,8 @@ export const ExhibitionEditFormSection = async ({ id }: ExhibitionEditFormSectio
     venue: data.venue ? data.venue : '',
     startDate: data.startDate ? data.startDate.toDate().toISOString().split('T')[0] : '',
     endDate: data.endDate ? data.endDate.toDate().toISOString().split('T')[0] : '',
+    officialUrl: data.officialUrl ? data.officialUrl : '',
+    imageUrl: data.imageUrl ? data.imageUrl : '',
     status: data.status,
   } satisfies Exhibition
 
