@@ -15,6 +15,9 @@ env:
   IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REPO }}/${{ vars.SERVICE_NAME }}:${{ github.sha }}
 
 jobs:
+  test-and-build:
+    uses: ./.github/workflows/test-and-build.yml
+
   deploy:
     runs-on: ubuntu-latest
     permissions:
@@ -23,6 +26,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Test and Build
+        run: pnpm install && pnpm build && pnpm test
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
