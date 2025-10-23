@@ -4,8 +4,8 @@ import db from '@/lib/firestore'
 import { revalidatePath } from 'next/cache'
 import { Timestamp } from '@google-cloud/firestore'
 import { TZDate } from '@date-fns/tz'
-import { redirect } from 'next/navigation'
 import { exhibitionFormDataSchema } from '@/schema/exhibition'
+import { FormSubmitState } from '@/schema/common'
 
 export async function deleteExhibition(id: string) {
   await db.collection('exhibition').doc(id).delete()
@@ -14,14 +14,7 @@ export async function deleteExhibition(id: string) {
   revalidatePath('/')
 }
 
-export async function updateExhibition(
-  prev:
-    | {
-        errors: Record<string, string>
-      }
-    | undefined,
-  formData: FormData,
-) {
+export async function updateExhibition(prev: FormSubmitState, formData: FormData) {
   const formDataObject = Object.fromEntries(formData.entries())
 
   const parsed = exhibitionFormDataSchema.safeParse(formDataObject)
@@ -32,6 +25,7 @@ export async function updateExhibition(
       errors[path] = issue.message
     })
     return {
+      status: 'error' as const,
       errors,
     }
   }
@@ -52,5 +46,8 @@ export async function updateExhibition(
   revalidatePath('/')
   revalidatePath(`/exhibition/${data.id}/edit`)
 
-  redirect('/exhibition')
+  return {
+    status: 'success' as const,
+    errors: undefined,
+  }
 }

@@ -1,7 +1,7 @@
 'use client'
 
-import { useActionState } from 'react'
-import type { Exhibition } from '@/schema/exhibition'
+import { useActionState, useEffect } from 'react'
+import { Exhibition } from '@/schema/exhibition'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'
@@ -15,6 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+import { toast } from 'sonner'
+import { FormSubmitState } from '@/schema/common'
 
 interface ExhibitionEditFormProps {
   exhibition: Exhibition
@@ -23,7 +25,20 @@ interface ExhibitionEditFormProps {
 export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
   const router = useRouter()
 
-  const [formState, update, isPending] = useActionState(updateExhibition, undefined)
+  const [formState, update, isPending] = useActionState<FormSubmitState, FormData>(
+    updateExhibition,
+    {
+      status: 'pending',
+      errors: undefined,
+    },
+  )
+
+  useEffect(() => {
+    if (formState && formState.status === 'success') {
+      toast.success('展覧会情報を更新しました')
+      router.push('/exhibition')
+    }
+  }, [formState, router])
 
   return (
     <form action={update} className="space-y-6">
