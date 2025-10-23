@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { Exhibition } from '@/schema/exhibition'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -24,6 +24,8 @@ interface ExhibitionEditFormProps {
 
 export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
   const router = useRouter()
+  const [imageUrl, setImageUrl] = useState(exhibition.imageUrl || '')
+  const [imageError, setImageError] = useState(false)
 
   const [formState, update, isPending] = useActionState<FormSubmitState, FormData>(
     updateExhibition,
@@ -39,6 +41,20 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
       router.push('/exhibition')
     }
   }, [formState, router])
+
+  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value
+    setImageUrl(url)
+    setImageError(false)
+  }
+
+  const handleImageError = () => {
+    setImageError(true)
+  }
+
+  const handleImageLoad = () => {
+    setImageError(false)
+  }
 
   return (
     <form action={update} className="space-y-6">
@@ -156,13 +172,32 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
               id="imageUrl"
               name="imageUrl"
               type="url"
-              defaultValue={exhibition.imageUrl}
+              value={imageUrl}
+              onChange={handleImageUrlChange}
               placeholder="https://example.com/image.jpg"
               className="text-base"
             />
             <p aria-live="polite" className="text-sm text-destructive">
               {formState?.errors?.imageUrl}
             </p>
+            {imageUrl && (
+              <div className="mt-4 rounded-md border p-4 bg-muted/30">
+                <p className="text-sm text-muted-foreground mb-2">プレビュー:</p>
+                {!imageError ? (
+                  <img
+                    src={imageUrl}
+                    alt="画像プレビュー"
+                    onError={handleImageError}
+                    onLoad={handleImageLoad}
+                    className="max-w-full h-auto max-h-[300px] rounded-md object-contain"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-[200px] bg-muted rounded-md">
+                    <p className="text-sm text-muted-foreground">画像を読み込めません</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Status */}
