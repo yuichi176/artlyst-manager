@@ -232,6 +232,8 @@ describe('ExhibitionEditForm', () => {
     test('送信が成功すると、展覧会一覧ページに遷移する', async () => {
       // ARRANGE
       const user = userEvent.setup()
+
+      // Mock successful update
       const mockUpdate = vi.fn()
       const mockDoc = vi.fn(() => ({ update: mockUpdate }))
       const mockCollection = vi.fn(() => ({ doc: mockDoc }))
@@ -241,10 +243,6 @@ describe('ExhibitionEditForm', () => {
       // @ts-expect-error
       vi.mocked(db.default.collection).mockImplementation(mockCollection)
 
-      // Mock redirect to track if it was called
-      const { redirect } = await import('next/navigation')
-      const mockRedirect = vi.mocked(redirect)
-
       render(<ExhibitionEditForm exhibition={dummyExhibition} />)
 
       // ACT
@@ -252,9 +250,9 @@ describe('ExhibitionEditForm', () => {
       await user.click(submitButton)
 
       // ASSERT
-      // Wait for redirect to be called
+      // Wait for the form submission to complete and router.push to be called
       await waitFor(() => {
-        expect(mockRedirect).toHaveBeenCalledWith('/exhibition')
+        expect(mockPush).toHaveBeenCalledWith('/exhibition')
       })
     })
   })
