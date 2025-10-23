@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react'
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
 import Link from 'next/link'
 
@@ -39,6 +39,12 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   const truncateTitle = (title: string, maxLength: number = 40) => {
     if (title.length <= maxLength) return title
     return title.slice(0, maxLength) + '...'
+  }
+
+  const isPubliclyVisible = (exhibition: Exhibition): boolean => {
+    const now = new Date()
+    const endDate = new Date(exhibition.endDate)
+    return exhibition.status === 'active' && endDate > now
   }
 
   const handleSort = (field: SortField) => {
@@ -130,6 +136,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="text-center w-[50px]"></TableHead>
               <TableHead>
                 <Button
                   variant="ghost"
@@ -188,13 +195,27 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
           <TableBody>
             {sortedExhibitions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
+                <TableCell colSpan={9} className="h-24 text-center">
                   No exhibitions found.
                 </TableCell>
               </TableRow>
             ) : (
               sortedExhibitions.map((exhibition) => (
                 <TableRow key={exhibition.id}>
+                  <TableCell className="text-center">
+                    {isPubliclyVisible(exhibition) && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Eye className="h-4 w-4 text-green-600 mx-auto" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>ユーザー公開中</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </TableCell>
                   <TableCell className="pl-5">
                     {exhibition.title.length > 40 ? (
                       <TooltipProvider>
