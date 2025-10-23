@@ -5,7 +5,7 @@ import { Exhibition } from '@/schema/exhibition'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'
-import { Loader2, Calendar, MapPin, FileText, CheckCircle2, Link as LinkIcon } from 'lucide-react'
+import { Loader2, Calendar, MapPin, FileText, CheckCircle2, Link as LinkIcon, Image } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import {
   Select,
@@ -143,6 +143,25 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
             />
             <p aria-live="polite" className="text-sm text-destructive">
               {formState?.errors?.officialUrl}
+            </p>
+          </div>
+
+          {/* Image URL */}
+          <div className="space-y-2">
+            <label htmlFor="imageUrl" className="flex items-center text-sm font-medium">
+              <Image className="mr-2 h-4 w-4 text-muted-foreground" />
+              画像URL
+            </label>
+            <Input
+              id="imageUrl"
+              name="imageUrl"
+              type="url"
+              defaultValue={exhibition.imageUrl}
+              placeholder="https://example.com/image.jpg"
+              className="text-base"
+            />
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.imageUrl}
             </p>
           </div>
 
