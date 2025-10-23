@@ -19,6 +19,7 @@ jobs:
     uses: ./.github/workflows/test-and-build.yml
 
   deploy:
+    needs: test-and-build
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
