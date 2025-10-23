@@ -9,6 +9,8 @@ export type RawExhibition = {
   venue: string
   startDate?: Timestamp
   endDate?: Timestamp
+  officialUrl?: string
+  imageUrl?: string
   status: Status
   updatedAt: Timestamp
   createdAt: Timestamp
@@ -20,6 +22,8 @@ export const exhibitionSchema = z.object({
   venue: z.string(),
   startDate: z.string(),
   endDate: z.string(),
+  officialUrl: z.string().optional(),
+  imageUrl: z.string().optional(),
   status: statusSchema,
 })
 export type Exhibition = z.infer<typeof exhibitionSchema>
@@ -34,5 +38,7 @@ export const exhibitionFormDataSchema = z.object({
   endDate: z
     .string()
     .refine((v) => !Number.isNaN(Date.parse(v)), '終了日は有効な日付を入力してください。'),
+  officialUrl: z.string().optional(),
+  imageUrl: z.string().optional(),
   status: statusSchema,
 })

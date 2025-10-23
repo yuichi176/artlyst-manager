@@ -170,6 +170,8 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                   {getSortIcon('endDate')}
                 </Button>
               </TableHead>
+              <TableHead className="text-center">公式サイトURL</TableHead>
+              <TableHead className="text-center">画像URL</TableHead>
               <TableHead>
                 <Button
                   variant="ghost"
@@ -186,7 +188,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
           <TableBody>
             {sortedExhibitions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   No exhibitions found.
                 </TableCell>
               </TableRow>
@@ -214,6 +216,10 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                   <TableCell className="pl-5">{exhibition.venue}</TableCell>
                   <TableCell className="pl-5">{exhibition.startDate}</TableCell>
                   <TableCell className="pl-5">{exhibition.endDate}</TableCell>
+                  <TableCell className="text-center">
+                    {exhibition.officialUrl ? '⚪︎' : '×'}
+                  </TableCell>
+                  <TableCell className="text-center">{exhibition.imageUrl ? '⚪︎' : '×'}</TableCell>
                   <TableCell className="pl-5">
                     <Badge variant={exhibition.status === 'active' ? 'default' : 'secondary'}>
                       {exhibition.status === 'active' ? 'Active' : 'Pending'}

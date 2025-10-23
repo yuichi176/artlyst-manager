@@ -12,6 +12,8 @@ describe('ExhibitionTable', () => {
       startDate: '2024-01-01',
       endDate: '2024-01-31',
       status: 'active',
+      officialUrl: 'https://example.com',
+      imageUrl: 'https://example.com/image.jpg',
     },
     {
       id: '2',

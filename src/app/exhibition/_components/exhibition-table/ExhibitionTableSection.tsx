@@ -15,6 +15,8 @@ export default async function ExhibitionTableSection() {
       venue: data.venue ? data.venue : '',
       startDate: data.startDate ? data.startDate.toDate().toISOString().split('T')[0] : '',
       endDate: data.endDate ? data.endDate.toDate().toISOString().split('T')[0] : '',
+      officialUrl: data.officialUrl ? data.officialUrl : '',
+      imageUrl: data.imageUrl ? data.imageUrl : '',
       status: data.status,
     } satisfies Exhibition
   })
