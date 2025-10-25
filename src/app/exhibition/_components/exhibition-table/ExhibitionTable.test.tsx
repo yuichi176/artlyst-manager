@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ExhibitionTable } from '@/app/exhibition/_components/exhibition-table/ExhibitionTable'
 import { Exhibition } from '@/schema/exhibition'
@@ -21,7 +21,7 @@ describe('ExhibitionTable', () => {
       venue: '会場B',
       startDate: '2024-12-01',
       endDate: '2025-03-30',
-      status: 'pending',
+      status: 'active',
     },
   ] satisfies Exhibition[]
 
@@ -47,7 +47,20 @@ describe('ExhibitionTable', () => {
   })
 
   describe('フィルタリング機能', () => {
-    test('初期状態で「すべて」フィルターが選択され、すべてのステータスの展覧会が表示されている', () => {
+    // テスト実行時の日時を2024年11月22日に固定
+    // 展覧会A: 2024-01-01 ~ 2024-01-31 (ended before mock date, not publicly visible)
+    // 展覧会B: 2024-12-01 ~ 2025-03-30 (active after mock date, publicly visible)
+    const mockCurrentDate = new Date('2024-11-22')
+    beforeEach(() => {
+      vi.useFakeTimers()
+      vi.setSystemTime(mockCurrentDate)
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    test('初期状態で「すべて」フィルターが選択され、すべての展覧会が表示されている', () => {
       // ACT
       render(<ExhibitionTable exhibitions={dummyExhibitions} />)
 
@@ -58,34 +71,36 @@ describe('ExhibitionTable', () => {
       expect(screen.getByText('展覧会B')).toBeInTheDocument()
     })
 
-    test('「Active」ボタンをクリックすると、ステータスが「active」の展覧会のみ表示される', async () => {
+    test('「公開中」ボタンをクリックすると、公開中の展覧会のみ表示される', () => {
       // ARRANGE
-      const user = userEvent.setup()
       render(<ExhibitionTable exhibitions={dummyExhibitions} />)
 
       // ACT
-      const activeButton = screen.getByRole('button', { name: 'Active' })
-      await user.click(activeButton)
+      const publicButton = screen.getByRole('button', { name: '公開中' })
+      fireEvent.click(publicButton)
 
       // ASSERT
-      expect(activeButton).toHaveClass('bg-primary')
-      expect(screen.getByText('展覧会A')).toBeInTheDocument()
-      expect(screen.queryByText('展覧会B')).not.toBeInTheDocument()
+      expect(publicButton).toHaveClass('bg-primary')
+      // 展覧会A is ended (2024-01-31 < 2024-11-22), so not publicly visible
+      expect(screen.queryByText('展覧会A')).not.toBeInTheDocument()
+      // 展覧会B is active and ends after mock date (2025-03-30 > 2024-11-22), so publicly visible
+      expect(screen.getByText('展覧会B')).toBeInTheDocument()
     })
 
-    test('「Pending」ボタンをクリックすると、ステータスが「pending」の展覧会のみ表示される', async () => {
+    test('「非公開」ボタンをクリックすると、非公開の展覧会のみ表示される', () => {
       // ARRANGE
-      const user = userEvent.setup()
       render(<ExhibitionTable exhibitions={dummyExhibitions} />)
 
       // ACT
-      const pendingButton = screen.getByRole('button', { name: 'Pending' })
-      await user.click(pendingButton)
+      const notPublicButton = screen.getByRole('button', { name: '非公開' })
+      fireEvent.click(notPublicButton)
 
       // ASSERT
-      expect(pendingButton).toHaveClass('bg-primary')
-      expect(screen.queryByText('展覧会A')).not.toBeInTheDocument()
-      expect(screen.getByText('展覧会B')).toBeInTheDocument()
+      expect(notPublicButton).toHaveClass('bg-primary')
+      // 展覧会A is ended, so not publicly visible
+      expect(screen.getByText('展覧会A')).toBeInTheDocument()
+      // 展覧会B is publicly visible
+      expect(screen.queryByText('展覧会B')).not.toBeInTheDocument()
     })
   })
 
@@ -402,13 +417,24 @@ describe('ExhibitionTable', () => {
   })
 
   describe('統合テスト', () => {
+    // Mock current date for public visibility filtering
+    const mockCurrentDate = new Date('2024-11-22')
+    beforeEach(() => {
+      vi.useFakeTimers()
+      vi.setSystemTime(mockCurrentDate)
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
     const integrationTestExhibitions = [
       {
         id: '1',
         title: 'A展覧会',
         venue: 'X会場',
         startDate: '2024-01-01',
-        endDate: '2024-01-31',
+        endDate: '2024-01-31', // Ended before mock date
         status: 'active',
       },
       {
@@ -416,7 +442,7 @@ describe('ExhibitionTable', () => {
         title: 'B展覧会',
         venue: 'Y会場',
         startDate: '2024-02-01',
-        endDate: '2024-02-28',
+        endDate: '2024-02-28', // Ended before mock date
         status: 'pending',
       },
       {
@@ -424,46 +450,43 @@ describe('ExhibitionTable', () => {
         title: 'C展覧会',
         venue: 'Z会場',
         startDate: '2024-03-01',
-        endDate: '2024-03-31',
+        endDate: '2025-03-31', // Active after mock date
         status: 'active',
       },
     ] satisfies Exhibition[]
 
-    test('フィルター適用後にソートしても正しく動作する', async () => {
+    test('フィルター適用後にソートしても正しく動作する', () => {
       // ARRANGE
-      const user = userEvent.setup()
       render(<ExhibitionTable exhibitions={integrationTestExhibitions} />)
 
       // ACT
-      // First, apply Active filter
-      const activeButton = screen.getByRole('button', { name: 'Active' })
-      await user.click(activeButton)
+      // First, apply public visibility filter
+      const publicButton = screen.getByRole('button', { name: '公開中' })
+      fireEvent.click(publicButton)
 
       // Then sort by title descending
       const titleHeader = screen.getByRole('button', { name: /展覧会/ })
-      await user.click(titleHeader) // ascending
-      await user.click(titleHeader) // descending
+      fireEvent.click(titleHeader) // ascending
+      fireEvent.click(titleHeader) // descending
 
       // ASSERT
       const rows = screen.getAllByRole('row')
-      // Only active exhibitions should be shown (A展覧会 and C展覧会)
-      // Sorted in descending order: C, A
-      expect(rows).toHaveLength(3) // 1 header + 2 data rows
+      // Only C展覧会 is publicly visible (active + endDate > mockCurrentDate)
+      expect(rows).toHaveLength(2) // 1 header + 1 data row
       expect(rows[1]).toHaveTextContent('C展覧会')
-      expect(rows[2]).toHaveTextContent('A展覧会')
-      // B展覧会 (pending) should not be visible
+      // A展覧会 (ended) and B展覧会 (pending) should not be visible
+      expect(screen.queryByText('A展覧会')).not.toBeInTheDocument()
       expect(screen.queryByText('B展覧会')).not.toBeInTheDocument()
     })
 
-    test('ソート適用後にフィルターを変更しても正しく動作する', async () => {
+    test('ソート適用後にフィルターを変更しても正しく動作する', () => {
       // ARRANGE
-      const user = userEvent.setup()
       render(<ExhibitionTable exhibitions={integrationTestExhibitions} />)
 
       // ACT
       // First, sort by venue ascending
       const venueHeader = screen.getByRole('button', { name: /会場/ })
-      await user.click(venueHeader)
+      fireEvent.click(venueHeader)
 
       // Verify initial sort (all exhibitions, sorted by venue)
       let rows = screen.getAllByRole('row')
@@ -471,31 +494,33 @@ describe('ExhibitionTable', () => {
       expect(rows[2]).toHaveTextContent('Y会場')
       expect(rows[3]).toHaveTextContent('Z会場')
 
-      // Then apply Pending filter
-      const pendingButton = screen.getByRole('button', { name: 'Pending' })
-      await user.click(pendingButton)
+      // Then apply not public filter
+      const notPublicButton = screen.getByRole('button', { name: '非公開' })
+      fireEvent.click(notPublicButton)
 
       // ASSERT
-      // Only pending exhibition should be shown (B展覧会)
-      // Sort should still be applied
+      // A展覧会 (ended) and B展覧会 (pending) are not publicly visible
+      // Sort should still be applied by venue
       rows = screen.getAllByRole('row')
-      expect(rows).toHaveLength(2) // 1 header + 1 data row
-      expect(rows[1]).toHaveTextContent('B展覧会')
-      expect(rows[1]).toHaveTextContent('Y会場')
-      // A展覧会 and C展覧会 (active) should not be visible
-      expect(screen.queryByText('A展覧会')).not.toBeInTheDocument()
+      expect(rows).toHaveLength(3) // 1 header + 2 data rows
+      expect(rows[1]).toHaveTextContent('A展覧会')
+      expect(rows[1]).toHaveTextContent('X会場')
+      expect(rows[2]).toHaveTextContent('B展覧会')
+      expect(rows[2]).toHaveTextContent('Y会場')
+      // C展覧会 (publicly visible) should not be shown
       expect(screen.queryByText('C展覧会')).not.toBeInTheDocument()
     })
 
-    test('100件以上の展覧会データでもスムーズに動作する', async () => {
+    test('100件以上の展覧会データでもスムーズに動作する', () => {
       // ARRANGE
-      const user = userEvent.setup()
+      // Create exhibitions where half are publicly visible (active + future end date)
       const largeDataSet: Exhibition[] = Array.from({ length: 150 }, (_, i) => ({
         id: `${i + 1}`,
         title: `展覧会${String.fromCharCode(65 + (i % 26))}${Math.floor(i / 26)}`,
         venue: `会場${i % 10}`,
         startDate: `2024-${String(1 + (i % 12)).padStart(2, '0')}-01`,
-        endDate: `2024-${String(1 + (i % 12)).padStart(2, '0')}-28`,
+        // Half have future end dates, half have past end dates
+        endDate: i % 2 === 0 ? '2025-12-31' : '2024-01-31',
         status: i % 2 === 0 ? 'active' : 'pending',
       }))
 
@@ -505,23 +530,23 @@ describe('ExhibitionTable', () => {
       // Verify all exhibitions are rendered initially
       expect(screen.getAllByRole('row')).toHaveLength(151) // 1 header + 150 data rows
 
-      // Apply filter
-      const activeButton = screen.getByRole('button', { name: 'Active' })
-      await user.click(activeButton)
+      // Apply public visibility filter
+      const publicButton = screen.getByRole('button', { name: '公開中' })
+      fireEvent.click(publicButton)
 
-      // Verify filtered count (75 active exhibitions)
+      // Verify filtered count (75 publicly visible exhibitions: active + future end date)
       expect(screen.getAllByRole('row')).toHaveLength(76) // 1 header + 75 data rows
 
       // Apply sort
       const titleHeader = screen.getByRole('button', { name: /展覧会/ })
-      await user.click(titleHeader)
+      fireEvent.click(titleHeader)
 
       // Verify sorting works with large dataset
       const rows = screen.getAllByRole('row')
       expect(rows).toHaveLength(76) // Same count after sorting
 
       // Verify that data is still filtered and now sorted
-      // First data row should be the first alphabetically among active exhibitions
+      // First data row should be the first alphabetically among publicly visible exhibitions
       const firstDataRow = rows[1]
       expect(firstDataRow).toBeInTheDocument()
     })

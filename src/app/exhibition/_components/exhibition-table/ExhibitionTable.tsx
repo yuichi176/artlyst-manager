@@ -32,7 +32,6 @@ type SortOrder = 'asc' | 'desc' | null
 
 export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'pending'>('all')
   const [publicVisibilityFilter, setPublicVisibilityFilter] = useState<boolean | null>(null)
   const [sortField, setSortField] = useState<SortField | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>(null)
@@ -77,11 +76,6 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   }
 
   const filteredExhibitions = exhibitions.filter((exhibition) => {
-    // Filter by status
-    if (statusFilter !== 'all' && exhibition.status !== statusFilter) {
-      return false
-    }
-
     // Filter by public visibility
     if (publicVisibilityFilter !== null) {
       const isVisible = isPubliclyVisible(exhibition)
@@ -121,61 +115,29 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
 
   return (
     <>
-      <div className="mb-4 flex gap-4 flex-wrap items-start">
-        <div className="flex flex-col gap-2">
-          <div className="text-xs font-medium text-muted-foreground px-1">ステータス</div>
-          <div className="flex gap-2">
-            <Button
-              variant={statusFilter === 'all' ? 'default' : 'outline'}
-              onClick={() => setStatusFilter('all')}
-              size="sm"
-            >
-              すべて
-            </Button>
-            <Button
-              variant={statusFilter === 'active' ? 'default' : 'outline'}
-              onClick={() => setStatusFilter('active')}
-              size="sm"
-            >
-              Active
-            </Button>
-            <Button
-              variant={statusFilter === 'pending' ? 'default' : 'outline'}
-              onClick={() => setStatusFilter('pending')}
-              size="sm"
-            >
-              Pending
-            </Button>
-          </div>
-        </div>
-        <div className="h-auto w-px bg-border self-stretch my-1"></div>
-        <div className="flex flex-col gap-2">
-          <div className="text-xs font-medium text-muted-foreground px-1">公開状態</div>
-          <div className="flex gap-2">
-            <Button
-              variant={publicVisibilityFilter === null ? 'default' : 'outline'}
-              onClick={() => setPublicVisibilityFilter(null)}
-              size="sm"
-            >
-              すべて
-            </Button>
-            <Button
-              variant={publicVisibilityFilter === true ? 'default' : 'outline'}
-              onClick={() => setPublicVisibilityFilter(true)}
-              size="sm"
-            >
-              <Eye className="h-4 w-4 mr-1" />
-              公開中
-            </Button>
-            <Button
-              variant={publicVisibilityFilter === false ? 'default' : 'outline'}
-              onClick={() => setPublicVisibilityFilter(false)}
-              size="sm"
-            >
-              非公開
-            </Button>
-          </div>
-        </div>
+      <div className="mb-4 flex gap-2">
+        <Button
+          variant={publicVisibilityFilter === null ? 'default' : 'outline'}
+          onClick={() => setPublicVisibilityFilter(null)}
+          size="sm"
+        >
+          すべて
+        </Button>
+        <Button
+          variant={publicVisibilityFilter === true ? 'default' : 'outline'}
+          onClick={() => setPublicVisibilityFilter(true)}
+          size="sm"
+        >
+          <Eye className="h-4 w-4 mr-1" />
+          公開中
+        </Button>
+        <Button
+          variant={publicVisibilityFilter === false ? 'default' : 'outline'}
+          onClick={() => setPublicVisibilityFilter(false)}
+          size="sm"
+        >
+          非公開
+        </Button>
       </div>
 
       <div className="rounded-md border">
