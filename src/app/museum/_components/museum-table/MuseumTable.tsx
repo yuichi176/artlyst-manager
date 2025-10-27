@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil } from 'lucide-react'
+import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 
 interface MuseumTableProps {
@@ -110,7 +110,21 @@ export function MuseumTable({ museums }: MuseumTableProps) {
           ) : (
             sortedMuseums.map((museum) => (
               <TableRow key={museum.id}>
-                <TableCell className="pl-5">{museum.name}</TableCell>
+                <TableCell className="pl-5">
+                  {museum.officialUrl ? (
+                    <a
+                      href={museum.officialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      {museum.name}
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  ) : (
+                    museum.name
+                  )}
+                </TableCell>
                 <TableCell>
                   {museum.address.length > 35 ? (
                     <TooltipProvider>
