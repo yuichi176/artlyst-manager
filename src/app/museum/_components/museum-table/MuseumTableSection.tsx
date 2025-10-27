@@ -10,7 +10,7 @@ export default async function MuseumTableSection() {
     const data = doc.data() as Museum
 
     return {
-      id: data.id,
+      id: doc.id,
       name: data.name,
       address: data.address,
       access: data.access,

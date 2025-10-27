@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil } from 'lucide-react'
+import Link from 'next/link'
 
 interface MuseumTableProps {
   museums: Museum[]
@@ -169,10 +170,12 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem disabled>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        編集
-                      </DropdownMenuItem>
+                      <Link href={`/museum/${museum.id}/edit`}>
+                        <DropdownMenuItem>
+                          <Pencil className="mr-2 h-4 w-4" />
+                          編集
+                        </DropdownMenuItem>
+                      </Link>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
