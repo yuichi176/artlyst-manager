@@ -7,8 +7,9 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import Link from 'next/link'
-import { Home } from 'lucide-react'
+import { Home, Plus } from 'lucide-react'
 import { Suspense } from 'react'
+import { Button } from '@/components/ui/button'
 import MuseumTableSection from '@/app/museum/_components/museum-table/MuseumTableSection'
 import { MuseumTableSkeleton } from '@/app/museum/_components/museum-table/MuseumTableSkeleton'
 
@@ -33,7 +34,15 @@ export default function MuseumListPage() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <h2 className="text-2xl font-bold tracking-tight mb-5">美術館一覧</h2>
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-2xl font-bold tracking-tight">美術館一覧</h2>
+        <Link href="/museum/create">
+          <Button className="cursor-pointer">
+            <Plus className="h-4 w-4" />
+            美術館を登録
+          </Button>
+        </Link>
+      </div>
       <Suspense fallback={<MuseumTableSkeleton />}>
         <MuseumTableSection />
       </Suspense>
