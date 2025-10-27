@@ -5,6 +5,13 @@ import { revalidatePath } from 'next/cache'
 import { museumFormDataSchema } from '@/schema/museum'
 import { FormSubmitState } from '@/schema/common'
 
+export async function deleteMuseum(id: string) {
+  await db.collection('museum').doc(id).delete()
+  console.log('Successfully deleted museum with ID:', id)
+
+  revalidatePath('/')
+}
+
 export async function updateMuseum(prev: FormSubmitState, formData: FormData) {
   const formDataObject = Object.fromEntries(formData.entries())
 

@@ -18,8 +18,9 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, ExternalLink } from 'lucide-react'
+import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, ExternalLink, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import { DeleteMuseumModal } from '@/app/museum/_components/museum-table/modal/DeleteMuseumModal'
 
 interface MuseumTableProps {
   museums: Museum[]
@@ -29,6 +30,7 @@ type SortField = 'name'
 type SortOrder = 'asc' | 'desc' | null
 
 export function MuseumTable({ museums }: MuseumTableProps) {
+  const [deletingMuseum, setDeletingMuseum] = useState<Museum | undefined>(undefined)
   const [sortField, setSortField] = useState<SortField | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>(null)
 
@@ -80,7 +82,8 @@ export function MuseumTable({ museums }: MuseumTableProps) {
   })
 
   return (
-    <div className="rounded-md border">
+    <>
+      <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
@@ -190,6 +193,13 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                           編集
                         </DropdownMenuItem>
                       </Link>
+                      <DropdownMenuItem
+                        onClick={() => setDeletingMuseum(museum)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        削除
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -198,6 +208,15 @@ export function MuseumTable({ museums }: MuseumTableProps) {
           )}
         </TableBody>
       </Table>
-    </div>
+      </div>
+
+      <DeleteMuseumModal
+        museum={deletingMuseum}
+        open={deletingMuseum !== undefined}
+        onOpenChange={(open) => {
+          if (!open) setDeletingMuseum(undefined)
+        }}
+      />
+    </>
   )
 }
