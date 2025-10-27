@@ -42,3 +42,5 @@ export const exhibitionFormDataSchema = z.object({
   imageUrl: z.string().optional(),
   status: statusSchema,
 })
+
+export const exhibitionCreateFormDataSchema = exhibitionFormDataSchema.omit({ id: true })

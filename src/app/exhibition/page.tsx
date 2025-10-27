@@ -2,7 +2,8 @@ import ExhibitionTableSection from '@/app/exhibition/_components/exhibition-tabl
 import { ExhibitionTableSkeleton } from '@/app/exhibition/_components/exhibition-table/ExhibitionTableSkeleton'
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { Home } from 'lucide-react'
+import { Home, Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -33,7 +34,15 @@ export default function ExhibitionListPage() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <h2 className="text-2xl font-bold tracking-tight mb-5">展覧会一覧</h2>
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-2xl font-bold tracking-tight">展覧会一覧</h2>
+        <Link href="/exhibition/create">
+          <Button className="cursor-pointer">
+            <Plus className="h-4 w-4" />
+            展覧会を登録
+          </Button>
+        </Link>
+      </div>
       <Suspense fallback={<ExhibitionTableSkeleton />}>
         <ExhibitionTableSection />
       </Suspense>
