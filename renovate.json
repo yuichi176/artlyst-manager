@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "config:recommended"
+  ],
+  "timezone": "Asia/Tokyo",
+  "dependencyDashboard": false,
+  "rangeStrategy": "bump",
+  "prConcurrentLimit": 1,
+  "major": {
+     "enabled": false
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "requiredStatusChecks": true
+    }
+  ]
+}
