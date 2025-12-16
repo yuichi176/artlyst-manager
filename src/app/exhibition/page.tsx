@@ -17,24 +17,26 @@ export const dynamic = 'force-dynamic'
 
 export default function ExhibitionListPage() {
   return (
-    <div className="space-y-6">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/" className="flex items-center">
-                <Home className="h-4 w-4" />
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>展覧会一覧</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <>
+      <div className="mb-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/" className="flex items-center">
+                  <Home className="h-4 w-4" />
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>展覧会一覧</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
 
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold tracking-tight">展覧会一覧</h2>
         <Link href="/exhibition/create">
           <Button className="cursor-pointer">
@@ -46,6 +48,6 @@ export default function ExhibitionListPage() {
       <Suspense fallback={<ExhibitionTableSkeleton />}>
         <ExhibitionTableSection />
       </Suspense>
-    </div>
+    </>
   )
 }

@@ -140,151 +140,147 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
         </Button>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-center w-[50px]"></TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                onClick={() => handleSort('title')}
+                className="h-8 px-2 lg:px-3"
+              >
+                展覧会
+                {getSortIcon('title')}
+              </Button>
+            </TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                onClick={() => handleSort('venue')}
+                className="h-8 px-2 lg:px-3"
+              >
+                会場
+                {getSortIcon('venue')}
+              </Button>
+            </TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                onClick={() => handleSort('startDate')}
+                className="h-8 px-2 lg:px-3"
+              >
+                開始日
+                {getSortIcon('startDate')}
+              </Button>
+            </TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                onClick={() => handleSort('endDate')}
+                className="h-8 px-2 lg:px-3"
+              >
+                終了日
+                {getSortIcon('endDate')}
+              </Button>
+            </TableHead>
+            <TableHead className="text-center">公式サイトURL</TableHead>
+            <TableHead className="text-center">画像URL</TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                onClick={() => handleSort('status')}
+                className="h-8 px-2 lg:px-3"
+              >
+                ステータス
+                {getSortIcon('status')}
+              </Button>
+            </TableHead>
+            <TableHead className="w-[50px]"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedExhibitions.length === 0 ? (
             <TableRow>
-              <TableHead className="text-center w-[50px]"></TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => handleSort('title')}
-                  className="h-8 px-2 lg:px-3"
-                >
-                  展覧会
-                  {getSortIcon('title')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => handleSort('venue')}
-                  className="h-8 px-2 lg:px-3"
-                >
-                  会場
-                  {getSortIcon('venue')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => handleSort('startDate')}
-                  className="h-8 px-2 lg:px-3"
-                >
-                  開始日
-                  {getSortIcon('startDate')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => handleSort('endDate')}
-                  className="h-8 px-2 lg:px-3"
-                >
-                  終了日
-                  {getSortIcon('endDate')}
-                </Button>
-              </TableHead>
-              <TableHead className="text-center">公式サイトURL</TableHead>
-              <TableHead className="text-center">画像URL</TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  onClick={() => handleSort('status')}
-                  className="h-8 px-2 lg:px-3"
-                >
-                  ステータス
-                  {getSortIcon('status')}
-                </Button>
-              </TableHead>
-              <TableHead className="w-[50px]"></TableHead>
+              <TableCell colSpan={9} className="h-24 text-center">
+                No exhibitions found.
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedExhibitions.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={9} className="h-24 text-center">
-                  No exhibitions found.
+          ) : (
+            sortedExhibitions.map((exhibition) => (
+              <TableRow key={exhibition.id}>
+                <TableCell className="text-center">
+                  {isPubliclyVisible(exhibition) && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Eye className="h-4 w-4 text-green-600 mx-auto" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>ユーザー公開中</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </TableCell>
+                <TableCell className="pl-5">
+                  {exhibition.title.length > 40 ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-default">{truncateTitle(exhibition.title)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-md">{exhibition.title}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    exhibition.title
+                  )}
+                </TableCell>
+                <TableCell className="pl-5">{exhibition.venue}</TableCell>
+                <TableCell className="pl-5">{exhibition.startDate}</TableCell>
+                <TableCell className="pl-5">{exhibition.endDate}</TableCell>
+                <TableCell className="text-center">
+                  {exhibition.officialUrl ? '⚪︎' : '×'}
+                </TableCell>
+                <TableCell className="text-center">{exhibition.imageUrl ? '⚪︎' : '×'}</TableCell>
+                <TableCell className="pl-5">
+                  <Badge variant={exhibition.status === 'active' ? 'default' : 'secondary'}>
+                    {exhibition.status === 'active' ? 'Active' : 'Pending'}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <Link href={`/exhibition/${exhibition.id}/edit`}>
+                        <DropdownMenuItem>
+                          <Pencil className="mr-2 h-4 w-4" />
+                          編集
+                        </DropdownMenuItem>
+                      </Link>
+                      <DropdownMenuItem
+                        onClick={() => setDeletingExhibition(exhibition)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        削除
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
-            ) : (
-              sortedExhibitions.map((exhibition) => (
-                <TableRow key={exhibition.id}>
-                  <TableCell className="text-center">
-                    {isPubliclyVisible(exhibition) && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Eye className="h-4 w-4 text-green-600 mx-auto" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>ユーザー公開中</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
-                  </TableCell>
-                  <TableCell className="pl-5">
-                    {exhibition.title.length > 40 ? (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span className="cursor-default">
-                              {truncateTitle(exhibition.title)}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="max-w-md">{exhibition.title}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ) : (
-                      exhibition.title
-                    )}
-                  </TableCell>
-                  <TableCell className="pl-5">{exhibition.venue}</TableCell>
-                  <TableCell className="pl-5">{exhibition.startDate}</TableCell>
-                  <TableCell className="pl-5">{exhibition.endDate}</TableCell>
-                  <TableCell className="text-center">
-                    {exhibition.officialUrl ? '⚪︎' : '×'}
-                  </TableCell>
-                  <TableCell className="text-center">{exhibition.imageUrl ? '⚪︎' : '×'}</TableCell>
-                  <TableCell className="pl-5">
-                    <Badge variant={exhibition.status === 'active' ? 'default' : 'secondary'}>
-                      {exhibition.status === 'active' ? 'Active' : 'Pending'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <Link href={`/exhibition/${exhibition.id}/edit`}>
-                          <DropdownMenuItem>
-                            <Pencil className="mr-2 h-4 w-4" />
-                            編集
-                          </DropdownMenuItem>
-                        </Link>
-                        <DropdownMenuItem
-                          onClick={() => setDeletingExhibition(exhibition)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          削除
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            ))
+          )}
+        </TableBody>
+      </Table>
 
       <DeleteExhibitionModal
         exhibition={deletingExhibition}
