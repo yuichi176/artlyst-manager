@@ -128,7 +128,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
           onClick={() => setPublicVisibilityFilter(true)}
           size="sm"
         >
-          <Eye className="h-4 w-4 mr-1" />
+          <Eye className="h-4 w-4" />
           公開中
         </Button>
         <Button
@@ -143,7 +143,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-center w-[50px]"></TableHead>
+            <TableHead className="text-center px-4"></TableHead>
             <TableHead>
               <Button
                 variant="ghost"
@@ -209,7 +209,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
           ) : (
             sortedExhibitions.map((exhibition) => (
               <TableRow key={exhibition.id}>
-                <TableCell className="text-center">
+                <TableCell className="text-center px-4">
                   {isPubliclyVisible(exhibition) && (
                     <TooltipProvider>
                       <Tooltip>
@@ -231,7 +231,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                           <span className="cursor-default">{truncateTitle(exhibition.title)}</span>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p className="max-w-md">{exhibition.title}</p>
+                          <p className="py-2">{exhibition.title}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
