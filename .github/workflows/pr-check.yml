@@ -1,0 +1,13 @@
+name: PR Check
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    uses: ./.github/workflows/test-and-build.yml
