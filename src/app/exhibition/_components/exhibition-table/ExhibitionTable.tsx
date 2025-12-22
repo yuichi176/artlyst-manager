@@ -27,7 +27,7 @@ interface ExhibitionTableProps {
   exhibitions: Exhibition[]
 }
 
-type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status'
+type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'createdAt'
 type SortOrder = 'asc' | 'desc' | null
 
 export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
@@ -107,6 +107,9 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
         break
       case 'status':
         comparison = a.status.localeCompare(b.status)
+        break
+      case 'createdAt':
+        comparison = a.createdAt.localeCompare(b.createdAt)
         break
     }
 
@@ -196,6 +199,16 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                 {getSortIcon('status')}
               </Button>
             </TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                onClick={() => handleSort('createdAt')}
+                className="h-8 px-2 lg:px-3"
+              >
+                作成日
+                {getSortIcon('createdAt')}
+              </Button>
+            </TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
         </TableHeader>
@@ -242,15 +255,14 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                 <TableCell className="pl-5">{exhibition.venue}</TableCell>
                 <TableCell className="pl-5">{exhibition.startDate}</TableCell>
                 <TableCell className="pl-5">{exhibition.endDate}</TableCell>
-                <TableCell className="text-center">
-                  {exhibition.officialUrl ? '⚪︎' : '×'}
-                </TableCell>
+                <TableCell className="text-center">{exhibition.officialUrl ? '⚪︎' : '×'}</TableCell>
                 <TableCell className="text-center">{exhibition.imageUrl ? '⚪︎' : '×'}</TableCell>
                 <TableCell className="pl-5">
                   <Badge variant={exhibition.status === 'active' ? 'default' : 'secondary'}>
                     {exhibition.status === 'active' ? 'Active' : 'Pending'}
                   </Badge>
                 </TableCell>
+                <TableCell className="pl-5">{exhibition.createdAt}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

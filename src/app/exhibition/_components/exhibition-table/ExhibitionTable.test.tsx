@@ -14,6 +14,8 @@ describe('ExhibitionTable', () => {
       status: 'active',
       officialUrl: 'https://example.com',
       imageUrl: 'https://example.com/image.jpg',
+      createdAt: '2024-01-01',
+      updatedAt: '2024-01-15',
     },
     {
       id: '2',
@@ -22,6 +24,8 @@ describe('ExhibitionTable', () => {
       startDate: '2024-12-01',
       endDate: '2025-03-30',
       status: 'active',
+      createdAt: '2024-01-01',
+      updatedAt: '2024-01-15',
     },
   ] satisfies Exhibition[]
 
@@ -113,6 +117,8 @@ describe('ExhibitionTable', () => {
         startDate: '2024-03-01',
         endDate: '2024-06-30',
         status: 'pending',
+        createdAt: '2024-01-01',
+        updatedAt: '2024-01-15',
       },
       {
         id: '2',
@@ -121,6 +127,8 @@ describe('ExhibitionTable', () => {
         startDate: '2024-01-01',
         endDate: '2024-04-30',
         status: 'active',
+        createdAt: '2024-01-01',
+        updatedAt: '2024-01-15',
       },
       {
         id: '3',
@@ -129,6 +137,8 @@ describe('ExhibitionTable', () => {
         startDate: '2024-02-01',
         endDate: '2024-05-31',
         status: 'active',
+        createdAt: '2024-01-01',
+        updatedAt: '2024-01-15',
       },
     ] satisfies Exhibition[]
 
@@ -287,6 +297,8 @@ describe('ExhibitionTable', () => {
           startDate: '2024-01-01',
           endDate: '2024-01-31',
           status: 'active',
+          createdAt: '2024-01-01',
+          updatedAt: '2024-01-15',
         },
       ] satisfies Exhibition[]
 
@@ -307,6 +319,8 @@ describe('ExhibitionTable', () => {
           startDate: '2024-01-01',
           endDate: '2024-01-31',
           status: 'active',
+          createdAt: '2024-01-01',
+          updatedAt: '2024-01-15',
         },
       ] satisfies Exhibition[]
 
@@ -332,6 +346,8 @@ describe('ExhibitionTable', () => {
           startDate: '2024-01-01',
           endDate: '2024-01-31',
           status: 'active',
+          createdAt: '2024-01-01',
+          updatedAt: '2024-01-15',
         },
       ] satisfies Exhibition[]
 
@@ -358,6 +374,8 @@ describe('ExhibitionTable', () => {
           startDate: '2024-01-01',
           endDate: '2024-01-31',
           status: 'active',
+          createdAt: '2024-01-01',
+          updatedAt: '2024-01-15',
         },
       ] satisfies Exhibition[]
 
@@ -436,6 +454,8 @@ describe('ExhibitionTable', () => {
         startDate: '2024-01-01',
         endDate: '2024-01-31', // Ended before mock date
         status: 'active',
+        createdAt: '2024-01-01',
+        updatedAt: '2024-01-15',
       },
       {
         id: '2',
@@ -444,6 +464,8 @@ describe('ExhibitionTable', () => {
         startDate: '2024-02-01',
         endDate: '2024-02-28', // Ended before mock date
         status: 'pending',
+        createdAt: '2024-01-01',
+        updatedAt: '2024-01-15',
       },
       {
         id: '3',
@@ -452,6 +474,8 @@ describe('ExhibitionTable', () => {
         startDate: '2024-03-01',
         endDate: '2025-03-31', // Active after mock date
         status: 'active',
+        createdAt: '2024-01-01',
+        updatedAt: '2024-01-15',
       },
     ] satisfies Exhibition[]
 
@@ -522,6 +546,8 @@ describe('ExhibitionTable', () => {
         // Half have future end dates, half have past end dates
         endDate: i % 2 === 0 ? '2025-12-31' : '2024-01-31',
         status: i % 2 === 0 ? 'active' : 'pending',
+        createdAt: '2024-01-01',
+        updatedAt: '2024-01-15',
       }))
 
       render(<ExhibitionTable exhibitions={largeDataSet} />)
