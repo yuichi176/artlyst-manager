@@ -22,19 +22,34 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react'
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
 import Link from 'next/link'
+import { useTableSort } from '@/hooks/useTableSort'
+
+type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'createdAt'
 
 interface ExhibitionTableProps {
   exhibitions: Exhibition[]
 }
 
-type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'createdAt'
-type SortOrder = 'asc' | 'desc' | null
-
 export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
   const [publicVisibilityFilter, setPublicVisibilityFilter] = useState<boolean | null>(null)
-  const [sortField, setSortField] = useState<SortField | null>(null)
-  const [sortOrder, setSortOrder] = useState<SortOrder>(null)
+
+  const filteredExhibitions = exhibitions.filter((exhibition) => {
+    if (publicVisibilityFilter !== null) {
+      const isVisible = isPubliclyVisible(exhibition)
+      if (publicVisibilityFilter !== isVisible) {
+        return false
+      }
+    }
+    return true
+  })
+
+  const {
+    sortedItems: sortedExhibitions,
+    handleSort,
+    sortField,
+    sortOrder,
+  } = useTableSort<Exhibition, SortField>(filteredExhibitions)
 
   const truncateTitle = (title: string, maxLength: number = 40) => {
     if (title.length <= maxLength) return title
@@ -45,21 +60,6 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
     const now = new Date()
     const endDate = new Date(exhibition.endDate)
     return exhibition.status === 'active' && endDate > now
-  }
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      // Cycle through: asc -> desc -> null
-      if (sortOrder === 'asc') {
-        setSortOrder('desc')
-      } else if (sortOrder === 'desc') {
-        setSortOrder(null)
-        setSortField(null)
-      }
-    } else {
-      setSortField(field)
-      setSortOrder('asc')
-    }
   }
 
   const getSortIcon = (field: SortField) => {
@@ -74,47 +74,6 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
     }
     return <ArrowUpDown className="ml-2 h-4 w-4" />
   }
-
-  const filteredExhibitions = exhibitions.filter((exhibition) => {
-    // Filter by public visibility
-    if (publicVisibilityFilter !== null) {
-      const isVisible = isPubliclyVisible(exhibition)
-      if (publicVisibilityFilter !== isVisible) {
-        return false
-      }
-    }
-
-    return true
-  })
-
-  const sortedExhibitions = [...filteredExhibitions].sort((a, b) => {
-    if (!sortField || !sortOrder) return 0
-
-    let comparison = 0
-
-    switch (sortField) {
-      case 'title':
-        comparison = a.title.localeCompare(b.title)
-        break
-      case 'venue':
-        comparison = a.venue.localeCompare(b.venue)
-        break
-      case 'startDate':
-        comparison = a.startDate.localeCompare(b.startDate)
-        break
-      case 'endDate':
-        comparison = a.endDate.localeCompare(b.endDate)
-        break
-      case 'status':
-        comparison = a.status.localeCompare(b.status)
-        break
-      case 'createdAt':
-        comparison = a.createdAt.localeCompare(b.createdAt)
-        break
-    }
-
-    return sortOrder === 'asc' ? comparison : -comparison
-  })
 
   return (
     <>
