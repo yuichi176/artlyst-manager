@@ -47,13 +47,13 @@ src/
 │   │   └── page.tsx
 │   └── layout.tsx                # Root layout with sidebar
 ├── components/
-│   ├── ui/                       # Radix UI components (shadcn/ui style)
+│   ├── shadcn-ui/                # Radix UI components (shadcn/ui style)
 │   └── layout/                   # Layout components (Header, AppSidebar)
 ├── hooks/                        # Custom React hooks
 ├── lib/
 │   ├── actions/                  # Next.js Server Actions
-│   ├── firestore.ts              # Firestore database instance
-│   └── utils.ts                  # Utility functions
+│   └── firestore.ts              # Firestore database instance              
+├── utils/                        # Utility functions
 └── schema/                       # Zod schemas for data validation
 ```
 
