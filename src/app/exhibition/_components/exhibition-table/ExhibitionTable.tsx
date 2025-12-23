@@ -23,7 +23,7 @@ import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2, Eye } 
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
 import Link from 'next/link'
 import { useTableSort } from '@/hooks/useTableSort'
-import { truncate } from '@/utils'
+import { TruncatedText } from '@/components'
 
 type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'createdAt'
 
@@ -194,20 +194,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                   )}
                 </TableCell>
                 <TableCell className="pl-5">
-                  {exhibition.title.length > 40 ? (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="cursor-default">{truncate(exhibition.title)}</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="py-2">{exhibition.title}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ) : (
-                    exhibition.title
-                  )}
+                  <TruncatedText text={exhibition.title} maxLength={40} />
                 </TableCell>
                 <TableCell className="pl-5">{exhibition.venue}</TableCell>
                 <TableCell className="pl-5">{exhibition.startDate}</TableCell>

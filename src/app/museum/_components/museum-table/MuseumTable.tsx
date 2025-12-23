@@ -17,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import {
   ArrowUpDown,
   ArrowUp,
@@ -30,7 +29,7 @@ import {
 import Link from 'next/link'
 import { DeleteMuseumModal } from '@/app/museum/_components/museum-table/modal/DeleteMuseumModal'
 import { useTableSort } from '@/hooks/useTableSort'
-import { truncate } from '@/utils'
+import { TruncatedText } from '@/components'
 
 type SortField = 'name'
 
@@ -109,54 +108,13 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {museum.address.length > 35 ? (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span className="cursor-default">{truncate(museum.address)}</span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="max-w-md">{museum.address}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ) : (
-                      museum.address
-                    )}
+                    <TruncatedText text={museum.address} maxLength={35} />
                   </TableCell>
                   <TableCell>
-                    {museum.access.length > 35 ? (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span className="cursor-default">{truncate(museum.access)}</span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="max-w-md">{museum.access}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ) : (
-                      museum.access
-                    )}
+                    <TruncatedText text={museum.access} maxLength={35} />
                   </TableCell>
                   <TableCell>
-                    {museum.openingInformation.length > 35 ? (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <span className="cursor-default">
-                              {truncate(museum.openingInformation)}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="max-w-md">{museum.openingInformation}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ) : (
-                      museum.openingInformation
-                    )}
+                    <TruncatedText text={museum.openingInformation} maxLength={35} />
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
