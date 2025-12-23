@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { Exhibition } from '@/schema/exhibition'
 import {
   Table,
@@ -34,22 +34,12 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
   const [publicVisibilityFilter, setPublicVisibilityFilter] = useState<boolean | null>(null)
 
-  const filteredExhibitions = exhibitions.filter((exhibition) => {
-    if (publicVisibilityFilter !== null) {
-      const isVisible = isPubliclyVisible(exhibition)
-      if (publicVisibilityFilter !== isVisible) {
-        return false
-      }
-    }
-    return true
-  })
-
   const {
     sortedItems: sortedExhibitions,
     handleSort,
     sortField,
     sortOrder,
-  } = useTableSort<Exhibition, SortField>(filteredExhibitions)
+  } = useTableSort<Exhibition, SortField>(exhibitions)
 
   const truncateTitle = (title: string, maxLength: number = 40) => {
     if (title.length <= maxLength) return title
@@ -61,6 +51,18 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
     const endDate = new Date(exhibition.endDate)
     return exhibition.status === 'active' && endDate > now
   }
+
+  const filteredExhibitions = useMemo(() => {
+    return sortedExhibitions.filter((exhibition) => {
+      if (publicVisibilityFilter !== null) {
+        const isVisible = isPubliclyVisible(exhibition)
+        if (publicVisibilityFilter !== isVisible) {
+          return false
+        }
+      }
+      return true
+    })
+  }, [sortedExhibitions, publicVisibilityFilter])
 
   const getSortIcon = (field: SortField) => {
     if (sortField !== field) {
@@ -172,14 +174,14 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedExhibitions.length === 0 ? (
+          {filteredExhibitions.length === 0 ? (
             <TableRow>
               <TableCell colSpan={9} className="h-24 text-center">
                 No exhibitions found.
               </TableCell>
             </TableRow>
           ) : (
-            sortedExhibitions.map((exhibition) => (
+            filteredExhibitions.map((exhibition) => (
               <TableRow key={exhibition.id}>
                 <TableCell className="text-center px-4">
                   {isPubliclyVisible(exhibition) && (
