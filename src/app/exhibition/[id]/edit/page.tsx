@@ -10,7 +10,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@/components/shadcn-ui/breadcrumb'
 
 export const dynamic = 'force-dynamic'
 

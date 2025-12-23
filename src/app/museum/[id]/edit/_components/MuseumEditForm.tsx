@@ -2,8 +2,8 @@
 
 import { useActionState, useEffect } from 'react'
 import { Museum } from '@/schema/museum'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/shadcn-ui/button'
+import { Input } from '@/components/shadcn-ui/input'
 import { updateMuseum } from '@/lib/actions/museum'
 import {
   Loader2,
@@ -16,7 +16,7 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
 import { toast } from 'sonner'
 import { FormSubmitState } from '@/schema/common'
 

@@ -8,7 +8,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@/components/shadcn-ui/breadcrumb'
 
 export default function ExhibitionCreate() {
   return (

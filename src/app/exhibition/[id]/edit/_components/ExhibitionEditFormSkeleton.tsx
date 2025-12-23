@@ -1,5 +1,5 @@
-import { Skeleton } from '@/components/ui/skeleton'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/shadcn-ui/skeleton'
+import { Card, CardHeader, CardContent } from '@/components/shadcn-ui/card'
 
 export function ExhibitionEditFormSkeleton() {
   return (

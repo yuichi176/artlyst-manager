@@ -5,11 +5,11 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@/components/shadcn-ui/breadcrumb'
 import Link from 'next/link'
 import { Home, Plus } from 'lucide-react'
 import { Suspense } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shadcn-ui/button'
 import MuseumTableSection from '@/app/museum/_components/museum-table/MuseumTableSection'
 import { MuseumTableSkeleton } from '@/app/museum/_components/museum-table/MuseumTableSkeleton'
 

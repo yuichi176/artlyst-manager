@@ -1,8 +1,8 @@
 'use client'
 
 import { useActionState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/shadcn-ui/button'
+import { Input } from '@/components/shadcn-ui/input'
 import { createMuseum } from '@/lib/actions/museum'
 import {
   Loader2,
@@ -15,7 +15,7 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
 import { FormSubmitState } from '@/schema/common'
 
 export function MuseumCreateForm() {

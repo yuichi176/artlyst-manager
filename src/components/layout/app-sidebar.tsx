@@ -7,7 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
+} from '@/components/shadcn-ui/sidebar'
 import { LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
 

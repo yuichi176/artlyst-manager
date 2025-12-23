@@ -3,7 +3,7 @@ import { ExhibitionTableSkeleton } from '@/app/exhibition/_components/exhibition
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { Home, Plus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shadcn-ui/button'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -11,7 +11,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@/components/shadcn-ui/breadcrumb'
 
 export const dynamic = 'force-dynamic'
 

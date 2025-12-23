@@ -9,16 +9,21 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
+} from '@/components/shadcn-ui/table'
+import { Badge } from '@/components/shadcn-ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+} from '@/components/shadcn-ui/dropdown-menu'
+import { Button } from '@/components/shadcn-ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/shadcn-ui/tooltip'
 import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react'
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
 import Link from 'next/link'

@@ -1,7 +1,12 @@
 'use client'
 
 import { truncate } from '@/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/shadcn-ui/tooltip'
 
 interface TruncatedTextProps {
   text: string

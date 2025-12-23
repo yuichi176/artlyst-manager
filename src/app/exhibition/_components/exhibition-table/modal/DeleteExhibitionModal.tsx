@@ -8,8 +8,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+} from '@/components/shadcn-ui/dialog'
+import { Button } from '@/components/shadcn-ui/button'
 import { deleteExhibition } from '@/lib/actions/exhibition'
 import { useActionState } from 'react'
 import { Loader2 } from 'lucide-react'

@@ -9,14 +9,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/components/shadcn-ui/table'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
+} from '@/components/shadcn-ui/dropdown-menu'
+import { Button } from '@/components/shadcn-ui/button'
 import {
   ArrowUpDown,
   ArrowUp,

@@ -2,10 +2,18 @@
 
 import { useActionState, useEffect, useState } from 'react'
 import { Exhibition } from '@/schema/exhibition'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/shadcn-ui/button'
+import { Input } from '@/components/shadcn-ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'
-import { Loader2, Calendar, MapPin, FileText, CheckCircle2, Link as LinkIcon, Image } from 'lucide-react'
+import {
+  Loader2,
+  Calendar,
+  MapPin,
+  FileText,
+  CheckCircle2,
+  Link as LinkIcon,
+  Image,
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import {
   Select,
@@ -13,8 +21,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+} from '@/components/shadcn-ui/select'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
 import { toast } from 'sonner'
 import { FormSubmitState } from '@/schema/common'
 
