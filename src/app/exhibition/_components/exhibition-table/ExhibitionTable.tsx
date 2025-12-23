@@ -23,6 +23,7 @@ import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2, Eye } 
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
 import Link from 'next/link'
 import { useTableSort } from '@/hooks/useTableSort'
+import { truncate } from '@/utils'
 
 type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'createdAt'
 
@@ -40,11 +41,6 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
     sortField,
     sortOrder,
   } = useTableSort<Exhibition, SortField>(exhibitions)
-
-  const truncateTitle = (title: string, maxLength: number = 40) => {
-    if (title.length <= maxLength) return title
-    return title.slice(0, maxLength) + '...'
-  }
 
   const isPubliclyVisible = (exhibition: Exhibition): boolean => {
     const now = new Date()
@@ -202,7 +198,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <span className="cursor-default">{truncateTitle(exhibition.title)}</span>
+                          <span className="cursor-default">{truncate(exhibition.title)}</span>
                         </TooltipTrigger>
                         <TooltipContent>
                           <p className="py-2">{exhibition.title}</p>

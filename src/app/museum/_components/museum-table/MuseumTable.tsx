@@ -30,6 +30,7 @@ import {
 import Link from 'next/link'
 import { DeleteMuseumModal } from '@/app/museum/_components/museum-table/modal/DeleteMuseumModal'
 import { useTableSort } from '@/hooks/useTableSort'
+import { truncate } from '@/utils'
 
 type SortField = 'name'
 
@@ -46,11 +47,6 @@ export function MuseumTable({ museums }: MuseumTableProps) {
     sortField,
     sortOrder,
   } = useTableSort<Museum, SortField>(museums)
-
-  const truncateText = (text: string, maxLength: number = 35) => {
-    if (text.length <= maxLength) return text
-    return text.slice(0, maxLength) + '...'
-  }
 
   const getSortIcon = (field: SortField) => {
     if (sortField !== field) {
@@ -117,7 +113,7 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <span className="cursor-default">{truncateText(museum.address)}</span>
+                            <span className="cursor-default">{truncate(museum.address)}</span>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p className="max-w-md">{museum.address}</p>
@@ -133,7 +129,7 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <span className="cursor-default">{truncateText(museum.access)}</span>
+                            <span className="cursor-default">{truncate(museum.access)}</span>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p className="max-w-md">{museum.access}</p>
@@ -150,7 +146,7 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="cursor-default">
-                              {truncateText(museum.openingInformation)}
+                              {truncate(museum.openingInformation)}
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>
