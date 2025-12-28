@@ -1,12 +1,28 @@
 import { ExhibitionTable } from '@/app/exhibition/_components/exhibition-table/ExhibitionTable'
 import db from '@/lib/firestore'
 import { RawExhibition, Exhibition } from '@/schema/exhibition'
+import { PaginationSection } from '@/components'
 
-export default async function ExhibitionTableSection() {
-  const exhibitionCollectionRef = db.collection('exhibition')
-  const existingDocumentsSnapshot = await exhibitionCollectionRef.get()
+const PAGE_SIZE = 100
 
-  const exhibitions = existingDocumentsSnapshot.docs.map((doc) => {
+interface ExhibitionTableSectionProps {
+  currentPage: number
+}
+
+export default async function ExhibitionTableSection({ currentPage }: ExhibitionTableSectionProps) {
+  const baseQuery = db.collection('exhibition').orderBy('createdAt', 'desc')
+
+  // 件数カウント
+  const totalSnapshot = await baseQuery.get()
+  const totalCount = totalSnapshot.size
+
+  // 現在ページまでをまとめて取得して最後の PAGE_SIZE 件だけ使う簡易実装
+  const limitForPage = currentPage * PAGE_SIZE
+  const pageSnapshot = await baseQuery.limit(limitForPage).get()
+  const allDocs = pageSnapshot.docs
+  const pageDocs = allDocs.slice(-PAGE_SIZE)
+
+  const exhibitions: Exhibition[] = pageDocs.map((doc) => {
     const data = doc.data() as RawExhibition
 
     return {
@@ -20,8 +36,13 @@ export default async function ExhibitionTableSection() {
       status: data.status,
       updatedAt: data.updatedAt.toDate().toISOString().split('T')[0],
       createdAt: data.createdAt.toDate().toISOString().split('T')[0],
-    } satisfies Exhibition
+    }
   })
 
-  return <ExhibitionTable exhibitions={exhibitions} />
+  return (
+    <>
+      <ExhibitionTable exhibitions={exhibitions} />
+      <PaginationSection pageSize={PAGE_SIZE} totalCount={totalCount} currentPage={currentPage} />
+    </>
+  )
 }
