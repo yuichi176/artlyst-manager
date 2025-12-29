@@ -17,6 +17,7 @@ export default async function MuseumTableSection() {
       openingInformation: data.openingInformation,
       officialUrl: data.officialUrl,
       scrapeUrl: data.scrapeUrl,
+      scrapeEnabled: data.scrapeEnabled,
     } satisfies Museum
   })
 

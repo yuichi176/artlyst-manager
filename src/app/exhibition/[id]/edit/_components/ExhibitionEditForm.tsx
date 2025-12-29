@@ -71,7 +71,6 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
           <CardTitle className="text-lg font-semibold">基本情報</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Title */}
           <div className="space-y-2">
             <label htmlFor="title" className="flex items-center text-sm font-medium">
               <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -91,7 +90,6 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
             </p>
           </div>
 
-          {/* Venue */}
           <div className="space-y-2">
             <label htmlFor="venue" className="flex items-center text-sm font-medium">
               <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -111,7 +109,6 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
             </p>
           </div>
 
-          {/* Dates */}
           <div className="space-y-3">
             <label className="flex items-center text-sm font-medium">
               <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -151,7 +148,6 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
             </p>
           </div>
 
-          {/* Official URL */}
           <div className="space-y-2">
             <label htmlFor="officialUrl" className="flex items-center text-sm font-medium">
               <LinkIcon className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -170,7 +166,6 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
             </p>
           </div>
 
-          {/* Image URL */}
           <div className="space-y-2">
             <label htmlFor="imageUrl" className="flex items-center text-sm font-medium">
               <Image className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -208,7 +203,6 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
             )}
           </div>
 
-          {/* Status */}
           <div className="space-y-2">
             <label htmlFor="status" className="flex items-center text-sm font-medium">
               <CheckCircle2 className="mr-2 h-4 w-4 text-muted-foreground" />

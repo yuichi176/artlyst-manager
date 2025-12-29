@@ -25,6 +25,7 @@ export const MuseumEditFormSection = async ({ id }: MuseumEditFormSectionProps) 
     openingInformation: data.openingInformation,
     officialUrl: data.officialUrl,
     scrapeUrl: data.scrapeUrl,
+    scrapeEnabled: data.scrapeEnabled,
   } satisfies Museum
 
   return <MuseumEditForm museum={museum} />

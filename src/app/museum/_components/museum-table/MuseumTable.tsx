@@ -79,6 +79,7 @@ export function MuseumTable({ museums }: MuseumTableProps) {
               <TableHead>住所</TableHead>
               <TableHead>アクセス</TableHead>
               <TableHead>開館情報</TableHead>
+              <TableHead>スクレイピング</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -116,6 +117,7 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                   <TableCell>
                     <TruncatedText text={museum.openingInformation} maxLength={35} />
                   </TableCell>
+                  <TableCell className="text-center">{museum.scrapeEnabled ? '⚪︎' : '×'}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

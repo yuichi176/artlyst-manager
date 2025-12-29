@@ -14,11 +14,19 @@ import {
   Link as LinkIcon,
   Globe,
   CheckCircle2,
+  ToggleRight,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
 import { toast } from 'sonner'
 import { FormSubmitState } from '@/schema/common'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/shadcn-ui/select'
 
 interface MuseumEditFormProps {
   museum: Museum
@@ -46,7 +54,6 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
           <CardTitle className="text-lg font-semibold">基本情報</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Name */}
           <div className="space-y-2">
             <label htmlFor="name" className="flex items-center text-sm font-medium">
               <Building2 className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -66,7 +73,6 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
             </p>
           </div>
 
-          {/* Address */}
           <div className="space-y-2">
             <label htmlFor="address" className="flex items-center text-sm font-medium">
               <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -86,7 +92,6 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
             </p>
           </div>
 
-          {/* Access */}
           <div className="space-y-2">
             <label htmlFor="access" className="flex items-center text-sm font-medium">
               <Info className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -106,7 +111,6 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
             </p>
           </div>
 
-          {/* Opening Information */}
           <div className="space-y-2">
             <label htmlFor="openingInformation" className="flex items-center text-sm font-medium">
               <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -126,7 +130,6 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
             </p>
           </div>
 
-          {/* Official URL */}
           <div className="space-y-2">
             <label htmlFor="officialUrl" className="flex items-center text-sm font-medium">
               <LinkIcon className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -145,7 +148,6 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
             </p>
           </div>
 
-          {/* Scrape URL */}
           <div className="space-y-2">
             <label htmlFor="scrapeUrl" className="flex items-center text-sm font-medium">
               <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -162,6 +164,24 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
             <p aria-live="polite" className="text-sm text-destructive">
               {formState?.errors?.scrapeUrl}
             </p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="scrapeEnabled" className="flex items-center text-sm font-medium">
+              <ToggleRight className="mr-2 h-4 w-4 text-muted-foreground" />
+              スクレイピング
+            </label>
+            <div className="flex items-center gap-3">
+              <Select name="scrapeEnabled" defaultValue={String(museum.scrapeEnabled)}>
+                <SelectTrigger className="min-w-[160px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">有効</SelectItem>
+                  <SelectItem value="false">無効</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <input type="hidden" name="id" value={museum.id} />

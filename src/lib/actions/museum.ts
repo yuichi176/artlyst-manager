@@ -30,6 +30,7 @@ export async function createMuseum(prev: FormSubmitState, formData: FormData) {
     openingInformation: data.openingInformation,
     officialUrl: data.officialUrl,
     scrapeUrl: data.scrapeUrl,
+    scrapeEnabled: data.scrapeEnabled === 'true',
   })
   console.log('Successfully created museum with ID:', docRef.id)
 
@@ -62,14 +63,18 @@ export async function updateMuseum(prev: FormSubmitState, formData: FormData) {
   }
 
   const data = parsed.data
-  await db.collection('museum').doc(data.id).update({
-    name: data.name,
-    address: data.address,
-    access: data.access,
-    openingInformation: data.openingInformation,
-    officialUrl: data.officialUrl,
-    scrapeUrl: data.scrapeUrl,
-  })
+  await db
+    .collection('museum')
+    .doc(data.id)
+    .update({
+      name: data.name,
+      address: data.address,
+      access: data.access,
+      openingInformation: data.openingInformation,
+      officialUrl: data.officialUrl,
+      scrapeUrl: data.scrapeUrl,
+      scrapeEnabled: data.scrapeEnabled === 'true',
+    })
   console.log('Successfully updated museum with ID:', data.id)
 
   revalidatePath('/')
