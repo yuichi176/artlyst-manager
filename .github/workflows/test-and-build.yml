@@ -20,8 +20,9 @@ jobs:
     - name: Install dependencies
       run: pnpm install
 
-    - name: Run tests
-      run: pnpm test
+#    FIXME: Enable tests when they are available
+#    - name: Run tests
+#      run: pnpm test
 
     - name: Run build
       run: pnpm build

@@ -48,6 +48,8 @@ describe('ExhibitionEditForm', () => {
     startDate: '2024-01-01',
     endDate: '2024-12-31',
     status: 'active',
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-15',
   }
 
   describe('基本レンダリング', () => {
