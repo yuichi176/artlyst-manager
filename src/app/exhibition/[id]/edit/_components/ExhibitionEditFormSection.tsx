@@ -17,7 +17,7 @@ export const ExhibitionEditFormSection = async ({ id }: ExhibitionEditFormSectio
 
   const data = existingDocumentsSnapshot.data() as RawExhibition
 
-  const exhibition: Exhibition = {
+  const exhibition = {
     id: id,
     title: data.title,
     venue: data.venue ? data.venue : '',
@@ -26,6 +26,8 @@ export const ExhibitionEditFormSection = async ({ id }: ExhibitionEditFormSectio
     officialUrl: data.officialUrl ? data.officialUrl : '',
     imageUrl: data.imageUrl ? data.imageUrl : '',
     status: data.status,
+    updatedAt: data.updatedAt.toDate().toISOString().split('T')[0],
+    createdAt: data.createdAt.toDate().toISOString().split('T')[0],
   } satisfies Exhibition
 
   return <ExhibitionEditForm exhibition={exhibition} />
