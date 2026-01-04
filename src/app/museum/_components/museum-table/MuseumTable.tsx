@@ -31,7 +31,7 @@ import { DeleteMuseumModal } from '@/app/museum/_components/museum-table/modal/D
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
 
-type SortField = 'name'
+type SortField = 'name' | 'venueType'
 
 interface MuseumTableProps {
   museums: Museum[]
@@ -78,6 +78,16 @@ export function MuseumTable({ museums }: MuseumTableProps) {
             <TableHead>住所</TableHead>
             <TableHead>アクセス</TableHead>
             <TableHead>開館情報</TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                onClick={() => handleSort('venueType')}
+                className="h-8 px-2 lg:px-3"
+              >
+                施設タイプ
+                {getSortIcon('venueType')}
+              </Button>
+            </TableHead>
             <TableHead>スクレイピング</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
@@ -116,6 +126,7 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                 <TableCell>
                   <TruncatedText text={museum.openingInformation} maxLength={35} />
                 </TableCell>
+                <TableCell className="pl-5">{museum.venueType}</TableCell>
                 <TableCell className="text-center">{museum.scrapeEnabled ? '⚪︎' : '×'}</TableCell>
                 <TableCell>
                   <DropdownMenu>

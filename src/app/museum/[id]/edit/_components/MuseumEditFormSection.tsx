@@ -23,6 +23,7 @@ export const MuseumEditFormSection = async ({ id }: MuseumEditFormSectionProps) 
     address: data.address,
     access: data.access,
     openingInformation: data.openingInformation,
+    venueType: data.venueType,
     officialUrl: data.officialUrl,
     scrapeUrl: data.scrapeUrl,
     scrapeEnabled: data.scrapeEnabled,
