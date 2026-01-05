@@ -129,6 +129,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                 {getSortIcon('venue')}
               </Button>
             </TableHead>
+            <TableHead className="pl-5">公式サイトURL</TableHead>
             <TableHead>
               <Button
                 variant="ghost"
@@ -149,8 +150,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                 {getSortIcon('endDate')}
               </Button>
             </TableHead>
-            <TableHead className="text-center">公式サイトURL</TableHead>
-            <TableHead className="text-center">画像URL</TableHead>
+            {/*<TableHead className="text-center">画像URL</TableHead>*/}
             <TableHead>
               <Button
                 variant="ghost"
@@ -202,10 +202,23 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                   <TruncatedText text={exhibition.title} maxLength={40} />
                 </TableCell>
                 <TableCell className="pl-5">{exhibition.venue}</TableCell>
+                <TableCell className="pl-5">
+                  {exhibition.officialUrl ? (
+                    <a
+                      href={exhibition.officialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {exhibition.officialUrl}
+                    </a>
+                  ) : (
+                    '-'
+                  )}
+                </TableCell>
                 <TableCell className="pl-5">{exhibition.startDate}</TableCell>
                 <TableCell className="pl-5">{exhibition.endDate}</TableCell>
-                <TableCell className="text-center">{exhibition.officialUrl ? '⚪︎' : '×'}</TableCell>
-                <TableCell className="text-center">{exhibition.imageUrl ? '⚪︎' : '×'}</TableCell>
+                {/*<TableCell className="text-center">{exhibition.imageUrl ? '⚪︎' : '×'}</TableCell>*/}
                 <TableCell className="pl-5">
                   <Badge variant={exhibition.status === 'active' ? 'default' : 'secondary'}>
                     {exhibition.status === 'active' ? 'Active' : 'Pending'}
