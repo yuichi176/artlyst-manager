@@ -1,7 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import type { Exhibition } from '@/schema/exhibition'
+import { useActionState, useMemo, useRef, useState } from 'react'
+import type { Exhibition, Status } from '@/schema/exhibition'
 import {
   Table,
   TableBody,
@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/shadcn-ui/table'
-import { Badge } from '@/components/shadcn-ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +28,15 @@ import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-t
 import Link from 'next/link'
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
+import { FormSubmitState } from '@/schema/common'
+import { updateExhibitionStatus } from '@/lib/actions/exhibition'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/shadcn-ui/select'
 
 type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'createdAt'
 
@@ -39,6 +47,16 @@ interface ExhibitionTableProps {
 export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
   const [publicVisibilityFilter, setPublicVisibilityFilter] = useState<boolean | null>(null)
+
+  const formRefs = useRef<Record<string, HTMLFormElement | null>>({})
+
+  const [formState, updateStatus, isPending] = useActionState<FormSubmitState, FormData>(
+    updateExhibitionStatus,
+    {
+      status: 'pending',
+      errors: undefined,
+    },
+  )
 
   const {
     sortedItems: sortedExhibitions,
@@ -182,76 +200,99 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
               </TableCell>
             </TableRow>
           ) : (
-            filteredExhibitions.map((exhibition) => (
-              <TableRow key={exhibition.id}>
-                <TableCell className="text-center px-4">
-                  {isPubliclyVisible(exhibition) && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Eye className="h-4 w-4 text-green-600 mx-auto" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>ユーザー公開中</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
-                </TableCell>
-                <TableCell className="pl-5">
-                  <TruncatedText text={exhibition.title} maxLength={40} />
-                </TableCell>
-                <TableCell className="pl-5">{exhibition.venue}</TableCell>
-                <TableCell className="pl-5">
-                  {exhibition.officialUrl ? (
-                    <a
-                      href={exhibition.officialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {exhibition.officialUrl}
-                    </a>
-                  ) : (
-                    '-'
-                  )}
-                </TableCell>
-                <TableCell className="pl-5">{exhibition.startDate}</TableCell>
-                <TableCell className="pl-5">{exhibition.endDate}</TableCell>
-                {/*<TableCell className="text-center">{exhibition.imageUrl ? '⚪︎' : '×'}</TableCell>*/}
-                <TableCell className="pl-5">
-                  <Badge variant={exhibition.status === 'active' ? 'default' : 'secondary'}>
-                    {exhibition.status === 'active' ? 'Active' : 'Pending'}
-                  </Badge>
-                </TableCell>
-                <TableCell className="pl-5">{exhibition.createdAt}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <Link href={`/exhibition/${exhibition.id}/edit`}>
-                        <DropdownMenuItem>
-                          <Pencil className="mr-2 h-4 w-4" />
-                          編集
-                        </DropdownMenuItem>
-                      </Link>
-                      <DropdownMenuItem
-                        onClick={() => setDeletingExhibition(exhibition)}
-                        className="text-destructive"
+            filteredExhibitions.map((exhibition) => {
+              return (
+                <TableRow key={exhibition.id}>
+                  <TableCell className="text-center px-4">
+                    {isPubliclyVisible(exhibition) && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Eye className="h-4 w-4 text-green-600 mx-auto" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>ユーザー公開中</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </TableCell>
+                  <TableCell className="pl-5">
+                    <TruncatedText text={exhibition.title} maxLength={40} />
+                  </TableCell>
+                  <TableCell className="pl-5">{exhibition.venue}</TableCell>
+                  <TableCell className="pl-5">
+                    {exhibition.officialUrl ? (
+                      <a
+                        href={exhibition.officialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
                       >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        削除
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))
+                        {exhibition.officialUrl}
+                      </a>
+                    ) : (
+                      '-'
+                    )}
+                  </TableCell>
+                  <TableCell className="pl-5">{exhibition.startDate}</TableCell>
+                  <TableCell className="pl-5">{exhibition.endDate}</TableCell>
+                  {/*<TableCell className="text-center">{exhibition.imageUrl ? '⚪︎' : '×'}</TableCell>*/}
+                  <TableCell className="pl-5">
+                    <form
+                      action={updateStatus}
+                      className="flex items-center"
+                      ref={(el) => {
+                        formRefs.current[exhibition.id] = el
+                      }}
+                    >
+                      <input type="hidden" name="id" value={exhibition.id} />
+                      <Select
+                        name="status"
+                        defaultValue={exhibition.status}
+                        onValueChange={() => {
+                          formRefs.current[exhibition.id]?.requestSubmit()
+                        }}
+                      >
+                        <SelectTrigger className="min-w-[160px]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </form>
+                  </TableCell>
+                  <TableCell className="pl-5">{exhibition.createdAt}</TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <Link href={`/exhibition/${exhibition.id}/edit`}>
+                          <DropdownMenuItem>
+                            <Pencil className="mr-2 h-4 w-4" />
+                            編集
+                          </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuItem
+                          onClick={() => setDeletingExhibition(exhibition)}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          削除
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              )
+            })
           )}
         </TableBody>
       </Table>

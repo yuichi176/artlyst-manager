@@ -4,7 +4,11 @@ import db from '@/lib/firestore'
 import { revalidatePath } from 'next/cache'
 import { Timestamp } from '@google-cloud/firestore'
 import { TZDate } from '@date-fns/tz'
-import { exhibitionFormDataSchema, exhibitionCreateFormDataSchema } from '@/schema/exhibition'
+import {
+  exhibitionFormDataSchema,
+  exhibitionCreateFormDataSchema,
+  exhibitionStatusFormDataSchema,
+} from '@/schema/exhibition'
 import { FormSubmitState } from '@/schema/common'
 import { redirect } from 'next/navigation'
 import crypto from 'crypto'
@@ -99,4 +103,37 @@ function getDocumentHash(title: string, venue: string): string {
   const cleanedVenue = venue.replace(/\s+/g, '')
 
   return crypto.createHash('md5').update(`${cleanedTitle}_${cleanedVenue}`).digest('hex')
+}
+
+export async function updateExhibitionStatus(prev: FormSubmitState, formData: FormData) {
+  const formDataObject = Object.fromEntries(formData.entries())
+
+  const parsed = exhibitionStatusFormDataSchema.safeParse(formDataObject)
+  if (!parsed.success) {
+    const errors: Record<string, string> = {}
+    parsed.error.issues.forEach((issue) => {
+      const path = issue.path[0] as string
+      errors[path] = issue.message
+    })
+    return {
+      status: 'error' as const,
+      errors,
+    }
+  }
+
+  const data = parsed.data
+
+  await db.collection('exhibition').doc(data.id).update({
+    status: data.status,
+  })
+
+  console.log('Successfully updated exhibition status with ID:', data.id)
+
+  revalidatePath('/')
+  revalidatePath(`/exhibition/${data.id}/edit`)
+
+  return {
+    status: 'success' as const,
+    errors: undefined,
+  }
 }

@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { Timestamp } from '@google-cloud/firestore'
 
 const statusSchema = z.enum(['pending', 'active'])
-type Status = z.infer<typeof statusSchema>
+export type Status = z.infer<typeof statusSchema>
 
 export type RawExhibition = {
   title: string
@@ -46,3 +46,8 @@ export const exhibitionFormDataSchema = z.object({
 })
 
 export const exhibitionCreateFormDataSchema = exhibitionFormDataSchema.omit({ id: true })
+
+export const exhibitionStatusFormDataSchema = exhibitionFormDataSchema.pick({
+  id: true,
+  status: true,
+})
