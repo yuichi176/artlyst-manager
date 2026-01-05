@@ -115,14 +115,12 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
             <label htmlFor="openingInformation" className="flex items-center text-sm font-medium">
               <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
               開館情報
-              <span className="ml-1 text-destructive">*</span>
             </label>
             <Input
               id="openingInformation"
               name="openingInformation"
               defaultValue={museum.openingInformation}
               placeholder="開館情報を入力してください"
-              required
               className="text-base"
             />
             <p aria-live="polite" className="text-sm text-destructive">

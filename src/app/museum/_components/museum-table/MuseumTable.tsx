@@ -75,9 +75,9 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                 {getSortIcon('name')}
               </Button>
             </TableHead>
-            <TableHead>住所</TableHead>
+            {/*<TableHead>住所</TableHead>*/}
             <TableHead>アクセス</TableHead>
-            <TableHead>開館情報</TableHead>
+            {/*<TableHead>開館情報</TableHead>*/}
             <TableHead>
               <Button
                 variant="ghost"
@@ -117,15 +117,15 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                     museum.name
                   )}
                 </TableCell>
+                {/*<TableCell>*/}
+                {/*  <TruncatedText text={museum.address} maxLength={35} />*/}
+                {/*</TableCell>*/}
                 <TableCell>
-                  <TruncatedText text={museum.address} maxLength={35} />
+                  <TruncatedText text={museum.access} maxLength={50} />
                 </TableCell>
-                <TableCell>
-                  <TruncatedText text={museum.access} maxLength={35} />
-                </TableCell>
-                <TableCell>
-                  <TruncatedText text={museum.openingInformation} maxLength={35} />
-                </TableCell>
+                {/*<TableCell>*/}
+                {/*  <TruncatedText text={museum.openingInformation} maxLength={35} />*/}
+                {/*</TableCell>*/}
                 <TableCell className="pl-5">{museum.venueType}</TableCell>
                 <TableCell className="text-center">{museum.scrapeEnabled ? '⚪︎' : '×'}</TableCell>
                 <TableCell>
