@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useMemo, useRef, useState } from 'react'
-import type { Exhibition, Status } from '@/schema/exhibition'
+import type { Exhibition } from '@/schema/exhibition'
 import {
   Table,
   TableBody,
