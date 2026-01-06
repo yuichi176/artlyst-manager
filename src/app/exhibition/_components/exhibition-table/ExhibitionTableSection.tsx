@@ -10,7 +10,10 @@ interface ExhibitionTableSectionProps {
 }
 
 export default async function ExhibitionTableSection({ currentPage }: ExhibitionTableSectionProps) {
-  const baseQuery = db.collection('exhibition').orderBy('createdAt', 'desc')
+  const baseQuery = db
+    .collection('exhibition')
+    .where('isExcluded', '!=', true)
+    .orderBy('createdAt', 'desc')
 
   // 件数カウント
   const totalSnapshot = await baseQuery.get()

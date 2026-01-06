@@ -13,6 +13,7 @@ export type RawExhibition = {
   imageUrl?: string
   status: Status
   origin?: string
+  isExcluded?: boolean
   updatedAt: Timestamp
   createdAt: Timestamp
 }
