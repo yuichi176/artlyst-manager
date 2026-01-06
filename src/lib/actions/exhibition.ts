@@ -44,6 +44,7 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
       imageUrl: data.imageUrl || '',
       status: data.status,
       origin: 'manual',
+      isExcluded: false,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     })
