@@ -174,3 +174,14 @@ export async function updateExhibitionIsExcluded(prev: FormSubmitState, formData
     errors: undefined,
   }
 }
+
+export async function restoreExhibition(id: string) {
+  await db.collection('exhibition').doc(id).update({
+    isExcluded: false,
+  })
+
+  console.log('Successfully restored exhibition with ID:', id)
+
+  revalidatePath('/')
+  revalidatePath('/exhibition/excluded')
+}

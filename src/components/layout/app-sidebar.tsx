@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/shadcn-ui/sidebar'
-import { LayoutDashboard } from 'lucide-react'
+import { LayoutDashboard, Ban } from 'lucide-react'
 import Link from 'next/link'
 
 export function AppSidebar() {
@@ -24,6 +24,14 @@ export function AppSidebar() {
                   <Link href="/exhibition">
                     <LayoutDashboard />
                     <span>展覧会管理</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/exhibition/excluded">
+                    <Ban />
+                    <span>除外展覧会</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
