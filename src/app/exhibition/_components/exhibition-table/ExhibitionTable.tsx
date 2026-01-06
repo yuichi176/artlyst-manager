@@ -34,11 +34,12 @@ import {
   Ban,
 } from 'lucide-react'
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
+import { ExcludeExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/ExcludeExhibitionModal'
 import Link from 'next/link'
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
 import { FormSubmitState } from '@/schema/common'
-import { updateExhibitionIsExcluded, updateExhibitionStatus } from '@/lib/actions/exhibition'
+import { updateExhibitionStatus } from '@/lib/actions/exhibition'
 import {
   Select,
   SelectContent,
@@ -55,22 +56,12 @@ interface ExhibitionTableProps {
 
 export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
+  const [excludingExhibition, setExcludingExhibition] = useState<Exhibition | undefined>(undefined)
   const [publicVisibilityFilter, setPublicVisibilityFilter] = useState<boolean | null>(null)
 
   const formRefs = useRef<Record<string, HTMLFormElement | null>>({})
 
-  const [statusFormState, updateStatus, isStatusPending] = useActionState<
-    FormSubmitState,
-    FormData
-  >(updateExhibitionStatus, {
-    status: 'pending',
-    errors: undefined,
-  })
-
-  const [excludedFormState, updateIsExcluded, isExcludedPending] = useActionState<
-    FormSubmitState,
-    FormData
-  >(updateExhibitionIsExcluded, {
+  const [, updateStatus] = useActionState<FormSubmitState, FormData>(updateExhibitionStatus, {
     status: 'pending',
     errors: undefined,
   })
@@ -299,18 +290,9 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                             編集
                           </DropdownMenuItem>
                         </Link>
-                        <DropdownMenuItem className="p-0" asChild>
-                          <form action={updateIsExcluded} className="w-full">
-                            <input type="hidden" name="id" value={exhibition.id} />
-                            <input type="hidden" name="isExcluded" value="true" />
-                            <button
-                              type="submit"
-                              className="gap-2 flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                            >
-                              <Ban className="mr-2 h-4 w-4" />
-                              除外
-                            </button>
-                          </form>
+                        <DropdownMenuItem onClick={() => setExcludingExhibition(exhibition)}>
+                          <Ban className="mr-2 h-4 w-4" />
+                          除外
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeletingExhibition(exhibition)}
@@ -334,6 +316,14 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
         open={deletingExhibition !== undefined}
         onOpenChange={(open) => {
           if (!open) setDeletingExhibition(undefined)
+        }}
+      />
+
+      <ExcludeExhibitionModal
+        exhibition={excludingExhibition}
+        open={excludingExhibition !== undefined}
+        onOpenChange={(open) => {
+          if (!open) setExcludingExhibition(undefined)
         }}
       />
     </>
