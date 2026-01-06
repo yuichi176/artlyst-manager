@@ -23,13 +23,22 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip'
-import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react'
+import {
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Eye,
+  Ban,
+} from 'lucide-react'
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
 import Link from 'next/link'
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
 import { FormSubmitState } from '@/schema/common'
-import { updateExhibitionStatus } from '@/lib/actions/exhibition'
+import { updateExhibitionIsExcluded, updateExhibitionStatus } from '@/lib/actions/exhibition'
 import {
   Select,
   SelectContent,
@@ -50,13 +59,21 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
 
   const formRefs = useRef<Record<string, HTMLFormElement | null>>({})
 
-  const [formState, updateStatus, isPending] = useActionState<FormSubmitState, FormData>(
-    updateExhibitionStatus,
-    {
-      status: 'pending',
-      errors: undefined,
-    },
-  )
+  const [statusFormState, updateStatus, isStatusPending] = useActionState<
+    FormSubmitState,
+    FormData
+  >(updateExhibitionStatus, {
+    status: 'pending',
+    errors: undefined,
+  })
+
+  const [excludedFormState, updateIsExcluded, isExcludedPending] = useActionState<
+    FormSubmitState,
+    FormData
+  >(updateExhibitionIsExcluded, {
+    status: 'pending',
+    errors: undefined,
+  })
 
   const {
     sortedItems: sortedExhibitions,
@@ -282,6 +299,19 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                             編集
                           </DropdownMenuItem>
                         </Link>
+                        <DropdownMenuItem className="p-0" asChild>
+                          <form action={updateIsExcluded} className="w-full">
+                            <input type="hidden" name="id" value={exhibition.id} />
+                            <input type="hidden" name="isExcluded" value="true" />
+                            <button
+                              type="submit"
+                              className="gap-2 flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
+                            >
+                              <Ban className="mr-2 h-4 w-4" />
+                              除外
+                            </button>
+                          </form>
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeletingExhibition(exhibition)}
                           className="text-destructive"

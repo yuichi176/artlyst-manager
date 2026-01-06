@@ -8,6 +8,7 @@ import {
   exhibitionFormDataSchema,
   exhibitionCreateFormDataSchema,
   exhibitionStatusFormDataSchema,
+  exhibitionIsExcludedFormDataSchema,
 } from '@/schema/exhibition'
 import { FormSubmitState } from '@/schema/common'
 import { redirect } from 'next/navigation'
@@ -134,7 +135,38 @@ export async function updateExhibitionStatus(prev: FormSubmitState, formData: Fo
   console.log('Successfully updated exhibition status with ID:', data.id)
 
   revalidatePath('/')
-  revalidatePath(`/exhibition/${data.id}/edit`)
+
+  return {
+    status: 'success' as const,
+    errors: undefined,
+  }
+}
+
+export async function updateExhibitionIsExcluded(prev: FormSubmitState, formData: FormData) {
+  const formDataObject = Object.fromEntries(formData.entries())
+
+  const parsed = exhibitionIsExcludedFormDataSchema.safeParse(formDataObject)
+  if (!parsed.success) {
+    const errors: Record<string, string> = {}
+    parsed.error.issues.forEach((issue) => {
+      const path = issue.path[0] as string
+      errors[path] = issue.message
+    })
+    return {
+      status: 'error' as const,
+      errors,
+    }
+  }
+
+  const data = parsed.data
+
+  await db.collection('exhibition').doc(data.id).update({
+    isExcluded: data.isExcluded,
+  })
+
+  console.log('Successfully updated exhibition isExcluded with ID:', data.id)
+
+  revalidatePath('/')
 
   return {
     status: 'success' as const,

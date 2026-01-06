@@ -54,3 +54,8 @@ export const exhibitionStatusFormDataSchema = exhibitionFormDataSchema.pick({
   id: true,
   status: true,
 })
+
+export const exhibitionIsExcludedFormDataSchema = z.object({
+  id: z.string(),
+  isExcluded: z.coerce.boolean(),
+})
