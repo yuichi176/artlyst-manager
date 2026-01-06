@@ -12,6 +12,7 @@ export type RawExhibition = {
   officialUrl?: string
   imageUrl?: string
   status: Status
+  origin?: string
   updatedAt: Timestamp
   createdAt: Timestamp
 }
@@ -25,6 +26,7 @@ export const exhibitionSchema = z.object({
   officialUrl: z.string().optional(),
   imageUrl: z.string().optional(),
   status: statusSchema,
+  origin: z.string().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
 })

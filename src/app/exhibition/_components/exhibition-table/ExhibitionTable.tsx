@@ -189,6 +189,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                 {getSortIcon('createdAt')}
               </Button>
             </TableHead>
+            <TableHead className="text-center">Origin</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
         </TableHeader>
@@ -265,6 +266,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                     </form>
                   </TableCell>
                   <TableCell className="pl-5">{exhibition.createdAt}</TableCell>
+                  <TableCell className="pl-5">{exhibition.origin ?? '-'}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

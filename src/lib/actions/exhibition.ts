@@ -42,6 +42,9 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
       officialUrl: data.officialUrl || '',
       imageUrl: data.imageUrl || '',
       status: data.status,
+      origin: 'manual',
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
     })
   console.log('Successfully created exhibition with ID:', id)
 
@@ -85,6 +88,7 @@ export async function updateExhibition(prev: FormSubmitState, formData: FormData
       officialUrl: data.officialUrl || '',
       imageUrl: data.imageUrl || '',
       status: data.status,
+      updatedAt: Timestamp.now(),
     })
   console.log('Successfully updated exhibition with ID:', data.id)
 

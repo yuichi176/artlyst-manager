@@ -34,6 +34,7 @@ export default async function ExhibitionTableSection({ currentPage }: Exhibition
       officialUrl: data.officialUrl ? data.officialUrl : '',
       imageUrl: data.imageUrl ? data.imageUrl : '',
       status: data.status,
+      origin: data.origin,
       updatedAt: data.updatedAt.toDate().toISOString().split('T')[0],
       createdAt: data.createdAt.toDate().toISOString().split('T')[0],
     }
