@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/shadcn-ui/sidebar'
-import { LayoutDashboard, Ban } from 'lucide-react'
+import { GalleryHorizontal, Ban, Building2 } from 'lucide-react'
 import Link from 'next/link'
 
 export function AppSidebar() {
@@ -22,7 +22,7 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="/exhibition">
-                    <LayoutDashboard />
+                    <GalleryHorizontal />
                     <span>展覧会管理</span>
                   </Link>
                 </SidebarMenuButton>
@@ -38,7 +38,7 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="/museum">
-                    <LayoutDashboard />
+                    <Building2 />
                     <span>美術館管理</span>
                   </Link>
                 </SidebarMenuButton>
