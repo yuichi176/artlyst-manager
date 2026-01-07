@@ -12,7 +12,7 @@ import {
 } from '@/schema/exhibition'
 import { FormSubmitState } from '@/schema/common'
 import { redirect } from 'next/navigation'
-import crypto from 'crypto'
+import { getExhibitionDocumentHash } from '@/utils'
 
 export async function createExhibition(prev: FormSubmitState, formData: FormData) {
   const formDataObject = Object.fromEntries(formData.entries())
@@ -31,7 +31,7 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
   }
 
   const data = parsed.data
-  const id = getDocumentHash(data.title, data.venue)
+  const id = getExhibitionDocumentHash(data.title, data.venue)
   await db
     .collection('exhibition')
     .doc(id)
@@ -101,14 +101,6 @@ export async function updateExhibition(prev: FormSubmitState, formData: FormData
     status: 'success' as const,
     errors: undefined,
   }
-}
-
-function getDocumentHash(title: string, venue: string): string {
-  // Remove all whitespace characters for consistent hashing
-  const cleanedTitle = title.replace(/\s+/g, '')
-  const cleanedVenue = venue.replace(/\s+/g, '')
-
-  return crypto.createHash('md5').update(`${cleanedTitle}_${cleanedVenue}`).digest('hex')
 }
 
 export async function updateExhibitionStatus(prev: FormSubmitState, formData: FormData) {
