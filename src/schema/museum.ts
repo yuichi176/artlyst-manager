@@ -1,11 +1,12 @@
 import { z } from 'zod'
 
-const venueTypeSchema = z.enum(['美術館', '博物館', 'ギャラリー'])
+const venueTypeSchema = z.enum(['美術館', '博物館', 'ギャラリー', 'イベントスペース'])
 export type VenueType = z.infer<typeof venueTypeSchema>
 export const venueTypeOptions = [
   { label: '美術館', value: '美術館' },
   { label: '博物館', value: '博物館' },
   { label: 'ギャラリー', value: 'ギャラリー' },
+  { label: 'イベントスペース', value: 'イベントスペース' },
 ] satisfies {
   label: string
   value: VenueType
