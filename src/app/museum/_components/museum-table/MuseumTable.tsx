@@ -31,7 +31,7 @@ import { DeleteMuseumModal } from '@/app/museum/_components/museum-table/modal/D
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
 
-type SortField = 'name' | 'venueType'
+type SortField = 'name' | 'venueType' | 'area'
 
 interface MuseumTableProps {
   museums: Museum[]
@@ -88,6 +88,16 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                 {getSortIcon('venueType')}
               </Button>
             </TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                onClick={() => handleSort('area')}
+                className="h-8 px-2 lg:px-3"
+              >
+                エリア
+                {getSortIcon('area')}
+              </Button>
+            </TableHead>
             <TableHead>スクレイピング</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
@@ -95,7 +105,7 @@ export function MuseumTable({ museums }: MuseumTableProps) {
         <TableBody>
           {sortedMuseums.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="h-24 text-center">
+              <TableCell colSpan={6} className="h-24 text-center">
                 美術館が見つかりませんでした。
               </TableCell>
             </TableRow>
@@ -127,6 +137,7 @@ export function MuseumTable({ museums }: MuseumTableProps) {
                 {/*  <TruncatedText text={museum.openingInformation} maxLength={35} />*/}
                 {/*</TableCell>*/}
                 <TableCell className="pl-5">{museum.venueType}</TableCell>
+                <TableCell className="pl-5">{museum.area}</TableCell>
                 <TableCell className="text-center">{museum.scrapeEnabled ? '⚪︎' : '×'}</TableCell>
                 <TableCell>
                   <DropdownMenu>
