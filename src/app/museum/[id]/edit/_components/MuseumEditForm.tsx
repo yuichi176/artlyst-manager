@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect } from 'react'
-import { Museum, venueTypeOptions } from '@/schema/museum'
+import { Museum, venueTypeOptions, areaOptions } from '@/schema/museum'
 import { Button } from '@/components/shadcn-ui/button'
 import { Input } from '@/components/shadcn-ui/input'
 import { updateMuseum } from '@/lib/actions/museum'
@@ -150,6 +150,31 @@ export function MuseumEditForm({ museum }: MuseumEditFormProps) {
             </div>
             <p aria-live="polite" className="text-sm text-destructive">
               {formState?.errors?.venueType}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="area" className="flex items-center text-sm font-medium">
+              <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
+              エリア
+              <span className="ml-1 text-destructive">*</span>
+            </label>
+            <div className="flex items-center gap-3">
+              <Select name="area" defaultValue={museum.area} required>
+                <SelectTrigger id="area" className="min-w-[160px]">
+                  <SelectValue placeholder="エリアを選択" />
+                </SelectTrigger>
+                <SelectContent>
+                  {areaOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.area}
             </p>
           </div>
 

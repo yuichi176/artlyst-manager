@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/shadcn-ui/select'
-import { venueTypeOptions } from '@/schema/museum'
+import { venueTypeOptions, areaOptions } from '@/schema/museum'
 
 export function MuseumCreateForm() {
   const router = useRouter()
@@ -134,6 +134,31 @@ export function MuseumCreateForm() {
             </div>
             <p aria-live="polite" className="text-sm text-destructive">
               {formState?.errors?.venueType}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="area" className="flex items-center text-sm font-medium">
+              <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
+              エリア
+              <span className="ml-1 text-destructive">*</span>
+            </label>
+            <div className="flex items-center gap-3">
+              <Select name="area" defaultValue={areaOptions[0].value} required>
+                <SelectTrigger id="area" className="min-w-[160px]">
+                  <SelectValue placeholder="エリアを選択" />
+                </SelectTrigger>
+                <SelectContent>
+                  {areaOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.area}
             </p>
           </div>
 

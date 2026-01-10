@@ -16,6 +16,7 @@ export default async function MuseumTableSection() {
       access: data.access,
       openingInformation: data.openingInformation,
       venueType: data.venueType,
+      area: data.area,
       officialUrl: data.officialUrl,
       scrapeUrl: data.scrapeUrl,
       scrapeEnabled: data.scrapeEnabled,
