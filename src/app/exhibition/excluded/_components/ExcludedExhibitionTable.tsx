@@ -30,7 +30,7 @@ import { RestoreExhibitionModal } from './modal/RestoreExhibitionModal'
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
 
-type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'createdAt'
+type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'updatedAt' | 'createdAt'
 
 interface ExcludedExhibitionTableProps {
   exhibitions: Exhibition[]
@@ -119,6 +119,16 @@ export function ExcludedExhibitionTable({ exhibitions }: ExcludedExhibitionTable
             <TableHead>
               <Button
                 variant="ghost"
+                onClick={() => handleSort('updatedAt')}
+                className="h-8 px-2 lg:px-3"
+              >
+                更新日
+                {getSortIcon('updatedAt')}
+              </Button>
+            </TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
                 onClick={() => handleSort('createdAt')}
                 className="h-8 px-2 lg:px-3"
               >
@@ -133,7 +143,7 @@ export function ExcludedExhibitionTable({ exhibitions }: ExcludedExhibitionTable
         <TableBody>
           {sortedExhibitions.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={9} className="h-24 text-center">
+              <TableCell colSpan={10} className="h-24 text-center">
                 除外された展覧会はありません。
               </TableCell>
             </TableRow>
@@ -162,6 +172,7 @@ export function ExcludedExhibitionTable({ exhibitions }: ExcludedExhibitionTable
                   <TableCell className="pl-5">{exhibition.startDate}</TableCell>
                   <TableCell className="pl-5">{exhibition.endDate}</TableCell>
                   <TableCell className="pl-5">{exhibition.status}</TableCell>
+                  <TableCell className="pl-5">{exhibition.updatedAt}</TableCell>
                   <TableCell className="pl-5">{exhibition.createdAt}</TableCell>
                   <TableCell className="pl-5">{exhibition.origin ?? '-'}</TableCell>
                   <TableCell>

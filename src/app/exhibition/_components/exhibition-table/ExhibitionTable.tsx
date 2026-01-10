@@ -48,7 +48,7 @@ import {
   SelectValue,
 } from '@/components/shadcn-ui/select'
 
-type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'createdAt'
+type SortField = 'title' | 'venue' | 'startDate' | 'endDate' | 'status' | 'updatedAt' | 'createdAt'
 
 interface ExhibitionTableProps {
   exhibitions: Exhibition[]
@@ -190,6 +190,16 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
             <TableHead>
               <Button
                 variant="ghost"
+                onClick={() => handleSort('updatedAt')}
+                className="h-8 px-2 lg:px-3"
+              >
+                更新日
+                {getSortIcon('updatedAt')}
+              </Button>
+            </TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
                 onClick={() => handleSort('createdAt')}
                 className="h-8 px-2 lg:px-3"
               >
@@ -204,7 +214,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
         <TableBody>
           {filteredExhibitions.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={9} className="h-24 text-center">
+              <TableCell colSpan={10} className="h-24 text-center">
                 No exhibitions found.
               </TableCell>
             </TableRow>
@@ -273,6 +283,7 @@ export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
                       </Select>
                     </form>
                   </TableCell>
+                  <TableCell className="pl-5">{exhibition.updatedAt}</TableCell>
                   <TableCell className="pl-5">{exhibition.createdAt}</TableCell>
                   <TableCell className="pl-5">{exhibition.origin ?? '-'}</TableCell>
                   <TableCell>

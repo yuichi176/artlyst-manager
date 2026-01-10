@@ -123,6 +123,7 @@ export async function updateExhibitionStatus(prev: FormSubmitState, formData: Fo
 
   await db.collection('exhibition').doc(data.id).update({
     status: data.status,
+    updatedAt: Timestamp.now(),
   })
 
   console.log('Successfully updated exhibition status with ID:', data.id)
@@ -155,6 +156,7 @@ export async function updateExhibitionIsExcluded(prev: FormSubmitState, formData
 
   await db.collection('exhibition').doc(data.id).update({
     isExcluded: data.isExcluded,
+    updatedAt: Timestamp.now(),
   })
 
   console.log('Successfully updated exhibition isExcluded with ID:', data.id)
@@ -170,6 +172,7 @@ export async function updateExhibitionIsExcluded(prev: FormSubmitState, formData
 export async function restoreExhibition(id: string) {
   await db.collection('exhibition').doc(id).update({
     isExcluded: false,
+    updatedAt: Timestamp.now(),
   })
 
   console.log('Successfully restored exhibition with ID:', id)
