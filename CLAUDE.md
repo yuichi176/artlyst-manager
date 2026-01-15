@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Artbase Manager is a Next.js 15 application for managing art exhibitions. It uses:
+Artlyst Manager is a Next.js 15 application for managing art exhibitions. It uses:
 
 - **Next.js 15** with App Router and React Server Components
 - **Google Cloud Firestore** as the database

@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Artbase Manager',
+  title: 'Artlyst Manager',
 }
 
 export default function RootLayout({
