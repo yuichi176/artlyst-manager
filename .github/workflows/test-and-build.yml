@@ -2,27 +2,42 @@ name: Test and Build
 
 on:
   workflow_call:
+    inputs:
+      RUNNER:
+        type: string
+        required: true
+      NODE_VERSION:
+        type: string
+        required: true
+      PNPM_VERSION:
+        type: string
+        required: true
 
 jobs:
   test-and-build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.RUNNER }}
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 22.22.0
+      - name: Install pnpm ${{ inputs.PNPM_VERSION }}
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ inputs.PNPM_VERSION }}
 
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 10.28.2
+      - name: Setup Node.js ${{ inputs.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+          cache: pnpm
 
-    - name: Install dependencies
-      run: pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
-#    FIXME: Enable tests when they are available
-#    - name: Run tests
-#      run: pnpm test
+      - name: Run tests
+        # TODO: run test when implemented
+        run: echo "Tests would run here"
 
-    - name: Run build
-      run: pnpm build
+      - name: Build project
+        run: pnpm build
+
