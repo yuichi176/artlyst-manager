@@ -32,7 +32,6 @@ export function ExhibitionCreateForm({ museums }: ExhibitionCreateFormProps) {
   const router = useRouter()
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
-  const [selectedMuseum, setSelectedMuseum] = useState<{ id: string; name: string } | null>(null)
 
   const [formState, create, isPending] = useActionState<FormSubmitState, FormData>(
     createExhibition,
@@ -87,16 +86,7 @@ export function ExhibitionCreateForm({ museums }: ExhibitionCreateFormProps) {
               会場
               <span className="ml-1 text-destructive">*</span>
             </label>
-            <Select
-              name="museumId"
-              required
-              onValueChange={(value) => {
-                const museum = museums.find((m) => m.id === value)
-                if (museum) {
-                  setSelectedMuseum({ id: museum.id, name: museum.name })
-                }
-              }}
-            >
+            <Select name="museumId" required>
               <SelectTrigger className="text-base w-full">
                 <SelectValue placeholder="会場を選択してください" />
               </SelectTrigger>
@@ -108,9 +98,8 @@ export function ExhibitionCreateForm({ museums }: ExhibitionCreateFormProps) {
                 ))}
               </SelectContent>
             </Select>
-            {selectedMuseum && <input type="hidden" name="venue" value={selectedMuseum.name} />}
             <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.venue || formState?.errors?.museumId}
+              {formState?.errors?.museumId}
             </p>
           </div>
 

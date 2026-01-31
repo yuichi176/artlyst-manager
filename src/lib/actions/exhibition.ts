@@ -31,6 +31,17 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
   }
 
   const data = parsed.data
+
+  // Fetch museum name from Firestore
+  const museumDoc = await db.collection('museum').doc(data.museumId).get()
+  if (!museumDoc.exists) {
+    return {
+      status: 'error' as const,
+      errors: { museumId: '無効な会場が選択されています。' },
+    }
+  }
+  const venue = museumDoc.data()?.name
+
   const id = getExhibitionDocumentId(data.museumId, data.title)
   await db
     .collection('exhibition')
@@ -38,7 +49,7 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
     .set({
       title: data.title,
       museumId: data.museumId,
-      venue: data.venue,
+      venue,
       startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
       endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
       officialUrl: data.officialUrl || '',

@@ -27,7 +27,6 @@ export const exhibitionFormDataSchema = z.object({
   id: z.string(),
   title: z.string().min(1, '展覧会名は必須項目です。'),
   museumId: z.string(),
-  venue: z.string().min(1, '会場は必須項目です。'),
   startDate: z
     .string()
     .refine((v) => !Number.isNaN(Date.parse(v)), '開始日は有効な日付を入力してください。'),
@@ -39,10 +38,11 @@ export const exhibitionFormDataSchema = z.object({
   status: statusSchema,
 })
 
-export const exhibitionCreateFormDataSchema = exhibitionFormDataSchema.omit({ id: true })
+export const exhibitionCreateFormDataSchema = exhibitionFormDataSchema.omit({
+  id: true,
+})
 export const exhibitionUpdateFormDataSchema = exhibitionFormDataSchema.omit({
   museumId: true,
-  venue: true,
 })
 
 export const exhibitionStatusFormDataSchema = exhibitionFormDataSchema.pick({
