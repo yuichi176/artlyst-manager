@@ -1,4 +1,4 @@
-import { ExhibitionCreateForm } from '@/app/exhibition/create/_components/ExhibitionCreateForm'
+import { ExhibitionCreateFormSection } from '@/app/exhibition/create/_components/ExhibitionCreateFormSection'
 import Link from 'next/link'
 import { Home } from 'lucide-react'
 import {
@@ -9,19 +9,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/shadcn-ui/breadcrumb'
-import db from '@/lib/firestore'
-import { RawMuseum } from '@/schema/db'
-import { convertRawMuseumToMuseum } from '@/schema/converters'
+import { Suspense } from 'react'
+import { ExhibitionCreateFormSkeleton } from '@/app/exhibition/create/_components/ExhibitionCreateFormSkeleton'
 
-export default async function ExhibitionCreate() {
-  const museumCollectionRef = db.collection('museum')
-  const museumSnapshot = await museumCollectionRef.orderBy('name', 'asc').get()
-
-  const museums = museumSnapshot.docs.map((doc) => {
-    const data = doc.data() as RawMuseum
-    return convertRawMuseumToMuseum(doc.id, data)
-  })
-
+export default function ExhibitionCreate() {
   return (
     <div>
       <div className="mx-auto max-w-4xl space-y-6 px-6 py-4 pb-16">
@@ -51,7 +42,9 @@ export default async function ExhibitionCreate() {
           <h1 className="text-3xl font-bold tracking-tight">展覧会登録</h1>
         </div>
 
-        <ExhibitionCreateForm museums={museums} />
+        <Suspense fallback={<ExhibitionCreateFormSkeleton />}>
+          <ExhibitionCreateFormSection />
+        </Suspense>
       </div>
     </div>
   )
