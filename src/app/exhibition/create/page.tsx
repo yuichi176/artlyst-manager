@@ -12,6 +12,8 @@ import {
 import { Suspense } from 'react'
 import { ExhibitionCreateFormSkeleton } from '@/app/exhibition/create/_components/ExhibitionCreateFormSkeleton'
 
+export const dynamic = 'force-dynamic'
+
 export default function ExhibitionCreate() {
   return (
     <div>
