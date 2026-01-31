@@ -35,10 +35,6 @@ export function ExhibitionEditForm({ exhibition, museums }: ExhibitionEditFormPr
   const router = useRouter()
   const [imageUrl, setImageUrl] = useState(exhibition.imageUrl || '')
   const [imageError, setImageError] = useState(false)
-  const [selectedMuseum, setSelectedMuseum] = useState<{ id: string; name: string } | null>(() => {
-    const museum = museums.find((m) => m.id === exhibition.museumId)
-    return museum ? { id: museum.id, name: museum.name } : null
-  })
 
   const [formState, update, isPending] = useActionState<FormSubmitState, FormData>(
     updateExhibition,
@@ -101,18 +97,8 @@ export function ExhibitionEditForm({ exhibition, museums }: ExhibitionEditFormPr
               会場
               <span className="ml-1 text-destructive">*</span>
             </label>
-            <Select
-              name="museumId"
-              required
-              defaultValue={exhibition.museumId}
-              onValueChange={(value) => {
-                const museum = museums.find((m) => m.id === value)
-                if (museum) {
-                  setSelectedMuseum({ id: museum.id, name: museum.name })
-                }
-              }}
-            >
-              <SelectTrigger className="text-base">
+            <Select disabled defaultValue={exhibition.museumId}>
+              <SelectTrigger className="text-base w-full">
                 <SelectValue placeholder="会場を選択してください" />
               </SelectTrigger>
               <SelectContent>
@@ -123,10 +109,6 @@ export function ExhibitionEditForm({ exhibition, museums }: ExhibitionEditFormPr
                 ))}
               </SelectContent>
             </Select>
-            {selectedMuseum && <input type="hidden" name="venue" value={selectedMuseum.name} />}
-            <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.venue || formState?.errors?.museumId}
-            </p>
           </div>
 
           <div className="space-y-3">

@@ -5,11 +5,11 @@ import { revalidatePath } from 'next/cache'
 import { Timestamp } from '@google-cloud/firestore'
 import { TZDate } from '@date-fns/tz'
 import {
-  exhibitionFormDataSchema,
   exhibitionCreateFormDataSchema,
   exhibitionStatusFormDataSchema,
   exhibitionIsExcludedFormDataSchema,
   FormSubmitState,
+  exhibitionUpdateFormDataSchema,
 } from '@/schema/ui'
 import { redirect } from 'next/navigation'
 import { getExhibitionDocumentId } from '@/utils'
@@ -66,7 +66,7 @@ export async function deleteExhibition(id: string) {
 export async function updateExhibition(prev: FormSubmitState, formData: FormData) {
   const formDataObject = Object.fromEntries(formData.entries())
 
-  const parsed = exhibitionFormDataSchema.safeParse(formDataObject)
+  const parsed = exhibitionUpdateFormDataSchema.safeParse(formDataObject)
   if (!parsed.success) {
     const errors: Record<string, string> = {}
     parsed.error.issues.forEach((issue) => {
@@ -85,8 +85,6 @@ export async function updateExhibition(prev: FormSubmitState, formData: FormData
     .doc(data.id)
     .update({
       title: data.title,
-      museumId: data.museumId,
-      venue: data.venue,
       startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
       endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
       officialUrl: data.officialUrl || '',

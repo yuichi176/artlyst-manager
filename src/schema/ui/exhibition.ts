@@ -40,6 +40,10 @@ export const exhibitionFormDataSchema = z.object({
 })
 
 export const exhibitionCreateFormDataSchema = exhibitionFormDataSchema.omit({ id: true })
+export const exhibitionUpdateFormDataSchema = exhibitionFormDataSchema.omit({
+  museumId: true,
+  venue: true,
+})
 
 export const exhibitionStatusFormDataSchema = exhibitionFormDataSchema.pick({
   id: true,
