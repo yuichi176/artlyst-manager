@@ -2,8 +2,8 @@
 
 import db from '@/lib/firestore'
 import { revalidatePath } from 'next/cache'
-import { museumFormDataSchema, museumCreateFormDataSchema } from '@/schema/museum'
-import { FormSubmitState } from '@/schema/common'
+import { Timestamp } from '@google-cloud/firestore'
+import { museumFormDataSchema, museumCreateFormDataSchema, FormSubmitState } from '@/schema/ui'
 import { redirect } from 'next/navigation'
 
 export async function createMuseum(prev: FormSubmitState, formData: FormData) {
@@ -33,6 +33,8 @@ export async function createMuseum(prev: FormSubmitState, formData: FormData) {
     officialUrl: data.officialUrl,
     scrapeUrl: data.scrapeUrl,
     scrapeEnabled: data.scrapeEnabled === 'true',
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
   })
   console.log('Successfully created museum with ID:', docRef.id)
 
@@ -78,6 +80,7 @@ export async function updateMuseum(prev: FormSubmitState, formData: FormData) {
       officialUrl: data.officialUrl,
       scrapeUrl: data.scrapeUrl,
       scrapeEnabled: data.scrapeEnabled === 'true',
+      updatedAt: Timestamp.now(),
     })
   console.log('Successfully updated museum with ID:', data.id)
 

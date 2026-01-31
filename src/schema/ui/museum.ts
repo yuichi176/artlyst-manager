@@ -33,6 +33,10 @@ export const areaOptions = areaSchema.options.map((area) => ({
   value: area,
 }))
 
+/**
+ * UI layer schema for Museum.
+ * Uses ISO date strings for timestamps (optional for backward compatibility).
+ */
 export const museumSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -44,6 +48,8 @@ export const museumSchema = z.object({
   officialUrl: z.string(),
   scrapeUrl: z.string(),
   scrapeEnabled: z.boolean(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 })
 export type Museum = z.infer<typeof museumSchema>
 

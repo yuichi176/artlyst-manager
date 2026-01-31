@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Museum } from '@/schema/museum'
+import type { Museum } from '@/schema/ui'
 import {
   Table,
   TableBody,

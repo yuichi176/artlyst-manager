@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect } from 'react'
-import { Museum, venueTypeOptions, areaOptions } from '@/schema/museum'
+import { Museum, venueTypeOptions, areaOptions } from '@/schema/ui'
 import { Button } from '@/components/shadcn-ui/button'
 import { Input } from '@/components/shadcn-ui/input'
 import { updateMuseum } from '@/lib/actions/museum'
@@ -19,7 +19,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
 import { toast } from 'sonner'
-import { FormSubmitState } from '@/schema/common'
+import { FormSubmitState } from '@/schema/ui'
 import {
   Select,
   SelectContent,

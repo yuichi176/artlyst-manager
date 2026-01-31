@@ -1,5 +1,6 @@
 import db from '@/lib/firestore'
-import { Museum } from '@/schema/museum'
+import { RawMuseum } from '@/schema/db'
+import { convertRawMuseumToMuseum } from '@/schema/converters'
 import { MuseumTable } from '@/app/museum/_components/museum-table/MuseumTable'
 
 export default async function MuseumTableSection() {
@@ -7,20 +8,8 @@ export default async function MuseumTableSection() {
   const existingDocumentsSnapshot = await museumCollectionRef.get()
 
   const museums = existingDocumentsSnapshot.docs.map((doc) => {
-    const data = doc.data() as Museum
-
-    return {
-      id: doc.id,
-      name: data.name,
-      address: data.address,
-      access: data.access,
-      openingInformation: data.openingInformation,
-      venueType: data.venueType,
-      area: data.area,
-      officialUrl: data.officialUrl,
-      scrapeUrl: data.scrapeUrl,
-      scrapeEnabled: data.scrapeEnabled,
-    } satisfies Museum
+    const data = doc.data() as RawMuseum
+    return convertRawMuseumToMuseum(doc.id, data)
   })
 
   return <MuseumTable museums={museums} />

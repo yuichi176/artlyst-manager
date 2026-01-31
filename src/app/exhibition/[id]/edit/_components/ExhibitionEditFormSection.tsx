@@ -1,5 +1,6 @@
 import db from '@/lib/firestore'
-import { Exhibition, RawExhibition } from '@/schema/exhibition'
+import { RawExhibition } from '@/schema/db'
+import { convertRawExhibitionToExhibition } from '@/schema/converters'
 import { ExhibitionEditForm } from './ExhibitionEditForm'
 import { notFound } from 'next/navigation'
 
@@ -16,20 +17,7 @@ export const ExhibitionEditFormSection = async ({ id }: ExhibitionEditFormSectio
   }
 
   const data = existingDocumentsSnapshot.data() as RawExhibition
-
-  const exhibition = {
-    id: id,
-    title: data.title,
-    venue: data.venue ? data.venue : '',
-    startDate: data.startDate ? data.startDate.toDate().toISOString().split('T')[0] : '',
-    endDate: data.endDate ? data.endDate.toDate().toISOString().split('T')[0] : '',
-    officialUrl: data.officialUrl ? data.officialUrl : '',
-    imageUrl: data.imageUrl ? data.imageUrl : '',
-    status: data.status,
-    origin: data.origin,
-    updatedAt: data.updatedAt.toDate().toISOString().split('T')[0],
-    createdAt: data.createdAt.toDate().toISOString().split('T')[0],
-  } satisfies Exhibition
+  const exhibition = convertRawExhibitionToExhibition(id, data)
 
   return <ExhibitionEditForm exhibition={exhibition} />
 }

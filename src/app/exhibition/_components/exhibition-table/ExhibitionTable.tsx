@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useMemo, useRef, useState } from 'react'
-import type { Exhibition } from '@/schema/exhibition'
+import type { Exhibition } from '@/schema/ui'
 import {
   Table,
   TableBody,
@@ -38,7 +38,7 @@ import { ExcludeExhibitionModal } from '@/app/exhibition/_components/exhibition-
 import Link from 'next/link'
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
-import { FormSubmitState } from '@/schema/common'
+import { FormSubmitState } from '@/schema/ui'
 import { updateExhibitionStatus } from '@/lib/actions/exhibition'
 import {
   Select,

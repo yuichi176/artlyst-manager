@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ExhibitionEditForm } from '@/app/exhibition/[id]/edit/_components/ExhibitionEditForm'
-import { Exhibition } from '@/schema/exhibition'
+import { Exhibition } from '@/schema/ui'
 
 // Mock useRouter
 const mockPush = vi.fn()
