@@ -9,6 +9,7 @@ export type Status = z.infer<typeof statusSchema>
  */
 export const exhibitionSchema = z.object({
   id: z.string(),
+  museumId: z.string(),
   title: z.string(),
   venue: z.string(),
   startDate: z.string(),

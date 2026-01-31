@@ -10,6 +10,7 @@ export type Status = z.infer<typeof statusSchema>
  */
 export const rawExhibitionSchema = z.object({
   title: z.string(),
+  museumId: z.string(),
   venue: z.string(),
   startDate: z.instanceof(Timestamp).optional(),
   endDate: z.instanceof(Timestamp).optional(),

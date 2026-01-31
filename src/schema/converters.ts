@@ -8,15 +8,16 @@ export function convertRawExhibitionToExhibition(id: string, raw: RawExhibition)
   return {
     id,
     title: raw.title,
+    museumId: raw.museumId,
     venue: raw.venue ?? '',
     startDate: raw.startDate ? raw.startDate.toDate().toISOString().split('T')[0] : '',
     endDate: raw.endDate ? raw.endDate.toDate().toISOString().split('T')[0] : '',
     officialUrl: raw.officialUrl ?? '',
     imageUrl: raw.imageUrl ?? '',
     status: raw.status,
-    origin: raw.origin,
-    updatedAt: raw.updatedAt.toDate().toISOString().split('T')[0],
-    createdAt: raw.createdAt.toDate().toISOString().split('T')[0],
+    origin: raw.origin ?? '',
+    updatedAt: raw.updatedAt ? raw.updatedAt.toDate().toISOString().split('T')[0] : '',
+    createdAt: raw.updatedAt ? raw.createdAt.toDate().toISOString().split('T')[0] : '',
   }
 }
 
