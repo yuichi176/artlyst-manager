@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect, useState } from 'react'
-import { Exhibition } from '@/schema/ui'
+import { Exhibition, Museum } from '@/schema/ui'
 import { Button } from '@/components/shadcn-ui/button'
 import { Input } from '@/components/shadcn-ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'
@@ -28,12 +28,17 @@ import { FormSubmitState } from '@/schema/ui'
 
 interface ExhibitionEditFormProps {
   exhibition: Exhibition
+  museums: Museum[]
 }
 
-export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
+export function ExhibitionEditForm({ exhibition, museums }: ExhibitionEditFormProps) {
   const router = useRouter()
   const [imageUrl, setImageUrl] = useState(exhibition.imageUrl || '')
   const [imageError, setImageError] = useState(false)
+  const [selectedMuseum, setSelectedMuseum] = useState<{ id: string; name: string } | null>(() => {
+    const museum = museums.find((m) => m.id === exhibition.museumId)
+    return museum ? { id: museum.id, name: museum.name } : null
+  })
 
   const [formState, update, isPending] = useActionState<FormSubmitState, FormData>(
     updateExhibition,
@@ -91,21 +96,36 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="venue" className="flex items-center text-sm font-medium">
+            <label htmlFor="museumId" className="flex items-center text-sm font-medium">
               <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
               会場
               <span className="ml-1 text-destructive">*</span>
             </label>
-            <Input
-              id="venue"
-              name="venue"
-              defaultValue={exhibition.venue}
-              placeholder="会場名を入力してください"
+            <Select
+              name="museumId"
               required
-              className="text-base"
-            />
+              defaultValue={exhibition.museumId}
+              onValueChange={(value) => {
+                const museum = museums.find((m) => m.id === value)
+                if (museum) {
+                  setSelectedMuseum({ id: museum.id, name: museum.name })
+                }
+              }}
+            >
+              <SelectTrigger className="text-base">
+                <SelectValue placeholder="会場を選択してください" />
+              </SelectTrigger>
+              <SelectContent>
+                {museums.map((museum) => (
+                  <SelectItem key={museum.id} value={museum.id}>
+                    {museum.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {selectedMuseum && <input type="hidden" name="venue" value={selectedMuseum.name} />}
             <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.venue}
+              {formState?.errors?.venue || formState?.errors?.museumId}
             </p>
           </div>
 

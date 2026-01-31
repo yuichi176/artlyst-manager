@@ -9,8 +9,19 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/shadcn-ui/breadcrumb'
+import db from '@/lib/firestore'
+import { RawMuseum } from '@/schema/db'
+import { convertRawMuseumToMuseum } from '@/schema/converters'
 
-export default function ExhibitionCreate() {
+export default async function ExhibitionCreate() {
+  const museumCollectionRef = db.collection('museum')
+  const museumSnapshot = await museumCollectionRef.orderBy('name', 'asc').get()
+
+  const museums = museumSnapshot.docs.map((doc) => {
+    const data = doc.data() as RawMuseum
+    return convertRawMuseumToMuseum(doc.id, data)
+  })
+
   return (
     <div>
       <div className="mx-auto max-w-4xl space-y-6 px-6 py-4 pb-16">
@@ -40,7 +51,7 @@ export default function ExhibitionCreate() {
           <h1 className="text-3xl font-bold tracking-tight">展覧会登録</h1>
         </div>
 
-        <ExhibitionCreateForm />
+        <ExhibitionCreateForm museums={museums} />
       </div>
     </div>
   )

@@ -26,6 +26,7 @@ export type Exhibition = z.infer<typeof exhibitionSchema>
 export const exhibitionFormDataSchema = z.object({
   id: z.string(),
   title: z.string().min(1, '展覧会名は必須項目です。'),
+  museumId: z.string(),
   venue: z.string().min(1, '会場は必須項目です。'),
   startDate: z
     .string()

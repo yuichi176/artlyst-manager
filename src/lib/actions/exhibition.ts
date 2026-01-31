@@ -12,7 +12,7 @@ import {
   FormSubmitState,
 } from '@/schema/ui'
 import { redirect } from 'next/navigation'
-import { getExhibitionDocumentHash } from '@/utils'
+import { getExhibitionDocumentId } from '@/utils'
 
 export async function createExhibition(prev: FormSubmitState, formData: FormData) {
   const formDataObject = Object.fromEntries(formData.entries())
@@ -31,12 +31,13 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
   }
 
   const data = parsed.data
-  const id = getExhibitionDocumentHash(data.title, data.venue)
+  const id = getExhibitionDocumentId(data.museumId, data.title)
   await db
     .collection('exhibition')
     .doc(id)
     .set({
       title: data.title,
+      museumId: data.museumId,
       venue: data.venue,
       startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
       endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
@@ -84,6 +85,7 @@ export async function updateExhibition(prev: FormSubmitState, formData: FormData
     .doc(data.id)
     .update({
       title: data.title,
+      museumId: data.museumId,
       venue: data.venue,
       startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
       endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ExhibitionEditForm } from '@/app/exhibition/[id]/edit/_components/ExhibitionEditForm'
-import { Exhibition } from '@/schema/ui'
+import { Exhibition, Museum } from '@/schema/ui'
 
 // Mock useRouter
 const mockPush = vi.fn()
@@ -41,6 +41,20 @@ vi.mock('next/navigation', async (importOriginal) => {
 })
 
 describe('ExhibitionEditForm', () => {
+  const dummyMuseums: Museum[] = [
+    {
+      id: 'test-museum-id',
+      name: 'テスト会場',
+      address: '東京都',
+      access: 'テストアクセス',
+      venueType: '美術館',
+      area: '上野',
+      officialUrl: 'https://example.com',
+      scrapeUrl: 'https://example.com',
+      scrapeEnabled: true,
+    },
+  ]
+
   const dummyExhibition: Exhibition = {
     id: '1',
     title: 'テスト展覧会',
@@ -48,6 +62,7 @@ describe('ExhibitionEditForm', () => {
     startDate: '2024-01-01',
     endDate: '2024-12-31',
     status: 'active',
+    museumId: 'test-museum-id',
     createdAt: '2024-01-01',
     updatedAt: '2024-01-15',
   }
@@ -55,7 +70,7 @@ describe('ExhibitionEditForm', () => {
   describe('基本レンダリング', () => {
     test('初期表示時に、編集対象の展覧会データがフォームフィールドに表示されている', () => {
       // ACT
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ASSERT
       // Check that all form fields are populated with the exhibition data
@@ -80,7 +95,7 @@ describe('ExhibitionEditForm', () => {
     test('展覧会名が空で送信した場合、エラーメッセージが表示される', async () => {
       // ARRANGE
       const user = userEvent.setup()
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       // Clear the title field and remove required attribute to allow submission
@@ -102,7 +117,7 @@ describe('ExhibitionEditForm', () => {
     test('会場が空で送信した場合、エラーメッセージが表示される', async () => {
       // ARRANGE
       const user = userEvent.setup()
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       // Clear the venue field and remove required attribute to allow submission
@@ -124,7 +139,7 @@ describe('ExhibitionEditForm', () => {
     test('開始日が空で送信した場合、エラーメッセージが表示される', async () => {
       // ARRANGE
       const user = userEvent.setup()
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       // Clear the start date field and remove required attribute to allow submission
@@ -146,7 +161,7 @@ describe('ExhibitionEditForm', () => {
     test('終了日が空で送信した場合、エラーメッセージが表示される', async () => {
       // ARRANGE
       const user = userEvent.setup()
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       // Clear the end date field and remove required attribute to allow submission
@@ -180,7 +195,7 @@ describe('ExhibitionEditForm', () => {
       // @ts-expect-error
       vi.mocked(db.default.collection).mockImplementation(mockCollection)
 
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       const submitButton = screen.getByRole('button', { name: /変更を保存/ })
@@ -214,7 +229,7 @@ describe('ExhibitionEditForm', () => {
       // @ts-expect-error
       vi.mocked(db.default.collection).mockImplementation(mockCollection)
 
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       const submitButton = screen.getByRole('button', { name: /変更を保存/ })
@@ -245,7 +260,7 @@ describe('ExhibitionEditForm', () => {
       // @ts-expect-error
       vi.mocked(db.default.collection).mockImplementation(mockCollection)
 
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       const submitButton = screen.getByRole('button', { name: /変更を保存/ })
@@ -263,7 +278,7 @@ describe('ExhibitionEditForm', () => {
     test('「キャンセル」ボタンをクリックすると展覧会一覧ページに遷移する', async () => {
       // ARRANGE
       const user = userEvent.setup()
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       const cancelButton = screen.getByRole('button', { name: 'キャンセル' })
@@ -293,7 +308,7 @@ describe('ExhibitionEditForm', () => {
       // @ts-expect-error
       vi.mocked(db.default.collection).mockImplementation(mockCollection)
 
-      render(<ExhibitionEditForm exhibition={dummyExhibition} />)
+      render(<ExhibitionEditForm exhibition={dummyExhibition} museums={dummyMuseums} />)
 
       // ACT
       const submitButton = screen.getByRole('button', { name: /変更を保存/ })
