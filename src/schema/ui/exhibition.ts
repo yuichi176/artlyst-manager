@@ -1,25 +1,15 @@
 import { z } from 'zod'
-import { Timestamp } from '@google-cloud/firestore'
 
 const statusSchema = z.enum(['pending', 'active'])
 export type Status = z.infer<typeof statusSchema>
 
-export type RawExhibition = {
-  title: string
-  venue: string
-  startDate?: Timestamp
-  endDate?: Timestamp
-  officialUrl?: string
-  imageUrl?: string
-  status: Status
-  origin?: string
-  isExcluded?: boolean
-  updatedAt: Timestamp
-  createdAt: Timestamp
-}
-
+/**
+ * UI layer schema for Exhibition.
+ * Uses ISO date strings instead of Firestore Timestamp for serializability.
+ */
 export const exhibitionSchema = z.object({
   id: z.string(),
+  museumId: z.string(),
   title: z.string(),
   venue: z.string(),
   startDate: z.string(),

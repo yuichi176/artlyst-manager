@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
-import { FormSubmitState } from '@/schema/common'
+import { FormSubmitState } from '@/schema/ui'
 import {
   Select,
   SelectContent,
@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/shadcn-ui/select'
-import { venueTypeOptions, areaOptions } from '@/schema/museum'
+import { venueTypeOptions, areaOptions } from '@/schema/ui'
 
 export function MuseumCreateForm() {
   const router = useRouter()

@@ -1,5 +1,6 @@
 import db from '@/lib/firestore'
-import { Museum } from '@/schema/museum'
+import { RawMuseum } from '@/schema/db'
+import { convertRawMuseumToMuseum } from '@/schema/converters'
 import { MuseumEditForm } from './MuseumEditForm'
 import { notFound } from 'next/navigation'
 
@@ -15,20 +16,8 @@ export const MuseumEditFormSection = async ({ id }: MuseumEditFormSectionProps) 
     notFound()
   }
 
-  const data = existingDocumentsSnapshot.data() as Museum
-
-  const museum: Museum = {
-    id: id,
-    name: data.name,
-    address: data.address,
-    access: data.access,
-    openingInformation: data.openingInformation,
-    venueType: data.venueType,
-    area: data.area,
-    officialUrl: data.officialUrl,
-    scrapeUrl: data.scrapeUrl,
-    scrapeEnabled: data.scrapeEnabled,
-  } satisfies Museum
+  const data = existingDocumentsSnapshot.data() as RawMuseum
+  const museum = convertRawMuseumToMuseum(id, data)
 
   return <MuseumEditForm museum={museum} />
 }

@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/shadcn-ui/select'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
-import { FormSubmitState } from '@/schema/common'
+import { FormSubmitState } from '@/schema/ui'
 
 export function ExhibitionCreateForm() {
   const router = useRouter()

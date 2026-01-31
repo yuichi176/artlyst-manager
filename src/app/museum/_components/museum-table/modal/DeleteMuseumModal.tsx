@@ -1,6 +1,6 @@
 'use client'
 
-import type { Museum } from '@/schema/museum'
+import type { Museum } from '@/schema/ui'
 import {
   Dialog,
   DialogContent,

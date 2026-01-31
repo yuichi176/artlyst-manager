@@ -9,8 +9,8 @@ import {
   exhibitionCreateFormDataSchema,
   exhibitionStatusFormDataSchema,
   exhibitionIsExcludedFormDataSchema,
-} from '@/schema/exhibition'
-import { FormSubmitState } from '@/schema/common'
+  FormSubmitState,
+} from '@/schema/ui'
 import { redirect } from 'next/navigation'
 import { getExhibitionDocumentHash } from '@/utils'
 

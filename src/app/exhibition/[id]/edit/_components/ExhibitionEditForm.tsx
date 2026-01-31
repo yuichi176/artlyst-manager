@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect, useState } from 'react'
-import { Exhibition } from '@/schema/exhibition'
+import { Exhibition } from '@/schema/ui'
 import { Button } from '@/components/shadcn-ui/button'
 import { Input } from '@/components/shadcn-ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'
@@ -24,7 +24,7 @@ import {
 } from '@/components/shadcn-ui/select'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
 import { toast } from 'sonner'
-import { FormSubmitState } from '@/schema/common'
+import { FormSubmitState } from '@/schema/ui'
 
 interface ExhibitionEditFormProps {
   exhibition: Exhibition
