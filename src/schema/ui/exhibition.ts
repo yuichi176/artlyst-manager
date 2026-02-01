@@ -54,3 +54,8 @@ export const exhibitionIsExcludedFormDataSchema = z.object({
   id: z.string(),
   isExcluded: z.coerce.boolean(),
 })
+
+export const exhibitionOfficialUrlFormDataSchema = z.object({
+  id: z.string(),
+  officialUrl: z.string().url('有効なURLを入力してください').optional().or(z.literal('')),
+})

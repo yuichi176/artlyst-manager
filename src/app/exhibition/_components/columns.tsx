@@ -28,6 +28,7 @@ import {
 import Link from 'next/link'
 import { TruncatedText } from '@/components'
 import { StatusUpdateCell } from './status-update-cell'
+import { EditableUrlCell } from './editable-url-cell'
 
 // Type for table meta to pass callbacks
 export interface ExhibitionTableMeta {
@@ -114,24 +115,7 @@ export const columns: ColumnDef<Exhibition>[] = [
     accessorKey: 'officialUrl',
     header: () => <div className="pl-5 text-left">公式サイトURL</div>,
     cell: ({ row }) => {
-      const url = row.getValue('officialUrl') as string | undefined
-
-      return (
-        <div className="pl-5">
-          {url ? (
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              {url}
-            </a>
-          ) : (
-            '-'
-          )}
-        </div>
-      )
+      return <EditableUrlCell exhibition={row.original} />
     },
   },
   {

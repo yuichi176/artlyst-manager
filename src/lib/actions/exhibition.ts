@@ -8,6 +8,7 @@ import {
   exhibitionCreateFormDataSchema,
   exhibitionStatusFormDataSchema,
   exhibitionIsExcludedFormDataSchema,
+  exhibitionOfficialUrlFormDataSchema,
   FormSubmitState,
   exhibitionUpdateFormDataSchema,
 } from '@/schema/ui'
@@ -224,4 +225,37 @@ export async function restoreExhibition(id: string) {
 
   revalidatePath('/')
   revalidatePath('/exhibition/excluded')
+}
+
+export async function updateExhibitionOfficialUrl(prev: FormSubmitState, formData: FormData) {
+  const formDataObject = Object.fromEntries(formData.entries())
+
+  const parsed = exhibitionOfficialUrlFormDataSchema.safeParse(formDataObject)
+  if (!parsed.success) {
+    const errors: Record<string, string> = {}
+    parsed.error.issues.forEach((issue) => {
+      const path = issue.path[0] as string
+      errors[path] = issue.message
+    })
+    return {
+      status: 'error' as const,
+      errors,
+    }
+  }
+
+  const data = parsed.data
+
+  await db.collection('exhibition').doc(data.id).update({
+    officialUrl: data.officialUrl || '',
+    updatedAt: Timestamp.now(),
+  })
+
+  console.log('Successfully updated exhibition officialUrl with ID:', data.id)
+
+  revalidatePath('/')
+
+  return {
+    status: 'success' as const,
+    errors: undefined,
+  }
 }
