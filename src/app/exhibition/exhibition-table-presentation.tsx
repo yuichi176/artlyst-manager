@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useMemo, useRef, useState } from 'react'
+import { useActionState, useRef, useState } from 'react'
 import type { Exhibition } from '@/schema/ui'
 import {
   Table,
@@ -57,8 +57,6 @@ interface ExhibitionTableProps {
 export function ExhibitionTablePresentation({ exhibitions }: ExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
   const [excludingExhibition, setExcludingExhibition] = useState<Exhibition | undefined>(undefined)
-  const [publicVisibilityFilter, setPublicVisibilityFilter] = useState<boolean | null>(null)
-
   const formRefs = useRef<Record<string, HTMLFormElement | null>>({})
 
   const [, updateStatus] = useActionState<FormSubmitState, FormData>(updateExhibitionStatus, {
@@ -79,18 +77,6 @@ export function ExhibitionTablePresentation({ exhibitions }: ExhibitionTableProp
     return exhibition.status === 'active' && endDate > now
   }
 
-  const filteredExhibitions = useMemo(() => {
-    return sortedExhibitions.filter((exhibition) => {
-      if (publicVisibilityFilter !== null) {
-        const isVisible = isPubliclyVisible(exhibition)
-        if (publicVisibilityFilter !== isVisible) {
-          return false
-        }
-      }
-      return true
-    })
-  }, [sortedExhibitions, publicVisibilityFilter])
-
   const getSortIcon = (field: SortField) => {
     if (sortField !== field) {
       return <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -106,31 +92,6 @@ export function ExhibitionTablePresentation({ exhibitions }: ExhibitionTableProp
 
   return (
     <>
-      <div className="mb-4 flex gap-2">
-        <Button
-          variant={publicVisibilityFilter === null ? 'default' : 'outline'}
-          onClick={() => setPublicVisibilityFilter(null)}
-          size="sm"
-        >
-          すべて
-        </Button>
-        <Button
-          variant={publicVisibilityFilter === true ? 'default' : 'outline'}
-          onClick={() => setPublicVisibilityFilter(true)}
-          size="sm"
-        >
-          <Eye className="h-4 w-4" />
-          公開中
-        </Button>
-        <Button
-          variant={publicVisibilityFilter === false ? 'default' : 'outline'}
-          onClick={() => setPublicVisibilityFilter(false)}
-          size="sm"
-        >
-          非公開
-        </Button>
-      </div>
-
       <Table>
         <TableHeader>
           <TableRow>
@@ -212,14 +173,14 @@ export function ExhibitionTablePresentation({ exhibitions }: ExhibitionTableProp
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredExhibitions.length === 0 ? (
+          {sortedExhibitions.length === 0 ? (
             <TableRow>
               <TableCell colSpan={10} className="h-24 text-center">
                 No exhibitions found.
               </TableCell>
             </TableRow>
           ) : (
-            filteredExhibitions.map((exhibition) => {
+            sortedExhibitions.map((exhibition) => {
               return (
                 <TableRow key={exhibition.id}>
                   <TableCell className="text-center px-4">
