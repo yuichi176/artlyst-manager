@@ -20,6 +20,7 @@ export const exhibitionSchema = z.object({
   origin: z.string().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
+  eventStatus: z.enum(['ongoing', 'upcoming', 'ended']).optional(),
 })
 export type Exhibition = z.infer<typeof exhibitionSchema>
 
@@ -53,4 +54,16 @@ export const exhibitionStatusFormDataSchema = exhibitionFormDataSchema.pick({
 export const exhibitionIsExcludedFormDataSchema = z.object({
   id: z.string(),
   isExcluded: z.coerce.boolean(),
+})
+
+export const exhibitionOfficialUrlFormDataSchema = z.object({
+  id: z.string(),
+  officialUrl: z
+    .union([
+      z.string().refine((url) => url.startsWith('http://') || url.startsWith('https://'), {
+        message: 'URLはhttp://またはhttps://で始まる必要があります',
+      }),
+      z.literal(''),
+    ])
+    .optional(),
 })
