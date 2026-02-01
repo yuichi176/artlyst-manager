@@ -25,6 +25,13 @@ import { Input } from '@/components/shadcn-ui/input'
 import { Checkbox } from '@/components/shadcn-ui/checkbox'
 import { Label } from '@/components/shadcn-ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/shadcn-ui/radio-group'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/shadcn-ui/collapsible'
+import { Button } from '@/components/shadcn-ui/button'
+import { ChevronDown } from 'lucide-react'
 import type { Museum } from '@/schema/ui'
 
 // Declare module to extend TanStack Table types
@@ -60,6 +67,9 @@ export function DataTable<TData, TValue>({
 
   // Status filter state (single selection)
   const [selectedStatus, setSelectedStatus] = useState<string>('all')
+
+  // Collapsible state for filters
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false)
 
   const table = useReactTable({
     data,
@@ -148,99 +158,116 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Advanced filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 border rounded-lg bg-muted/20">
-        {/* Museum filter */}
-        <div className="space-y-3">
-          <h3 className="font-semibold text-sm">会場名</h3>
-          <div className="space-y-2 max-h-60 overflow-y-auto">
-            {museums.map((museum) => (
-              <div key={museum.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`museum-${museum.id}`}
-                  checked={selectedMuseumIds.includes(museum.id)}
-                  onCheckedChange={(checked) =>
-                    handleMuseumFilterChange(museum.id, checked === true)
-                  }
-                />
-                <Label
-                  htmlFor={`museum-${museum.id}`}
-                  className="text-sm font-normal cursor-pointer"
-                >
-                  {museum.name}
-                </Label>
+      <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-semibold">詳細フィルター</h3>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="w-9 p-0">
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-200 ${
+                  isFilterOpen ? 'transform rotate-180' : ''
+                }`}
+              />
+              <span className="sr-only">Toggle filters</span>
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+        <CollapsibleContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 border rounded-lg bg-muted/20">
+            {/* Museum filter */}
+            <div className="space-y-3">
+              <h3 className="font-semibold text-sm">会場名</h3>
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {museums.map((museum) => (
+                  <div key={museum.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`museum-${museum.id}`}
+                      checked={selectedMuseumIds.includes(museum.id)}
+                      onCheckedChange={(checked) =>
+                        handleMuseumFilterChange(museum.id, checked === true)
+                      }
+                    />
+                    <Label
+                      htmlFor={`museum-${museum.id}`}
+                      className="text-sm font-normal cursor-pointer"
+                    >
+                      {museum.name}
+                    </Label>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Event status filter */}
-        <div className="space-y-3">
-          <h3 className="font-semibold text-sm">開催ステータス</h3>
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="status-ongoing"
-                checked={selectedEventStatuses.includes('ongoing')}
-                onCheckedChange={(checked) =>
-                  handleEventStatusFilterChange('ongoing', checked === true)
-                }
-              />
-              <Label htmlFor="status-ongoing" className="text-sm font-normal cursor-pointer">
-                開催中
-              </Label>
+            {/* Event status filter */}
+            <div className="space-y-3">
+              <h3 className="font-semibold text-sm">開催ステータス</h3>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="status-ongoing"
+                    checked={selectedEventStatuses.includes('ongoing')}
+                    onCheckedChange={(checked) =>
+                      handleEventStatusFilterChange('ongoing', checked === true)
+                    }
+                  />
+                  <Label htmlFor="status-ongoing" className="text-sm font-normal cursor-pointer">
+                    開催中
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="status-upcoming"
+                    checked={selectedEventStatuses.includes('upcoming')}
+                    onCheckedChange={(checked) =>
+                      handleEventStatusFilterChange('upcoming', checked === true)
+                    }
+                  />
+                  <Label htmlFor="status-upcoming" className="text-sm font-normal cursor-pointer">
+                    開催前
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="status-ended"
+                    checked={selectedEventStatuses.includes('ended')}
+                    onCheckedChange={(checked) =>
+                      handleEventStatusFilterChange('ended', checked === true)
+                    }
+                  />
+                  <Label htmlFor="status-ended" className="text-sm font-normal cursor-pointer">
+                    終了
+                  </Label>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="status-upcoming"
-                checked={selectedEventStatuses.includes('upcoming')}
-                onCheckedChange={(checked) =>
-                  handleEventStatusFilterChange('upcoming', checked === true)
-                }
-              />
-              <Label htmlFor="status-upcoming" className="text-sm font-normal cursor-pointer">
-                開催前
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="status-ended"
-                checked={selectedEventStatuses.includes('ended')}
-                onCheckedChange={(checked) =>
-                  handleEventStatusFilterChange('ended', checked === true)
-                }
-              />
-              <Label htmlFor="status-ended" className="text-sm font-normal cursor-pointer">
-                終了
-              </Label>
+
+            {/* Status filter */}
+            <div className="space-y-3">
+              <h3 className="font-semibold text-sm">ステータス</h3>
+              <RadioGroup value={selectedStatus} onValueChange={handleStatusFilterChange}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="all" id="status-all" />
+                  <Label htmlFor="status-all" className="text-sm font-normal cursor-pointer">
+                    すべて
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="active" id="status-active" />
+                  <Label htmlFor="status-active" className="text-sm font-normal cursor-pointer">
+                    Active
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="pending" id="status-pending" />
+                  <Label htmlFor="status-pending" className="text-sm font-normal cursor-pointer">
+                    Pending
+                  </Label>
+                </div>
+              </RadioGroup>
             </div>
           </div>
-        </div>
-
-        {/* Status filter */}
-        <div className="space-y-3">
-          <h3 className="font-semibold text-sm">ステータス</h3>
-          <RadioGroup value={selectedStatus} onValueChange={handleStatusFilterChange}>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="all" id="status-all" />
-              <Label htmlFor="status-all" className="text-sm font-normal cursor-pointer">
-                すべて
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="active" id="status-active" />
-              <Label htmlFor="status-active" className="text-sm font-normal cursor-pointer">
-                Active
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="pending" id="status-pending" />
-              <Label htmlFor="status-pending" className="text-sm font-normal cursor-pointer">
-                Pending
-              </Label>
-            </div>
-          </RadioGroup>
-        </div>
-      </div>
+        </CollapsibleContent>
+      </Collapsible>
 
       {/* Table */}
       <div className="rounded-md border">
