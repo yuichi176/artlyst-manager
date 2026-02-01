@@ -1,4 +1,4 @@
-import { MuseumCreateForm } from '@/app/museum/create/_components/MuseumCreateForm'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { Home } from 'lucide-react'
 import {
@@ -9,6 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/shadcn-ui/breadcrumb'
+import MuseumCreateFormSection from './museum-create-form-section'
 
 export default function MuseumCreate() {
   return (
@@ -40,7 +41,9 @@ export default function MuseumCreate() {
           <h1 className="text-3xl font-bold tracking-tight">美術館登録</h1>
         </div>
 
-        <MuseumCreateForm />
+        <Suspense fallback={<div>読み込み中...</div>}>
+          <MuseumCreateFormSection />
+        </Suspense>
       </div>
     </div>
   )

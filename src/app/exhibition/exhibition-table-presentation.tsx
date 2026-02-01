@@ -33,8 +33,8 @@ import {
   Eye,
   Ban,
 } from 'lucide-react'
-import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
-import { ExcludeExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/ExcludeExhibitionModal'
+import { DeleteExhibitionModal } from '@/app/exhibition/_components/modal/delete-exhibition-modal'
+import { ExcludeExhibitionModal } from '@/app/exhibition/_components/modal/exclude-exhibition-modal'
 import Link from 'next/link'
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
@@ -54,7 +54,7 @@ interface ExhibitionTableProps {
   exhibitions: Exhibition[]
 }
 
-export function ExhibitionTable({ exhibitions }: ExhibitionTableProps) {
+export function ExhibitionTablePresentation({ exhibitions }: ExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
   const [excludingExhibition, setExcludingExhibition] = useState<Exhibition | undefined>(undefined)
   const [publicVisibilityFilter, setPublicVisibilityFilter] = useState<boolean | null>(null)

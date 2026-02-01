@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/shadcn-ui/table'
 
-export function ExhibitionTableSkeleton() {
+export default function ExhibitionTableSkeleton() {
   return (
     <>
       <div className="mb-4 flex gap-2">

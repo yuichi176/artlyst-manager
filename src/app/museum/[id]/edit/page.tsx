@@ -1,6 +1,4 @@
-import { MuseumEditFormSection } from '@/app/museum/[id]/edit/_components/MuseumEditFormSection'
 import { Suspense } from 'react'
-import { MuseumEditFormSkeleton } from '@/app/museum/[id]/edit/_components/MuseumEditFormSkeleton'
 import Link from 'next/link'
 import { Home } from 'lucide-react'
 import {
@@ -11,6 +9,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/shadcn-ui/breadcrumb'
+import MuseumEditFormSection from './museum-edit-form-section'
+import MuseumEditFormSkeleton from './museum-edit-form-skeleton'
 
 export const dynamic = 'force-dynamic'
 

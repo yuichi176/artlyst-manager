@@ -10,8 +10,8 @@ import Link from 'next/link'
 import { Home, Plus } from 'lucide-react'
 import { Suspense } from 'react'
 import { Button } from '@/components/shadcn-ui/button'
-import MuseumTableSection from '@/app/museum/_components/museum-table/MuseumTableSection'
-import { MuseumTableSkeleton } from '@/app/museum/_components/museum-table/MuseumTableSkeleton'
+import MuseumTableSection from './museum-table-section'
+import MuseumTableSkeleton from './museum-table-skeleton'
 
 export const dynamic = 'force-dynamic'
 

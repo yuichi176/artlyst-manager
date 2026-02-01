@@ -32,7 +32,7 @@ interface MuseumEditFormProps {
   museum: Museum
 }
 
-export function MuseumEditForm({ museum }: MuseumEditFormProps) {
+export function MuseumEditFormPresentation({ museum }: MuseumEditFormProps) {
   const router = useRouter()
 
   const [formState, update, isPending] = useActionState<FormSubmitState, FormData>(updateMuseum, {

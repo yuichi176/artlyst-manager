@@ -27,7 +27,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import Link from 'next/link'
-import { DeleteMuseumModal } from '@/app/museum/_components/museum-table/modal/DeleteMuseumModal'
+import { DeleteMuseumModal } from '@/app/museum/_components/modal/delete-museum-modal'
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
 
@@ -37,7 +37,7 @@ interface MuseumTableProps {
   museums: Museum[]
 }
 
-export function MuseumTable({ museums }: MuseumTableProps) {
+export function MuseumTablePresentation({ museums }: MuseumTableProps) {
   const [deletingMuseum, setDeletingMuseum] = useState<Museum | undefined>(undefined)
 
   const {

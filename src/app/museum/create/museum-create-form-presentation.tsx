@@ -27,7 +27,7 @@ import {
 } from '@/components/shadcn-ui/select'
 import { venueTypeOptions, areaOptions } from '@/schema/ui'
 
-export function MuseumCreateForm() {
+export function MuseumCreateFormPresentation() {
   const router = useRouter()
 
   const [formState, create, isPending] = useActionState<FormSubmitState, FormData>(createMuseum, {
