@@ -92,19 +92,9 @@ export function DataTable<TData, TValue>({
       },
       eventStatusFilter: (row, columnId, filterValue: string[]) => {
         if (!filterValue || filterValue.length === 0) return true
-        const startDate = new Date(row.getValue('startDate') as string)
-        const endDate = new Date(row.getValue('endDate') as string)
-        const now = new Date()
-
-        const isOngoing = startDate <= now && now <= endDate
-        const isUpcoming = now < startDate
-        const isEnded = endDate < now
-
-        return (
-          (filterValue.includes('ongoing') && isOngoing) ||
-          (filterValue.includes('upcoming') && isUpcoming) ||
-          (filterValue.includes('ended') && isEnded)
-        )
+        const eventStatus = row.original.eventStatus
+        if (!eventStatus) return false
+        return filterValue.includes(eventStatus)
       },
       statusFilter: (row, columnId, filterValue: string) => {
         if (!filterValue || filterValue === 'all') return true

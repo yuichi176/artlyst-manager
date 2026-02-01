@@ -20,6 +20,7 @@ export const exhibitionSchema = z.object({
   origin: z.string().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
+  eventStatus: z.enum(['ongoing', 'upcoming', 'ended']).optional(),
 })
 export type Exhibition = z.infer<typeof exhibitionSchema>
 

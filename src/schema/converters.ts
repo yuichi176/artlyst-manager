@@ -5,6 +5,22 @@ import { Exhibition, Museum } from './ui'
  * Convert RawExhibition (DB layer with Timestamp) to Exhibition (UI layer with ISO strings).
  */
 export function convertRawExhibitionToExhibition(id: string, raw: RawExhibition): Exhibition {
+  // Calculate event status based on current date
+  const now = new Date()
+  const startDate = raw.startDate ? raw.startDate.toDate() : null
+  const endDate = raw.endDate ? raw.endDate.toDate() : null
+
+  let eventStatus: 'ongoing' | 'upcoming' | 'ended' | undefined
+  if (startDate && endDate) {
+    if (startDate <= now && now <= endDate) {
+      eventStatus = 'ongoing'
+    } else if (now < startDate) {
+      eventStatus = 'upcoming'
+    } else if (endDate < now) {
+      eventStatus = 'ended'
+    }
+  }
+
   return {
     id,
     title: raw.title,
@@ -18,6 +34,7 @@ export function convertRawExhibitionToExhibition(id: string, raw: RawExhibition)
     origin: raw.origin ?? '',
     updatedAt: raw.updatedAt ? raw.updatedAt.toDate().toISOString().split('T')[0] : '',
     createdAt: raw.updatedAt ? raw.createdAt.toDate().toISOString().split('T')[0] : '',
+    eventStatus,
   }
 }
 
