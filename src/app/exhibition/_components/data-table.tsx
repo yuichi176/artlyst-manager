@@ -28,11 +28,7 @@ interface DataTableProps<TData, TValue> {
   meta?: TableMeta<TData>
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  meta,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
@@ -59,12 +55,6 @@ export function DataTable<TData, TValue>({
           placeholder="展覧会名で検索..."
           value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="会場で検索..."
-          value={(table.getColumn('venue')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('venue')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
       </div>
