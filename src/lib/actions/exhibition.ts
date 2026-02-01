@@ -31,22 +31,12 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
   }
 
   const data = parsed.data
-
-  // Fetch museum name from Firestore
-  const museumDoc = await db.collection('museum').doc(data.museumId).get()
-  if (!museumDoc.exists) {
-    return {
-      status: 'error' as const,
-      errors: { museumId: '無効な会場が選択されています。' },
-    }
-  }
-  const venue = museumDoc.data()?.name
-
   const id = getExhibitionDocumentId(data.museumId, data.title)
 
-  // Use transaction to prevent overwriting existing exhibitions
+  // Use transaction to ensure atomicity and prevent race conditions
   try {
     await db.runTransaction(async (transaction) => {
+      // Read phase: All reads must happen first
       const docRef = db.collection('exhibition').doc(id)
       const doc = await transaction.get(docRef)
 
@@ -54,6 +44,18 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
         throw new Error('EXHIBITION_ALREADY_EXISTS')
       }
 
+      // Validate museum exists and get venue name within transaction
+      const museumDoc = await transaction.get(db.collection('museum').doc(data.museumId))
+      if (!museumDoc.exists) {
+        throw new Error('MUSEUM_NOT_FOUND')
+      }
+
+      const venue = museumDoc.data()?.name
+      if (!venue) {
+        throw new Error('MUSEUM_NAME_MISSING')
+      }
+
+      // Write phase: Create exhibition
       transaction.set(docRef, {
         title: data.title,
         museumId: data.museumId,
@@ -71,10 +73,24 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
     })
     console.log('Successfully created exhibition with ID:', id)
   } catch (error) {
-    if (error instanceof Error && error.message === 'EXHIBITION_ALREADY_EXISTS') {
-      return {
-        status: 'error' as const,
-        errors: { title: 'この展覧会は既に登録されています。' },
+    if (error instanceof Error) {
+      if (error.message === 'EXHIBITION_ALREADY_EXISTS') {
+        return {
+          status: 'error' as const,
+          errors: { title: 'この展覧会は既に登録されています。' },
+        }
+      }
+      if (error.message === 'MUSEUM_NOT_FOUND') {
+        return {
+          status: 'error' as const,
+          errors: { museumId: '無効な会場が選択されています。' },
+        }
+      }
+      if (error.message === 'MUSEUM_NAME_MISSING') {
+        return {
+          status: 'error' as const,
+          errors: { museumId: '会場名の取得に失敗しました。' },
+        }
       }
     }
     throw error
