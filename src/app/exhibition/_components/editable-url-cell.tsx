@@ -19,20 +19,25 @@ export function EditableUrlCell({ exhibition }: EditableUrlCellProps) {
 
   const handleSave = () => {
     startTransition(async () => {
-      const formData = new FormData()
-      formData.append('id', exhibition.id)
-      formData.append('officialUrl', urlValue)
+      try {
+        const formData = new FormData()
+        formData.append('id', exhibition.id)
+        formData.append('officialUrl', urlValue)
 
-      const result = await updateExhibitionOfficialUrl(
-        { status: 'pending', errors: undefined },
-        formData
-      )
+        const result = await updateExhibitionOfficialUrl(
+          { status: 'pending', errors: undefined },
+          formData
+        )
 
-      if (result.status === 'success') {
-        setIsEditing(false)
-        setError(undefined)
-      } else if (result.errors?.officialUrl) {
-        setError(result.errors.officialUrl)
+        if (result.status === 'success') {
+          setIsEditing(false)
+          setError(undefined)
+        } else if (result.errors?.officialUrl) {
+          setError(result.errors.officialUrl)
+        }
+      } catch (err) {
+        setError('更新中にエラーが発生しました')
+        console.error('Failed to update URL:', err)
       }
     })
   }
