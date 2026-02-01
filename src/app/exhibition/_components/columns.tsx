@@ -53,28 +53,22 @@ const SortButton = ({
   const isSorted = column.getIsSorted()
 
   return (
-    <Button
-      variant="ghost"
-      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      className="h-8 px-2 lg:px-3"
-    >
-      {children}
-      {!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}
-      {isSorted === 'asc' && <ArrowUp className="ml-2 h-4 w-4" />}
-      {isSorted === 'desc' && <ArrowDown className="ml-2 h-4 w-4" />}
-    </Button>
+    <div className="text-left">
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="h-8 px-2 lg:px-3"
+      >
+        {children}
+        {!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}
+        {isSorted === 'asc' && <ArrowUp className="ml-2 h-4 w-4" />}
+        {isSorted === 'desc' && <ArrowDown className="ml-2 h-4 w-4" />}
+      </Button>
+    </div>
   )
 }
 
 export const columns: ColumnDef<Exhibition>[] = [
-  {
-    accessorKey: 'museumId',
-    header: '',
-    cell: () => null,
-    enableSorting: false,
-    enableHiding: false,
-    filterFn: 'museumFilter',
-  },
   {
     id: 'visibility',
     header: '',
@@ -85,16 +79,18 @@ export const columns: ColumnDef<Exhibition>[] = [
       }
 
       return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Eye className="h-4 w-4 text-green-600 mx-auto" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>ユーザー公開中</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <div className="pl-3">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Eye className="h-4 w-4 text-green-600 mx-auto" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>ユーザー公開中</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       )
     },
     enableSorting: false,
@@ -116,7 +112,7 @@ export const columns: ColumnDef<Exhibition>[] = [
   },
   {
     accessorKey: 'officialUrl',
-    header: () => <div className="pl-5">公式サイトURL</div>,
+    header: () => <div className="pl-5 text-left">公式サイトURL</div>,
     cell: ({ row }) => {
       const url = row.getValue('officialUrl') as string | undefined
 

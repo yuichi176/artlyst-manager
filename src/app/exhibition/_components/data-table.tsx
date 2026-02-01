@@ -270,6 +270,11 @@ export function DataTable<TData, TValue>({
       </Collapsible>
 
       {/* Table */}
+
+      {/* Total count */}
+      <div className="text-sm text-muted-foreground">
+        全 {table.getFilteredRowModel().rows.length} 件を表示
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -305,11 +310,6 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-      </div>
-
-      {/* Total count */}
-      <div className="text-sm text-muted-foreground">
-        全 {table.getFilteredRowModel().rows.length} 件を表示
       </div>
     </div>
   )
