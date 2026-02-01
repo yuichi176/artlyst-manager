@@ -15,13 +15,7 @@ import {
 
 export const dynamic = 'force-dynamic'
 
-export default async function ExhibitionListPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page: string | undefined }>
-}) {
-  const page = (await searchParams).page ?? '1'
-
+export default async function ExhibitionListPage() {
   return (
     <>
       <div className="mb-6">
@@ -52,7 +46,7 @@ export default async function ExhibitionListPage({
         </Link>
       </div>
       <Suspense fallback={<ExhibitionTableSkeleton />}>
-        <ExhibitionTableSection currentPage={Number(page)} />
+        <ExhibitionTableSection />
       </Suspense>
     </>
   )

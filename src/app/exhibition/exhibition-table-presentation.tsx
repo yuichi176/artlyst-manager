@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Exhibition } from '@/schema/ui'
+import type { Exhibition, Museum } from '@/schema/ui'
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/modal/delete-exhibition-modal'
 import { ExcludeExhibitionModal } from '@/app/exhibition/_components/modal/exclude-exhibition-modal'
 import { DataTable } from '@/app/exhibition/_components/data-table'
@@ -9,9 +9,10 @@ import { columns, type ExhibitionTableMeta } from '@/app/exhibition/_components/
 
 interface ExhibitionTableProps {
   exhibitions: Exhibition[]
+  museums: Museum[]
 }
 
-export function ExhibitionTablePresentation({ exhibitions }: ExhibitionTableProps) {
+export function ExhibitionTablePresentation({ exhibitions, museums }: ExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
   const [excludingExhibition, setExcludingExhibition] = useState<Exhibition | undefined>(undefined)
 
@@ -22,7 +23,7 @@ export function ExhibitionTablePresentation({ exhibitions }: ExhibitionTableProp
 
   return (
     <>
-      <DataTable columns={columns} data={exhibitions} meta={tableMeta} />
+      <DataTable columns={columns} data={exhibitions} museums={museums} meta={tableMeta} />
 
       <DeleteExhibitionModal
         exhibition={deletingExhibition}

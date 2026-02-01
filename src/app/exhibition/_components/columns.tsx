@@ -68,6 +68,14 @@ const SortButton = ({
 
 export const columns: ColumnDef<Exhibition>[] = [
   {
+    accessorKey: 'museumId',
+    header: '',
+    cell: () => null,
+    enableSorting: false,
+    enableHiding: false,
+    filterFn: 'museumFilter',
+  },
+  {
     id: 'visibility',
     header: '',
     cell: ({ row }) => {
@@ -134,6 +142,7 @@ export const columns: ColumnDef<Exhibition>[] = [
     accessorKey: 'startDate',
     header: ({ column }) => <SortButton column={column}>開始日</SortButton>,
     cell: ({ row }) => <div className="pl-5">{row.getValue('startDate')}</div>,
+    filterFn: 'eventStatusFilter',
   },
   {
     accessorKey: 'endDate',
@@ -148,6 +157,7 @@ export const columns: ColumnDef<Exhibition>[] = [
         <StatusUpdateCell exhibition={row.original} />
       </div>
     ),
+    filterFn: 'statusFilter',
   },
   {
     accessorKey: 'updatedAt',
