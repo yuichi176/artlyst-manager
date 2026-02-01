@@ -92,23 +92,14 @@ export function ExhibitionEditForm({ exhibition, museums }: ExhibitionEditFormPr
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="museumId" className="flex items-center text-sm font-medium">
+            <label className="flex items-center text-sm font-medium">
               <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
               会場
-              <span className="ml-1 text-destructive">*</span>
             </label>
-            <Select disabled defaultValue={exhibition.museumId}>
-              <SelectTrigger className="text-base w-full">
-                <SelectValue placeholder="会場を選択してください" />
-              </SelectTrigger>
-              <SelectContent>
-                {museums.map((museum) => (
-                  <SelectItem key={museum.id} value={museum.id}>
-                    {museum.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="rounded-md border border-input bg-muted px-3 py-2 text-base">
+              {exhibition.venue}
+            </div>
+            <p className="text-sm text-muted-foreground">会場は作成後に変更できません</p>
           </div>
 
           <div className="space-y-3">
