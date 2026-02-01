@@ -43,24 +43,42 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
   const venue = museumDoc.data()?.name
 
   const id = getExhibitionDocumentId(data.museumId, data.title)
-  await db
-    .collection('exhibition')
-    .doc(id)
-    .set({
-      title: data.title,
-      museumId: data.museumId,
-      venue,
-      startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
-      endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
-      officialUrl: data.officialUrl || '',
-      imageUrl: data.imageUrl || '',
-      status: data.status,
-      origin: 'manual',
-      isExcluded: false,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
+
+  // Use transaction to prevent overwriting existing exhibitions
+  try {
+    await db.runTransaction(async (transaction) => {
+      const docRef = db.collection('exhibition').doc(id)
+      const doc = await transaction.get(docRef)
+
+      if (doc.exists) {
+        throw new Error('EXHIBITION_ALREADY_EXISTS')
+      }
+
+      transaction.set(docRef, {
+        title: data.title,
+        museumId: data.museumId,
+        venue,
+        startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
+        endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
+        officialUrl: data.officialUrl || '',
+        imageUrl: data.imageUrl || '',
+        status: data.status,
+        origin: 'manual',
+        isExcluded: false,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      })
     })
-  console.log('Successfully created exhibition with ID:', id)
+    console.log('Successfully created exhibition with ID:', id)
+  } catch (error) {
+    if (error instanceof Error && error.message === 'EXHIBITION_ALREADY_EXISTS') {
+      return {
+        status: 'error' as const,
+        errors: { title: 'この展覧会は既に登録されています。' },
+      }
+    }
+    throw error
+  }
 
   revalidatePath('/')
 

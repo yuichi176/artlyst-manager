@@ -190,6 +190,51 @@ await db.runTransaction(async (transaction) => {
 })
 ```
 
+#### 4. Preventing Document Overwrite (ID Collision Prevention)
+
+When using generated IDs (e.g., hash-based IDs), use transactions to prevent accidentally overwriting existing documents:
+
+```typescript
+// Generate document ID (e.g., from hash of title and museum)
+const id = getExhibitionDocumentId(data.museumId, data.title)
+
+// Use transaction to prevent overwriting existing exhibitions
+try {
+  await db.runTransaction(async (transaction) => {
+    const docRef = db.collection('exhibition').doc(id)
+    const doc = await transaction.get(docRef)
+
+    if (doc.exists) {
+      throw new Error('EXHIBITION_ALREADY_EXISTS')
+    }
+
+    transaction.set(docRef, {
+      title: data.title,
+      museumId: data.museumId,
+      venue,
+      startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
+      endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
+      status: data.status,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    })
+  })
+} catch (error) {
+  if (error instanceof Error && error.message === 'EXHIBITION_ALREADY_EXISTS') {
+    return {
+      status: 'error' as const,
+      errors: { title: 'この展覧会は既に登録されています。' },
+    }
+  }
+  throw error
+}
+```
+
+**Why this is important:**
+- Prevents silent data loss from hash collisions
+- Ensures duplicate detection before creation
+- Provides clear user feedback when duplicates are detected
+
 ### When NOT to Use Transactions
 
 - **Simple single-document writes**: Use `set()` or `update()` directly
