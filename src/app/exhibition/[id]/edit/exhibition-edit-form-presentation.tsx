@@ -31,7 +31,7 @@ interface ExhibitionEditFormProps {
   museums: Museum[]
 }
 
-export function ExhibitionEditForm({ exhibition, museums }: ExhibitionEditFormProps) {
+export function ExhibitionEditFormPresentation({ exhibition, museums }: ExhibitionEditFormProps) {
   const router = useRouter()
   const [imageUrl, setImageUrl] = useState(exhibition.imageUrl || '')
   const [imageError, setImageError] = useState(false)

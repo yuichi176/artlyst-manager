@@ -1,5 +1,5 @@
-import ExhibitionTableSection from '@/app/exhibition/_components/exhibition-table/ExhibitionTableSection'
-import { ExhibitionTableSkeleton } from '@/app/exhibition/_components/exhibition-table/ExhibitionTableSkeleton'
+import ExhibitionTableSection from './exhibition-table-section'
+import ExhibitionTableSkeleton from './exhibition-table-skeleton'
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { Home, Plus } from 'lucide-react'

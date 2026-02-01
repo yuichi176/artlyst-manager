@@ -28,7 +28,7 @@ interface ExhibitionCreateFormProps {
   museums: Museum[]
 }
 
-export function ExhibitionCreateForm({ museums }: ExhibitionCreateFormProps) {
+export function ExhibitionCreateFormPresentation({ museums }: ExhibitionCreateFormProps) {
   const router = useRouter()
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)

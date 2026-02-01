@@ -25,8 +25,8 @@ import {
   Trash2,
   RotateCcw,
 } from 'lucide-react'
-import { DeleteExhibitionModal } from '@/app/exhibition/_components/exhibition-table/modal/DeleteExhibitionModal'
-import { RestoreExhibitionModal } from './modal/RestoreExhibitionModal'
+import { DeleteExhibitionModal } from '@/app/exhibition/_components/modal/delete-exhibition-modal'
+import { RestoreExhibitionModal } from './_components/modal/RestoreExhibitionModal'
 import { useTableSort } from '@/hooks/useTableSort'
 import { TruncatedText } from '@/components'
 
@@ -36,7 +36,7 @@ interface ExcludedExhibitionTableProps {
   exhibitions: Exhibition[]
 }
 
-export function ExcludedExhibitionTable({ exhibitions }: ExcludedExhibitionTableProps) {
+export function ExcludedExhibitionTablePresentation({ exhibitions }: ExcludedExhibitionTableProps) {
   const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
   const [restoringExhibition, setRestoringExhibition] = useState<Exhibition | undefined>(undefined)
 
@@ -208,7 +208,7 @@ export function ExcludedExhibitionTable({ exhibitions }: ExcludedExhibitionTable
       <DeleteExhibitionModal
         exhibition={deletingExhibition}
         open={deletingExhibition !== undefined}
-        onOpenChange={(open) => {
+        onOpenChange={(open: boolean) => {
           if (!open) setDeletingExhibition(undefined)
         }}
       />
@@ -216,7 +216,7 @@ export function ExcludedExhibitionTable({ exhibitions }: ExcludedExhibitionTable
       <RestoreExhibitionModal
         exhibition={restoringExhibition}
         open={restoringExhibition !== undefined}
-        onOpenChange={(open) => {
+        onOpenChange={(open: boolean) => {
           if (!open) setRestoringExhibition(undefined)
         }}
       />

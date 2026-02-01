@@ -1,7 +1,7 @@
 import db from '@/lib/firestore'
 import { RawMuseum } from '@/schema/db'
 import { convertRawMuseumToMuseum } from '@/schema/converters'
-import { MuseumTable } from '@/app/museum/_components/museum-table/MuseumTable'
+import { MuseumTablePresentation } from './museum-table-presentation'
 
 export default async function MuseumTableSection() {
   const museumCollectionRef = db.collection('museum')
@@ -12,5 +12,5 @@ export default async function MuseumTableSection() {
     return convertRawMuseumToMuseum(doc.id, data)
   })
 
-  return <MuseumTable museums={museums} />
+  return <MuseumTablePresentation museums={museums} />
 }

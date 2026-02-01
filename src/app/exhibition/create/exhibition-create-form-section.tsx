@@ -1,9 +1,9 @@
 import db from '@/lib/firestore'
 import { RawMuseum } from '@/schema/db'
 import { convertRawMuseumToMuseum } from '@/schema/converters'
-import { ExhibitionCreateForm } from './ExhibitionCreateForm'
+import { ExhibitionCreateFormPresentation } from './exhibition-create-form-presentation'
 
-export const ExhibitionCreateFormSection = async () => {
+export default async function ExhibitionCreateFormSection() {
   const museumCollectionRef = db.collection('museum')
   const museumSnapshot = await museumCollectionRef.orderBy('name', 'asc').get()
 
@@ -12,5 +12,5 @@ export const ExhibitionCreateFormSection = async () => {
     return convertRawMuseumToMuseum(doc.id, data)
   })
 
-  return <ExhibitionCreateForm museums={museums} />
+  return <ExhibitionCreateFormPresentation museums={museums} />
 }

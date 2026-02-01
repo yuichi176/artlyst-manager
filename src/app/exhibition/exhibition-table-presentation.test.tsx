@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ExhibitionTable } from '@/app/exhibition/_components/exhibition-table/ExhibitionTable'
+import { ExhibitionTablePresentation as ExhibitionTable } from './exhibition-table-presentation'
 import { Exhibition } from '@/schema/ui'
 
 describe('ExhibitionTable', () => {

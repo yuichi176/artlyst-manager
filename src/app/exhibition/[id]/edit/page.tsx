@@ -1,6 +1,4 @@
-import { ExhibitionEditFormSection } from '@/app/exhibition/[id]/edit/_components/ExhibitionEditFormSection'
 import { Suspense } from 'react'
-import { ExhibitionEditFormSkeleton } from '@/app/exhibition/[id]/edit/_components/ExhibitionEditFormSkeleton'
 import Link from 'next/link'
 import { Home } from 'lucide-react'
 import {
@@ -11,6 +9,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/shadcn-ui/breadcrumb'
+import ExhibitionEditFormSection from './exhibition-edit-form-section'
+import ExhibitionEditFormSkeleton from './exhibition-edit-form-skeleton'
 
 export const dynamic = 'force-dynamic'
 

@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/shadcn-ui/skeleton'
 import { Card, CardHeader, CardContent } from '@/components/shadcn-ui/card'
 
-export function MuseumEditFormSkeleton() {
+export default function MuseumEditFormSkeleton() {
   return (
     <div className="space-y-6">
       <Card>

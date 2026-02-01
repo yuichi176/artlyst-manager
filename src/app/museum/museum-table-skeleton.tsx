@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/shadcn-ui/table'
 
-export function MuseumTableSkeleton() {
+export default function MuseumTableSkeleton() {
   return (
     <Table>
       <TableHeader>

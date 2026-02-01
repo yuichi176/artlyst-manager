@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ExhibitionEditForm } from '@/app/exhibition/[id]/edit/_components/ExhibitionEditForm'
+import { ExhibitionEditFormPresentation as ExhibitionEditForm } from './exhibition-edit-form-presentation'
 import { Exhibition, Museum } from '@/schema/ui'
 
 // Mock useRouter

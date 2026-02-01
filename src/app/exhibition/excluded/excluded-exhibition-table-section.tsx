@@ -1,4 +1,4 @@
-import { ExhibitionTable } from '@/app/exhibition/_components/exhibition-table/ExhibitionTable'
+import { ExcludedExhibitionTablePresentation } from './excluded-exhibition-table-presentation'
 import db from '@/lib/firestore'
 import { RawExhibition } from '@/schema/db'
 import { Exhibition } from '@/schema/ui'
@@ -7,14 +7,16 @@ import { PaginationSection } from '@/components'
 
 const PAGE_SIZE = 100
 
-interface ExhibitionTableSectionProps {
+interface ExcludedExhibitionTableSectionProps {
   currentPage: number
 }
 
-export default async function ExhibitionTableSection({ currentPage }: ExhibitionTableSectionProps) {
+export default async function ExcludedExhibitionTableSection({
+  currentPage,
+}: ExcludedExhibitionTableSectionProps) {
   const baseQuery = db
     .collection('exhibition')
-    .where('isExcluded', '!=', true)
+    .where('isExcluded', '!=', false)
     .orderBy('createdAt', 'desc')
 
   // 件数カウント
@@ -34,7 +36,7 @@ export default async function ExhibitionTableSection({ currentPage }: Exhibition
 
   return (
     <>
-      <ExhibitionTable exhibitions={exhibitions} />
+      <ExcludedExhibitionTablePresentation exhibitions={exhibitions} />
       <PaginationSection pageSize={PAGE_SIZE} totalCount={totalCount} currentPage={currentPage} />
     </>
   )

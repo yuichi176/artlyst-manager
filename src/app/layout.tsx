@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/layout/app-sidebar'
 import { Header } from '@/components/layout/header'
 import { Toaster } from '@/components/shadcn-ui/sonner'
 import { MainLayout } from '@/components/layout/main-layout'
+import { cn } from '@/utils'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={cn('antialiased', geistSans.variable, geistMono.variable)}>
         <SidebarProvider>
           <AppSidebar />
           <MainLayout>

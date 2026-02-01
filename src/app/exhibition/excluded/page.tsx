@@ -1,5 +1,5 @@
-import ExcludedExhibitionTableSection from '@/app/exhibition/excluded/_components/ExcludedExhibitionTableSection'
-import { ExhibitionTableSkeleton } from '@/app/exhibition/_components/exhibition-table/ExhibitionTableSkeleton'
+import ExcludedExhibitionTableSection from './excluded-exhibition-table-section'
+import ExhibitionTableSkeleton from '@/app/exhibition/exhibition-table-skeleton'
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { Home, RotateCcw } from 'lucide-react'
