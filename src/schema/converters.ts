@@ -33,7 +33,7 @@ export function convertRawExhibitionToExhibition(id: string, raw: RawExhibition)
     status: raw.status,
     origin: raw.origin ?? '',
     updatedAt: raw.updatedAt ? raw.updatedAt.toDate().toISOString().split('T')[0] : '',
-    createdAt: raw.updatedAt ? raw.createdAt.toDate().toISOString().split('T')[0] : '',
+    createdAt: raw.createdAt ? raw.createdAt.toDate().toISOString().split('T')[0] : '',
     eventStatus,
   }
 }
