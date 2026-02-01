@@ -57,5 +57,12 @@ export const exhibitionIsExcludedFormDataSchema = z.object({
 
 export const exhibitionOfficialUrlFormDataSchema = z.object({
   id: z.string(),
-  officialUrl: z.string().url('有効なURLを入力してください').optional().or(z.literal('')),
+  officialUrl: z
+    .union([
+      z.string().refine((url) => url.startsWith('http://') || url.startsWith('https://'), {
+        message: 'URLはhttp://またはhttps://で始まる必要があります',
+      }),
+      z.literal(''),
+    ])
+    .optional(),
 })
