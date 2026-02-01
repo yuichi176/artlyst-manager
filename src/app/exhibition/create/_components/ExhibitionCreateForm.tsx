@@ -22,9 +22,13 @@ import {
   SelectValue,
 } from '@/components/shadcn-ui/select'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
-import { FormSubmitState } from '@/schema/ui'
+import { FormSubmitState, Museum } from '@/schema/ui'
 
-export function ExhibitionCreateForm() {
+interface ExhibitionCreateFormProps {
+  museums: Museum[]
+}
+
+export function ExhibitionCreateForm({ museums }: ExhibitionCreateFormProps) {
   const router = useRouter()
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
@@ -77,20 +81,25 @@ export function ExhibitionCreateForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="venue" className="flex items-center text-sm font-medium">
+            <label htmlFor="museumId" className="flex items-center text-sm font-medium">
               <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
               会場
               <span className="ml-1 text-destructive">*</span>
             </label>
-            <Input
-              id="venue"
-              name="venue"
-              placeholder="会場名を入力してください"
-              required
-              className="text-base"
-            />
+            <Select name="museumId" required>
+              <SelectTrigger className="text-base w-full">
+                <SelectValue placeholder="会場を選択してください" />
+              </SelectTrigger>
+              <SelectContent>
+                {museums.map((museum) => (
+                  <SelectItem key={museum.id} value={museum.id}>
+                    {museum.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.venue}
+              {formState?.errors?.museumId}
             </p>
           </div>
 

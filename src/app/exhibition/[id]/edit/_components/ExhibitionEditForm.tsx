@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect, useState } from 'react'
-import { Exhibition } from '@/schema/ui'
+import { Exhibition, Museum } from '@/schema/ui'
 import { Button } from '@/components/shadcn-ui/button'
 import { Input } from '@/components/shadcn-ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'
@@ -28,9 +28,10 @@ import { FormSubmitState } from '@/schema/ui'
 
 interface ExhibitionEditFormProps {
   exhibition: Exhibition
+  museums: Museum[]
 }
 
-export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
+export function ExhibitionEditForm({ exhibition, museums }: ExhibitionEditFormProps) {
   const router = useRouter()
   const [imageUrl, setImageUrl] = useState(exhibition.imageUrl || '')
   const [imageError, setImageError] = useState(false)
@@ -91,22 +92,14 @@ export function ExhibitionEditForm({ exhibition }: ExhibitionEditFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="venue" className="flex items-center text-sm font-medium">
+            <label className="flex items-center text-sm font-medium">
               <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
               会場
-              <span className="ml-1 text-destructive">*</span>
             </label>
-            <Input
-              id="venue"
-              name="venue"
-              defaultValue={exhibition.venue}
-              placeholder="会場名を入力してください"
-              required
-              className="text-base"
-            />
-            <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.venue}
-            </p>
+            <div className="rounded-md border border-input bg-muted px-3 py-2 text-base">
+              {exhibition.venue}
+            </div>
+            <p className="text-sm text-muted-foreground">会場は作成後に変更できません</p>
           </div>
 
           <div className="space-y-3">

@@ -190,6 +190,71 @@ await db.runTransaction(async (transaction) => {
 })
 ```
 
+#### 4. Preventing Document Overwrite (ID Collision Prevention)
+
+When using generated IDs (e.g., hash-based IDs), use transactions to prevent accidentally overwriting existing documents. **Important:** All validation must happen inside the transaction to prevent race conditions.
+
+```typescript
+const data = parsed.data
+const id = getExhibitionDocumentId(data.museumId, data.title)
+
+// Use transaction to ensure atomicity and prevent race conditions
+try {
+  await db.runTransaction(async (transaction) => {
+    // Read phase: All reads must happen first
+    const docRef = db.collection('exhibition').doc(id)
+    const doc = await transaction.get(docRef)
+
+    if (doc.exists) {
+      throw new Error('EXHIBITION_ALREADY_EXISTS')
+    }
+
+    // Validate museum exists and get venue name within transaction
+    const museumDoc = await transaction.get(db.collection('museum').doc(data.museumId))
+    if (!museumDoc.exists) {
+      throw new Error('MUSEUM_NOT_FOUND')
+    }
+
+    const venue = museumDoc.data()?.name
+    if (!venue) {
+      throw new Error('MUSEUM_NAME_MISSING')
+    }
+
+    // Write phase: Create exhibition
+    transaction.set(docRef, {
+      title: data.title,
+      museumId: data.museumId,
+      venue,
+      startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
+      endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
+      status: data.status,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    })
+  })
+} catch (error) {
+  if (error instanceof Error) {
+    if (error.message === 'EXHIBITION_ALREADY_EXISTS') {
+      return { status: 'error', errors: { title: 'この展覧会は既に登録されています。' } }
+    }
+    if (error.message === 'MUSEUM_NOT_FOUND') {
+      return { status: 'error', errors: { museumId: '無効な会場が選択されています。' } }
+    }
+    if (error.message === 'MUSEUM_NAME_MISSING') {
+      return { status: 'error', errors: { museumId: '会場名の取得に失敗しました。' } }
+    }
+  }
+  throw error
+}
+```
+
+**Why this is important:**
+- Prevents silent data loss from hash collisions
+- Ensures duplicate detection before creation
+- **Prevents race conditions** by validating referenced documents within the transaction
+- Provides clear user feedback when duplicates or invalid references are detected
+- **Atomicity**: All validation and creation happen as a single atomic operation
+
 ### When NOT to Use Transactions
 
 - **Simple single-document writes**: Use `set()` or `update()` directly

@@ -17,6 +17,10 @@ env:
 jobs:
   test-and-build:
     uses: ./.github/workflows/test-and-build.yml
+    with:
+      RUNNER: ubuntu-latest
+      NODE_VERSION: "22"
+      PNPM_VERSION: "10"
 
   deploy:
     needs: test-and-build

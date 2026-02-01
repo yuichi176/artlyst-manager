@@ -1,4 +1,4 @@
-import { ExhibitionCreateForm } from '@/app/exhibition/create/_components/ExhibitionCreateForm'
+import { ExhibitionCreateFormSection } from '@/app/exhibition/create/_components/ExhibitionCreateFormSection'
 import Link from 'next/link'
 import { Home } from 'lucide-react'
 import {
@@ -9,6 +9,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/shadcn-ui/breadcrumb'
+import { Suspense } from 'react'
+import { ExhibitionCreateFormSkeleton } from '@/app/exhibition/create/_components/ExhibitionCreateFormSkeleton'
+
+export const dynamic = 'force-dynamic'
 
 export default function ExhibitionCreate() {
   return (
@@ -40,7 +44,9 @@ export default function ExhibitionCreate() {
           <h1 className="text-3xl font-bold tracking-tight">展覧会登録</h1>
         </div>
 
-        <ExhibitionCreateForm />
+        <Suspense fallback={<ExhibitionCreateFormSkeleton />}>
+          <ExhibitionCreateFormSection />
+        </Suspense>
       </div>
     </div>
   )

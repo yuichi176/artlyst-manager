@@ -5,14 +5,14 @@ import { revalidatePath } from 'next/cache'
 import { Timestamp } from '@google-cloud/firestore'
 import { TZDate } from '@date-fns/tz'
 import {
-  exhibitionFormDataSchema,
   exhibitionCreateFormDataSchema,
   exhibitionStatusFormDataSchema,
   exhibitionIsExcludedFormDataSchema,
   FormSubmitState,
+  exhibitionUpdateFormDataSchema,
 } from '@/schema/ui'
 import { redirect } from 'next/navigation'
-import { getExhibitionDocumentHash } from '@/utils'
+import { getExhibitionDocumentId } from '@/utils'
 
 export async function createExhibition(prev: FormSubmitState, formData: FormData) {
   const formDataObject = Object.fromEntries(formData.entries())
@@ -31,24 +31,70 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
   }
 
   const data = parsed.data
-  const id = getExhibitionDocumentHash(data.title, data.venue)
-  await db
-    .collection('exhibition')
-    .doc(id)
-    .set({
-      title: data.title,
-      venue: data.venue,
-      startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
-      endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
-      officialUrl: data.officialUrl || '',
-      imageUrl: data.imageUrl || '',
-      status: data.status,
-      origin: 'manual',
-      isExcluded: false,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
+  const id = getExhibitionDocumentId(data.museumId, data.title)
+
+  // Use transaction to ensure atomicity and prevent race conditions
+  try {
+    await db.runTransaction(async (transaction) => {
+      // Read phase: All reads must happen first
+      const docRef = db.collection('exhibition').doc(id)
+      const doc = await transaction.get(docRef)
+
+      if (doc.exists) {
+        throw new Error('EXHIBITION_ALREADY_EXISTS')
+      }
+
+      // Validate museum exists and get venue name within transaction
+      const museumDoc = await transaction.get(db.collection('museum').doc(data.museumId))
+      if (!museumDoc.exists) {
+        throw new Error('MUSEUM_NOT_FOUND')
+      }
+
+      const venue = museumDoc.data()?.name
+      if (!venue) {
+        throw new Error('MUSEUM_NAME_MISSING')
+      }
+
+      // Write phase: Create exhibition
+      transaction.set(docRef, {
+        title: data.title,
+        museumId: data.museumId,
+        venue,
+        startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
+        endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
+        officialUrl: data.officialUrl || '',
+        imageUrl: data.imageUrl || '',
+        status: data.status,
+        origin: 'manual',
+        isExcluded: false,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      })
     })
-  console.log('Successfully created exhibition with ID:', id)
+    console.log('Successfully created exhibition with ID:', id)
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'EXHIBITION_ALREADY_EXISTS') {
+        return {
+          status: 'error' as const,
+          errors: { title: 'この展覧会は既に登録されています。' },
+        }
+      }
+      if (error.message === 'MUSEUM_NOT_FOUND') {
+        return {
+          status: 'error' as const,
+          errors: { museumId: '無効な会場が選択されています。' },
+        }
+      }
+      if (error.message === 'MUSEUM_NAME_MISSING') {
+        return {
+          status: 'error' as const,
+          errors: { museumId: '会場名の取得に失敗しました。' },
+        }
+      }
+    }
+    throw error
+  }
 
   revalidatePath('/')
 
@@ -65,7 +111,7 @@ export async function deleteExhibition(id: string) {
 export async function updateExhibition(prev: FormSubmitState, formData: FormData) {
   const formDataObject = Object.fromEntries(formData.entries())
 
-  const parsed = exhibitionFormDataSchema.safeParse(formDataObject)
+  const parsed = exhibitionUpdateFormDataSchema.safeParse(formDataObject)
   if (!parsed.success) {
     const errors: Record<string, string> = {}
     parsed.error.issues.forEach((issue) => {
@@ -84,7 +130,6 @@ export async function updateExhibition(prev: FormSubmitState, formData: FormData
     .doc(data.id)
     .update({
       title: data.title,
-      venue: data.venue,
       startDate: Timestamp.fromDate(new TZDate(data.startDate, 'Asia/Tokyo')),
       endDate: Timestamp.fromDate(new TZDate(data.endDate, 'Asia/Tokyo')),
       officialUrl: data.officialUrl || '',

@@ -13,11 +13,7 @@ env:
   IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID_PROD }}/${{ vars.ARTIFACT_REPO }}/${{ vars.SERVICE_NAME }}:${{ github.event.release.tag_name }}
 
 jobs:
-  test-and-build:
-    uses: ./.github/workflows/test-and-build.yml
-
   deploy:
-    needs: test-and-build
     runs-on: ubuntu-latest
     environment: production
     permissions:
