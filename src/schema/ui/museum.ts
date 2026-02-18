@@ -33,6 +33,12 @@ export const areaOptions = areaSchema.options.map((area) => ({
   value: area,
 }))
 
+export const regionSchema = z.enum(['東京'])
+export const regionOptions = regionSchema.options.map((region) => ({
+  label: region,
+  value: region,
+}))
+
 /**
  * UI layer schema for Museum.
  * Uses ISO date strings for timestamps (optional for backward compatibility).
@@ -45,6 +51,7 @@ export const museumSchema = z.object({
   openingInformation: z.string().optional(),
   venueType: venueTypeSchema,
   area: areaSchema,
+  region: regionSchema,
   officialUrl: z.string(),
   scrapeUrl: z.string(),
   scrapeEnabled: z.boolean(),
@@ -61,6 +68,7 @@ export const museumFormDataSchema = z.object({
   openingInformation: z.string().optional(),
   venueType: venueTypeSchema,
   area: areaSchema,
+  region: regionSchema,
   officialUrl: z.string().min(1, { message: '公式URLは必須項目です。' }),
   scrapeUrl: z.string().min(1, { message: 'スクレイピングURLは必須項目です。' }),
   scrapeEnabled: z.string(),

@@ -98,6 +98,7 @@ export function MuseumTablePresentation({ museums }: MuseumTableProps) {
                 {getSortIcon('area')}
               </Button>
             </TableHead>
+            <TableHead>地域</TableHead>
             <TableHead>スクレイピング</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
@@ -105,7 +106,7 @@ export function MuseumTablePresentation({ museums }: MuseumTableProps) {
         <TableBody>
           {sortedMuseums.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center">
+              <TableCell colSpan={7} className="h-24 text-center">
                 美術館が見つかりませんでした。
               </TableCell>
             </TableRow>
@@ -138,6 +139,7 @@ export function MuseumTablePresentation({ museums }: MuseumTableProps) {
                 {/*</TableCell>*/}
                 <TableCell className="pl-5">{museum.venueType}</TableCell>
                 <TableCell className="pl-5">{museum.area}</TableCell>
+                <TableCell className="pl-5">{museum.region}</TableCell>
                 <TableCell className="text-center">{museum.scrapeEnabled ? '⚪︎' : '×'}</TableCell>
                 <TableCell>
                   <DropdownMenu>

@@ -1,9 +1,11 @@
 import { z } from 'zod'
 import { Timestamp } from '@google-cloud/firestore'
 
-const venueTypeSchema = z.enum(['美術館', '博物館', 'ギャラリー', 'イベントスペース'])
+const venueTypes = ['美術館', '博物館', 'ギャラリー', 'イベントスペース', '商業施設'] as const
+export const venueTypeSchema = z.enum(venueTypes)
+export type VenueType = z.infer<typeof venueTypeSchema>
 
-const areaSchema = z.enum([
+const areas = [
   '上野',
   '浅草・押上（スカイツリー）',
   '銀座・丸の内',
@@ -24,25 +26,25 @@ const areaSchema = z.enum([
   '武蔵野・三鷹・調布',
   '小金井・府中・多摩',
   '立川・八王子・多摩センター',
-])
+] as const
+export const areaSchema = z.enum(areas)
+export type Area = z.infer<typeof areaSchema>
 
-/**
- * Database layer schema for Museum documents in Firestore.
- * Uses Firestore Timestamp for date fields.
- * createdAt and updatedAt are optional for backward compatibility.
- */
-export const rawMuseumSchema = z.object({
-  name: z.string(),
-  address: z.string(),
-  access: z.string(),
-  openingInformation: z.string().optional(),
-  venueType: venueTypeSchema,
-  area: areaSchema,
-  officialUrl: z.string(),
-  scrapeUrl: z.string(),
-  scrapeEnabled: z.boolean(),
-  createdAt: z.instanceof(Timestamp).optional(),
-  updatedAt: z.instanceof(Timestamp).optional(),
-})
+const regions = ['東京'] as const
+export const regionSchema = z.enum(regions)
+export type Region = z.infer<typeof regionSchema>
 
-export type RawMuseum = z.infer<typeof rawMuseumSchema>
+export type RawMuseum = {
+  name: string
+  address: string
+  access: string
+  openingInformation?: string
+  venueType: VenueType
+  area: Area
+  region: Region
+  officialUrl: string
+  scrapeUrl: string
+  scrapeEnabled: boolean
+  createdAt?: Timestamp
+  updatedAt?: Timestamp
+}

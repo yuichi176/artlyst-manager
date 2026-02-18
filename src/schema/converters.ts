@@ -50,6 +50,7 @@ export function convertRawMuseumToMuseum(id: string, raw: RawMuseum): Museum {
     openingInformation: raw.openingInformation,
     venueType: raw.venueType,
     area: raw.area,
+    region: raw.region,
     officialUrl: raw.officialUrl,
     scrapeUrl: raw.scrapeUrl,
     scrapeEnabled: raw.scrapeEnabled,
