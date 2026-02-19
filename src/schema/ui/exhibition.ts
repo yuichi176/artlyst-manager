@@ -1,7 +1,5 @@
 import { z } from 'zod'
-
-const statusSchema = z.enum(['pending', 'active'])
-export type Status = z.infer<typeof statusSchema>
+import { statusSchema } from '@/schema/common/exhibition'
 
 /**
  * UI layer schema for Exhibition.

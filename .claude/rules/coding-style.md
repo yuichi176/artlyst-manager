@@ -171,14 +171,40 @@ Client Form → Server Action → Validation → Firestore → Revalidation → 
 
 ## Schema Organization
 
-The project separates type definitions into **DB layer** and **UI layer** to maintain clear boundaries between Firestore types and application types.
+The project separates type definitions into **Common layer**, **DB layer**, and **UI layer** to maintain clear boundaries between shared, Firestore, and application types.
 
 ### Directory Structure
 
 ```
 src/schema/
+├── common/          # Shared types used across DB and UI layers
 ├── db/              # Database layer types (Firestore)
 └── ui/              # UI layer types (Application)
+```
+
+### Common Layer Types (`src/schema/common/`)
+
+- **Purpose**: Define shared enums, constants, and types that are used across both DB and UI layers
+- **Characteristics**:
+    - Contains no Firestore-specific types (no `Timestamp`, etc.)
+    - Fully serializable
+    - Imported by both `db/` and `ui/` schemas
+    - Typically defines `enum`-like values using `z.enum()` with `as const` arrays
+- **Examples**: `Status` (exhibition status), `VenueType`, `Area`, `Region` (museum properties)
+
+**Example:**
+
+```typescript
+// src/schema/common/museum.ts
+import { z } from 'zod'
+
+export const venueTypes = ['美術館', '博物館', 'ギャラリー'] as const
+export const venueTypeSchema = z.enum(venueTypes)
+export type VenueType = z.infer<typeof venueTypeSchema>
+
+export const areas = ['上野', '銀座・丸の内', /* ... */] as const
+export const areaSchema = z.enum(areas)
+export type Area = z.infer<typeof areaSchema>
 ```
 
 ### DB Layer Types (`src/schema/db/`)
@@ -187,6 +213,7 @@ src/schema/
 - **Characteristics**:
     - Contains `Timestamp` objects for date/time fields
     - Matches the exact structure stored in Firestore
+    - Imports shared types from `src/schema/common/`
     - Used in Server Components and API routes for database operations
 - **Naming Convention**: `RawExhibition`, `RawUser`, `RawBookmark`, etc.
 
@@ -196,6 +223,7 @@ src/schema/
 - **Characteristics**:
     - Uses ISO date strings or JavaScript `Date` objects instead of `Timestamp`
     - Fully serializable (can be passed through Server/Client boundary)
+    - Imports shared types from `src/schema/common/`
     - Used in Client Components and as props
     - May include computed fields (e.g., `ongoingStatus`)
 - **Naming Convention**: `Exhibition`, `User`, `Bookmark`, etc. (no "Raw" prefix)
@@ -213,7 +241,7 @@ src/schema/
     - Convert UI types → DB types when writing to Firestore
 
 3. **Client Components**:
-    - Only import from `src/schema/ui/`
+    - Only import from `src/schema/ui/` and `src/schema/common/`
     - Never import or use DB layer types
     - Work exclusively with serializable types
 
