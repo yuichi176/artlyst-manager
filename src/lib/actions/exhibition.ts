@@ -16,7 +16,10 @@ import { redirect } from 'next/navigation'
 import { getExhibitionDocumentId } from '@/utils'
 
 export async function createExhibition(prev: FormSubmitState, formData: FormData) {
-  const formDataObject = Object.fromEntries(formData.entries())
+  const formDataObject = {
+    ...Object.fromEntries(formData.entries()),
+    genres: formData.getAll('genres'),
+  }
 
   const parsed = exhibitionCreateFormDataSchema.safeParse(formDataObject)
   if (!parsed.success) {
@@ -66,6 +69,7 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
         officialUrl: data.officialUrl || '',
         imageUrl: data.imageUrl || '',
         status: data.status,
+        genres: data.genres ?? [],
         origin: 'manual',
         isExcluded: false,
         createdAt: Timestamp.now(),
@@ -110,7 +114,10 @@ export async function deleteExhibition(id: string) {
 }
 
 export async function updateExhibition(prev: FormSubmitState, formData: FormData) {
-  const formDataObject = Object.fromEntries(formData.entries())
+  const formDataObject = {
+    ...Object.fromEntries(formData.entries()),
+    genres: formData.getAll('genres'),
+  }
 
   const parsed = exhibitionUpdateFormDataSchema.safeParse(formDataObject)
   if (!parsed.success) {
@@ -136,6 +143,7 @@ export async function updateExhibition(prev: FormSubmitState, formData: FormData
       officialUrl: data.officialUrl || '',
       imageUrl: data.imageUrl || '',
       status: data.status,
+      genres: data.genres ?? [],
       updatedAt: Timestamp.now(),
     })
   console.log('Successfully updated exhibition with ID:', data.id)

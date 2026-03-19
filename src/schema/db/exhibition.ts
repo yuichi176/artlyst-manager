@@ -12,6 +12,7 @@ export type RawExhibition = {
   status: Status
   origin?: string
   isExcluded?: boolean
+  genres: string[]
   createdAt: Timestamp
   updatedAt: Timestamp
 }

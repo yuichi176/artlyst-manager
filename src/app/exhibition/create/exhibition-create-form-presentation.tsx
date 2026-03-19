@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Link as LinkIcon,
   Image,
+  Tag,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import {
@@ -23,6 +24,7 @@ import {
 } from '@/components/shadcn-ui/select'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/shadcn-ui/card'
 import { FormSubmitState, Museum } from '@/schema/ui'
+import { genres } from '@/schema/common/exhibition'
 
 interface ExhibitionCreateFormProps {
   museums: Museum[]
@@ -180,6 +182,24 @@ export function ExhibitionCreateFormPresentation({ museums }: ExhibitionCreateFo
                 )}
               </div>
             )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="flex items-center text-sm font-medium">
+              <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
+              ジャンル
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {genres.map((genre) => (
+                <label key={genre} className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input type="checkbox" name="genres" value={genre} className="rounded" />
+                  {genre}
+                </label>
+              ))}
+            </div>
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.genres}
+            </p>
           </div>
 
           <div className="space-y-2">

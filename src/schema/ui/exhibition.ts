@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { statusSchema } from '@/schema/common/exhibition'
+import { genreSchema, statusSchema } from '@/schema/common/exhibition'
 
 /**
  * UI layer schema for Exhibition.
@@ -19,6 +19,7 @@ export const exhibitionSchema = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
   eventStatus: z.enum(['ongoing', 'upcoming', 'ended']).optional(),
+  genres: z.array(genreSchema).optional(),
 })
 export type Exhibition = z.infer<typeof exhibitionSchema>
 
@@ -35,6 +36,7 @@ export const exhibitionFormDataSchema = z.object({
   officialUrl: z.string().optional(),
   imageUrl: z.string().optional(),
   status: statusSchema,
+  genres: z.array(genreSchema).optional(),
 })
 
 export const exhibitionCreateFormDataSchema = exhibitionFormDataSchema.omit({
