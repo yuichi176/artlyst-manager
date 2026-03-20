@@ -192,13 +192,13 @@ export function ExhibitionCreateFormPresentation({ museums }: ExhibitionCreateFo
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {genres.map((genre) => (
                 <label key={genre} className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input type="checkbox" name="genres" value={genre} className="rounded" />
+                  <input type="checkbox" name="genre" value={genre} className="rounded" />
                   {genre}
                 </label>
               ))}
             </div>
             <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.genres}
+              {formState?.errors?.genre}
             </p>
           </div>
 

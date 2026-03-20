@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect, useState } from 'react'
-import { Exhibition, Museum } from '@/schema/ui'
+import { Exhibition } from '@/schema/ui'
 import { Button } from '@/components/shadcn-ui/button'
 import { Input } from '@/components/shadcn-ui/input'
 import { updateExhibition } from '@/lib/actions/exhibition'
@@ -30,10 +30,9 @@ import { genres } from '@/schema/common/exhibition'
 
 interface ExhibitionEditFormProps {
   exhibition: Exhibition
-  museums: Museum[]
 }
 
-export function ExhibitionEditFormPresentation({ exhibition, museums }: ExhibitionEditFormProps) {
+export function ExhibitionEditFormPresentation({ exhibition }: ExhibitionEditFormProps) {
   const router = useRouter()
   const [imageUrl, setImageUrl] = useState(exhibition.imageUrl || '')
   const [imageError, setImageError] = useState(false)
@@ -208,9 +207,9 @@ export function ExhibitionEditFormPresentation({ exhibition, museums }: Exhibiti
                 <label key={genre} className="flex items-center gap-2 text-sm cursor-pointer">
                   <input
                     type="checkbox"
-                    name="genres"
+                    name="genre"
                     value={genre}
-                    defaultChecked={exhibition.genres?.includes(genre)}
+                    defaultChecked={exhibition.genre?.includes(genre)}
                     className="rounded"
                   />
                   {genre}
@@ -218,7 +217,7 @@ export function ExhibitionEditFormPresentation({ exhibition, museums }: Exhibiti
               ))}
             </div>
             <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.genres}
+              {formState?.errors?.genre}
             </p>
           </div>
 

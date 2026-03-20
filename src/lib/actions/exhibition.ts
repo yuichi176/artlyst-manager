@@ -18,7 +18,7 @@ import { getExhibitionDocumentId } from '@/utils'
 export async function createExhibition(prev: FormSubmitState, formData: FormData) {
   const formDataObject = {
     ...Object.fromEntries(formData.entries()),
-    genres: formData.getAll('genres'),
+    genre: formData.getAll('genre'),
   }
 
   const parsed = exhibitionCreateFormDataSchema.safeParse(formDataObject)
@@ -69,7 +69,7 @@ export async function createExhibition(prev: FormSubmitState, formData: FormData
         officialUrl: data.officialUrl || '',
         imageUrl: data.imageUrl || '',
         status: data.status,
-        genres: data.genres ?? [],
+        genre: data.genre ?? [],
         origin: 'manual',
         isExcluded: false,
         createdAt: Timestamp.now(),
@@ -116,7 +116,7 @@ export async function deleteExhibition(id: string) {
 export async function updateExhibition(prev: FormSubmitState, formData: FormData) {
   const formDataObject = {
     ...Object.fromEntries(formData.entries()),
-    genres: formData.getAll('genres'),
+    genre: formData.getAll('genre'),
   }
 
   const parsed = exhibitionUpdateFormDataSchema.safeParse(formDataObject)
@@ -143,7 +143,7 @@ export async function updateExhibition(prev: FormSubmitState, formData: FormData
       officialUrl: data.officialUrl || '',
       imageUrl: data.imageUrl || '',
       status: data.status,
-      genres: data.genres ?? [],
+      genre: data.genre ?? [],
       updatedAt: Timestamp.now(),
     })
   console.log('Successfully updated exhibition with ID:', data.id)

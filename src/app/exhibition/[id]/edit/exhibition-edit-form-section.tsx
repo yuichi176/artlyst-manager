@@ -1,6 +1,6 @@
 import db from '@/lib/firestore'
-import { RawExhibition, RawMuseum } from '@/schema/db'
-import { convertRawExhibitionToExhibition, convertRawMuseumToMuseum } from '@/schema/converters'
+import { RawExhibition } from '@/schema/db'
+import { convertRawExhibitionToExhibition } from '@/schema/converters'
 import { ExhibitionEditFormPresentation } from './exhibition-edit-form-presentation'
 import { notFound } from 'next/navigation'
 
@@ -19,13 +19,5 @@ export default async function ExhibitionEditFormSection({ id }: ExhibitionEditFo
   const data = existingDocumentsSnapshot.data() as RawExhibition
   const exhibition = convertRawExhibitionToExhibition(id, data)
 
-  const museumCollectionRef = db.collection('museum')
-  const museumSnapshot = await museumCollectionRef.orderBy('name', 'asc').get()
-
-  const museums = museumSnapshot.docs.map((doc) => {
-    const data = doc.data() as RawMuseum
-    return convertRawMuseumToMuseum(doc.id, data)
-  })
-
-  return <ExhibitionEditFormPresentation exhibition={exhibition} museums={museums} />
+  return <ExhibitionEditFormPresentation exhibition={exhibition} />
 }

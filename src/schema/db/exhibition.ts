@@ -1,5 +1,5 @@
 import { Timestamp } from '@google-cloud/firestore'
-import { Status } from '@/schema/common/exhibition'
+import { Genre, Status } from '@/schema/common/exhibition'
 
 export type RawExhibition = {
   title: string
@@ -12,7 +12,7 @@ export type RawExhibition = {
   status: Status
   origin?: string
   isExcluded?: boolean
-  genres: string[]
+  genre: Genre[]
   createdAt: Timestamp
   updatedAt: Timestamp
 }
