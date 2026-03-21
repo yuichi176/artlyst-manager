@@ -29,6 +29,7 @@ import Link from 'next/link'
 import { TruncatedText } from '@/components'
 import { StatusUpdateCell } from './status-update-cell'
 import { EditableUrlCell } from './editable-url-cell'
+import { EditableGenreCell } from './editable-genre-cell'
 
 // Type for table meta to pass callbacks
 export interface ExhibitionTableMeta {
@@ -142,19 +143,7 @@ export const columns: ColumnDef<Exhibition>[] = [
   {
     accessorKey: 'genre',
     header: () => <div className="pl-5">ジャンル</div>,
-    cell: ({ row }) => {
-      const genre = row.getValue('genre') as string[] | undefined
-      if (!genre?.length) return <div className="pl-5">-</div>
-      return (
-        <div className="pl-5 flex flex-wrap gap-1">
-          {genre.map((g) => (
-            <span key={g} className="rounded-full bg-muted px-2 py-0.5 text-xs">
-              {g}
-            </span>
-          ))}
-        </div>
-      )
-    },
+    cell: ({ row }) => <EditableGenreCell exhibition={row.original} />,
     enableSorting: false,
   },
   {

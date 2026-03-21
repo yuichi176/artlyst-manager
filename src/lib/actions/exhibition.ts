@@ -9,6 +9,7 @@ import {
   exhibitionStatusFormDataSchema,
   exhibitionIsExcludedFormDataSchema,
   exhibitionOfficialUrlFormDataSchema,
+  exhibitionGenreFormDataSchema,
   FormSubmitState,
   exhibitionUpdateFormDataSchema,
 } from '@/schema/ui'
@@ -259,6 +260,42 @@ export async function updateExhibitionOfficialUrl(prev: FormSubmitState, formDat
   })
 
   console.log('Successfully updated exhibition officialUrl with ID:', data.id)
+
+  revalidatePath('/')
+
+  return {
+    status: 'success' as const,
+    errors: undefined,
+  }
+}
+
+export async function updateExhibitionGenre(prev: FormSubmitState, formData: FormData) {
+  const formDataObject = {
+    ...Object.fromEntries(formData.entries()),
+    genre: formData.getAll('genre'),
+  }
+
+  const parsed = exhibitionGenreFormDataSchema.safeParse(formDataObject)
+  if (!parsed.success) {
+    const errors: Record<string, string> = {}
+    parsed.error.issues.forEach((issue) => {
+      const path = issue.path[0] as string
+      errors[path] = issue.message
+    })
+    return {
+      status: 'error' as const,
+      errors,
+    }
+  }
+
+  const data = parsed.data
+
+  await db.collection('exhibition').doc(data.id).update({
+    genre: data.genre ?? [],
+    updatedAt: Timestamp.now(),
+  })
+
+  console.log('Successfully updated exhibition genre with ID:', data.id)
 
   revalidatePath('/')
 

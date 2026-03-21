@@ -51,6 +51,11 @@ export const exhibitionStatusFormDataSchema = exhibitionFormDataSchema.pick({
   status: true,
 })
 
+export const exhibitionGenreFormDataSchema = z.object({
+  id: z.string(),
+  genre: z.array(genreSchema).optional(),
+})
+
 export const exhibitionIsExcludedFormDataSchema = z.object({
   id: z.string(),
   isExcluded: z.coerce.boolean(),
