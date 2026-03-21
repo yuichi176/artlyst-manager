@@ -99,6 +99,13 @@ export const columns: ColumnDef<Exhibition>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: 'museumId',
+    header: () => null,
+    cell: () => null,
+    filterFn: 'museumFilter',
+    enableSorting: false,
+  },
+  {
     accessorKey: 'title',
     header: ({ column }) => <SortButton column={column}>展覧会</SortButton>,
     cell: ({ row }) => (

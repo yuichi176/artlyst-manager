@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   FilterFn,
@@ -33,6 +34,16 @@ import {
 import { Button } from '@/components/shadcn-ui/button'
 import { ChevronDown } from 'lucide-react'
 import type { Museum } from '@/schema/ui'
+import { cn } from '@/utils'
+
+function getPinnedStyles<TData>(column: Column<TData>): React.CSSProperties {
+  if (!column.getIsPinned()) return {}
+  return {
+    left: `${column.getStart('left')}px`,
+    position: 'sticky',
+    zIndex: 1,
+  }
+}
 
 // Declare module to extend TanStack Table types
 declare module '@tanstack/react-table' {
@@ -58,6 +69,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility] = useState<Record<string, boolean>>({ museumId: false })
 
   // Museum filter state
   const [selectedMuseumIds, setSelectedMuseumIds] = useState<string[]>([])
@@ -69,7 +81,7 @@ export function DataTable<TData, TValue>({
   const [selectedStatus, setSelectedStatus] = useState<string>('all')
 
   // Collapsible state for filters
-  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false)
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(true)
 
   const table = useReactTable({
     data,
@@ -82,6 +94,8 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
       columnFilters,
+      columnVisibility,
+      columnPinning: { left: ['title'] },
     },
     meta,
     filterFns: {
@@ -265,13 +279,20 @@ export function DataTable<TData, TValue>({
       <div className="text-sm text-muted-foreground">
         全 {table.getFilteredRowModel().rows.length} 件を表示
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-center px-4">
+                  <TableHead
+                    key={header.id}
+                    className={cn(
+                      'text-center px-4',
+                      header.column.getIsPinned() && 'bg-background',
+                    )}
+                    style={getPinnedStyles(header.column)}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -285,7 +306,11 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn(cell.column.getIsPinned() && 'bg-background')}
+                      style={getPinnedStyles(cell.column)}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
