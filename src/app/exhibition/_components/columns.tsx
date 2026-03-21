@@ -140,6 +140,24 @@ export const columns: ColumnDef<Exhibition>[] = [
     filterFn: 'statusFilter',
   },
   {
+    accessorKey: 'genre',
+    header: () => <div className="pl-5">ジャンル</div>,
+    cell: ({ row }) => {
+      const genre = row.getValue('genre') as string[] | undefined
+      if (!genre?.length) return <div className="pl-5">-</div>
+      return (
+        <div className="pl-5 flex flex-wrap gap-1">
+          {genre.map((g) => (
+            <span key={g} className="rounded-full bg-muted px-2 py-0.5 text-xs">
+              {g}
+            </span>
+          ))}
+        </div>
+      )
+    },
+    enableSorting: false,
+  },
+  {
     accessorKey: 'updatedAt',
     header: ({ column }) => <SortButton column={column}>更新日</SortButton>,
     cell: ({ row }) => <div className="pl-5">{row.getValue('updatedAt')}</div>,
