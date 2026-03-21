@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={cn('antialiased', geistSans.variable, geistMono.variable)}>
-        <SidebarProvider>
+        <SidebarProvider defaultOpen={false}>
           <AppSidebar />
           <MainLayout>
             <Header />
