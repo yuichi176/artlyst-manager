@@ -19,6 +19,7 @@ export function ExhibitionTablePresentation({ exhibitions, museums }: Exhibition
   const tableMeta: ExhibitionTableMeta = {
     onDelete: setDeletingExhibition,
     onExclude: setExcludingExhibition,
+    museums,
   }
 
   return (

@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef, Column } from '@tanstack/react-table'
-import type { Exhibition } from '@/schema/ui'
+import type { Exhibition, Museum } from '@/schema/ui'
 import { Button } from '@/components/shadcn-ui/button'
 import {
   DropdownMenu,
@@ -24,6 +24,7 @@ import {
   Trash2,
   Eye,
   Ban,
+  ExternalLink,
 } from 'lucide-react'
 import Link from 'next/link'
 import { TruncatedText } from '@/components'
@@ -35,6 +36,7 @@ import { EditableGenreCell } from './editable-genre-cell'
 export interface ExhibitionTableMeta {
   onDelete: (exhibition: Exhibition) => void
   onExclude: (exhibition: Exhibition) => void
+  museums: Museum[]
 }
 
 // Helper to check if exhibition is publicly visible
@@ -117,7 +119,27 @@ export const columns: ColumnDef<Exhibition>[] = [
   {
     accessorKey: 'venue',
     header: ({ column }) => <SortButton column={column}>会場</SortButton>,
-    cell: ({ row }) => <div className="pl-5">{row.getValue('venue')}</div>,
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as ExhibitionTableMeta | undefined
+      const museum = meta?.museums.find((m) => m.id === row.original.museumId)
+      const venue = row.getValue('venue') as string
+      if (museum?.officialUrl) {
+        return (
+          <div className="pl-5">
+            <a
+              href={museum.officialUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline inline-flex items-center gap-1"
+            >
+              {museum.name}
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        )
+      }
+      return <div className="pl-5">{venue}</div>
+    },
   },
   {
     accessorKey: 'officialUrl',
