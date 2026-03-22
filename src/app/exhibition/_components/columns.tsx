@@ -22,7 +22,6 @@ import {
   MoreHorizontal,
   Pencil,
   Trash2,
-  Eye,
   Ban,
   ExternalLink,
 } from 'lucide-react'
@@ -74,33 +73,6 @@ const SortButton = ({
 
 export const columns: ColumnDef<Exhibition>[] = [
   {
-    id: 'visibility',
-    header: '',
-    cell: ({ row }) => {
-      const exhibition = row.original
-      if (!isPubliclyVisible(exhibition)) {
-        return null
-      }
-
-      return (
-        <div className="pl-3">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Eye className="h-4 w-4 text-green-600 mx-auto" />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>ユーザー公開中</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      )
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: 'museumId',
     header: () => null,
     cell: () => null,
@@ -111,7 +83,21 @@ export const columns: ColumnDef<Exhibition>[] = [
     accessorKey: 'title',
     header: ({ column }) => <SortButton column={column}>展覧会</SortButton>,
     cell: ({ row }) => (
-      <div className="pl-5">
+      <div className="pl-5 flex items-center gap-2">
+        {isPubliclyVisible(row.original) && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 flex-shrink-0">
+                  公開中
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>ユーザー公開中</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
         <TruncatedText text={row.getValue('title')} maxLength={40} />
       </div>
     ),
@@ -149,15 +135,10 @@ export const columns: ColumnDef<Exhibition>[] = [
     },
   },
   {
-    accessorKey: 'startDate',
-    header: ({ column }) => <SortButton column={column}>開始日</SortButton>,
-    cell: ({ row }) => <div className="pl-5">{row.getValue('startDate')}</div>,
-    filterFn: 'eventStatusFilter',
-  },
-  {
-    accessorKey: 'endDate',
-    header: ({ column }) => <SortButton column={column}>終了日</SortButton>,
-    cell: ({ row }) => <div className="pl-5">{row.getValue('endDate')}</div>,
+    accessorKey: 'genre',
+    header: () => <div className="pl-5">ジャンル</div>,
+    cell: ({ row }) => <EditableGenreCell exhibition={row.original} />,
+    enableSorting: false,
   },
   {
     accessorKey: 'status',
@@ -170,10 +151,15 @@ export const columns: ColumnDef<Exhibition>[] = [
     filterFn: 'statusFilter',
   },
   {
-    accessorKey: 'genre',
-    header: () => <div className="pl-5">ジャンル</div>,
-    cell: ({ row }) => <EditableGenreCell exhibition={row.original} />,
-    enableSorting: false,
+    accessorKey: 'startDate',
+    header: ({ column }) => <SortButton column={column}>開始日</SortButton>,
+    cell: ({ row }) => <div className="pl-5">{row.getValue('startDate')}</div>,
+    filterFn: 'eventStatusFilter',
+  },
+  {
+    accessorKey: 'endDate',
+    header: ({ column }) => <SortButton column={column}>終了日</SortButton>,
+    cell: ({ row }) => <div className="pl-5">{row.getValue('endDate')}</div>,
   },
   {
     accessorKey: 'updatedAt',
