@@ -5,6 +5,7 @@ export type Status = z.infer<typeof statusSchema>
 
 export const genres = [
   '絵画',
+  '日本画',
   '彫刻',
   '現代アート',
   '写真',
