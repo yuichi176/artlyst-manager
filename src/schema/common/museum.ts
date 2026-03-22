@@ -6,6 +6,7 @@ export const venueTypes = [
   'ギャラリー',
   'イベントスペース',
   '商業施設',
+  '科学館',
 ] as const
 export const venueTypeSchema = z.enum(venueTypes)
 export type VenueType = z.infer<typeof venueTypeSchema>
