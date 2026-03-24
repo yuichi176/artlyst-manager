@@ -17,7 +17,7 @@ export default async function ExhibitionTableSection() {
       const data = doc.data() as RawMuseum
       return convertRawMuseumToMuseum(doc.id, data)
     })
-    .sort((a, b) => a.area.localeCompare(b.area))
+    .sort((a, b) => a.name.localeCompare(b.name))
 
   const pageSnapshot = await baseQuery.get()
   const allDocs = pageSnapshot.docs
