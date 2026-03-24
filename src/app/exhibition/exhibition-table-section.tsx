@@ -12,10 +12,12 @@ export default async function ExhibitionTableSection() {
 
   // Fetch museums for filter options
   const museumsSnapshot = await db.collection('museum').get()
-  const museums: Museum[] = museumsSnapshot.docs.map((doc) => {
-    const data = doc.data() as RawMuseum
-    return convertRawMuseumToMuseum(doc.id, data)
-  })
+  const museums: Museum[] = museumsSnapshot.docs
+    .map((doc) => {
+      const data = doc.data() as RawMuseum
+      return convertRawMuseumToMuseum(doc.id, data)
+    })
+    .sort((a, b) => a.area.localeCompare(b.area))
 
   const pageSnapshot = await baseQuery.get()
   const allDocs = pageSnapshot.docs
