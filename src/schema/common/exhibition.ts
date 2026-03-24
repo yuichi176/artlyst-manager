@@ -4,7 +4,7 @@ export const statusSchema = z.enum(['pending', 'active'])
 export type Status = z.infer<typeof statusSchema>
 
 export const genres = [
-  '絵画・平面',
+  '絵画',
   '日本画・浮世絵',
   '彫刻・立体',
   '版画',
