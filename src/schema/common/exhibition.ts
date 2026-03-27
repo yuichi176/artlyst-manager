@@ -27,6 +27,7 @@ export const genres = [
   '歴史・考古',
   '自然・科学',
   '子ども',
+  '参加型',
 ] as const
 export const genreSchema = z.enum(genres)
 export type Genre = z.infer<typeof genreSchema>
