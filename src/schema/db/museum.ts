@@ -15,6 +15,7 @@ export type RawMuseum = {
     scrapeUrls: string[]
     lastScrapedAt?: Timestamp
   }
+  aliases?: string[]
   createdAt?: Timestamp
   updatedAt?: Timestamp
 }

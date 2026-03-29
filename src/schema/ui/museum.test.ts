@@ -1,11 +1,20 @@
 import { describe, expect, it } from 'vitest'
-import { museumCreateFormDataSchema, parseScrapeUrls } from './museum'
+import { museumCreateFormDataSchema, parseAliases, parseScrapeUrls } from './museum'
 
 describe('parseScrapeUrls', () => {
   it('returns trimmed URLs and drops empty lines', () => {
     expect(parseScrapeUrls(' https://a.example.com \n\nhttps://b.example.com  ')).toEqual([
       'https://a.example.com',
       'https://b.example.com',
+    ])
+  })
+})
+
+describe('parseAliases', () => {
+  it('returns trimmed aliases and drops empty lines', () => {
+    expect(parseAliases(' 東京都美術館 \n\nTokyo Metropolitan Art Museum  ')).toEqual([
+      '東京都美術館',
+      'Tokyo Metropolitan Art Museum',
     ])
   })
 })
@@ -42,6 +51,15 @@ describe('museumCreateFormDataSchema', () => {
     })
 
     expect(parsed.scrapeUrls).toEqual([])
+  })
+
+  it('stores an empty array when aliases is omitted', () => {
+    const parsed = museumCreateFormDataSchema.parse({
+      ...baseInput,
+      scrapeEnabled: 'true',
+    })
+
+    expect(parsed.aliases).toEqual([])
   })
 
   it('requires scrapeEnabled', () => {

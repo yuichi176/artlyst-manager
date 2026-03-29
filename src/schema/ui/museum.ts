@@ -35,6 +35,7 @@ export const museumSchema = z.object({
     scrapeUrls: z.array(z.string()),
     lastScrapedAt: z.string().optional(),
   }),
+  aliases: z.array(z.string()),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 })
@@ -54,10 +55,20 @@ export function parseScrapeUrls(value: string): string[] {
     .filter(Boolean)
 }
 
-const scrapeUrlsFormSchema = z.preprocess(
-  (value) => (typeof value === 'string' ? value : ''),
-  z.string(),
-).transform(parseScrapeUrls)
+export function parseAliases(value: string): string[] {
+  return value
+    .split(/\r?\n/)
+    .map((alias) => alias.trim())
+    .filter(Boolean)
+}
+
+const scrapeUrlsFormSchema = z
+  .preprocess((value) => (typeof value === 'string' ? value : ''), z.string())
+  .transform(parseScrapeUrls)
+
+const aliasesFormSchema = z
+  .preprocess((value) => (typeof value === 'string' ? value : ''), z.string())
+  .transform(parseAliases)
 
 const museumFormDataBaseSchema = z.object({
   name: z.string().min(1, { message: '美術館名は必須項目です。' }),
@@ -70,6 +81,7 @@ const museumFormDataBaseSchema = z.object({
   officialUrl: z.string().min(1, { message: '公式URLは必須項目です。' }),
   scrapeEnabled: scrapeEnabledFormSchema,
   scrapeUrls: scrapeUrlsFormSchema,
+  aliases: aliasesFormSchema,
 })
 
 export const museumFormDataSchema = museumFormDataBaseSchema.extend({

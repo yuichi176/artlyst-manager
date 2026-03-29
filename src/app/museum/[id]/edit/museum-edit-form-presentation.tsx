@@ -9,6 +9,7 @@ import {
   Loader2,
   MapPin,
   Building2,
+  Tags,
   Info,
   Clock,
   Link as LinkIcon,
@@ -264,6 +265,24 @@ export function MuseumEditFormPresentation({ museum }: MuseumEditFormProps) {
             <p className="text-sm text-muted-foreground">1行に1URLずつ入力します。</p>
             <p aria-live="polite" className="text-sm text-destructive">
               {formState?.errors?.scrapeUrls}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="aliases" className="flex items-center text-sm font-medium">
+              <Tags className="mr-2 h-4 w-4 text-muted-foreground" />
+              別名
+            </label>
+            <textarea
+              id="aliases"
+              name="aliases"
+              defaultValue={museum.aliases.join('\n')}
+              placeholder="東京都美術館&#10;Tokyo Metropolitan Art Museum"
+              className="border-input bg-transparent focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive min-h-24 w-full rounded-md border px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+            />
+            <p className="text-sm text-muted-foreground">1行に1件ずつ入力します。</p>
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.aliases}
             </p>
           </div>
 

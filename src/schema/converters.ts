@@ -46,6 +46,7 @@ export function convertRawMuseumToMuseum(id: string, raw: RawMuseum): Museum {
   return {
     id,
     name: raw.name,
+    aliases: raw?.aliases ?? [],
     address: raw.address,
     access: raw.access,
     openingInformation: raw.openingInformation,

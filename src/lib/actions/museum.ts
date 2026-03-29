@@ -26,6 +26,7 @@ export async function createMuseum(prev: FormSubmitState, formData: FormData) {
   const scrapeEnabled = data.scrapeEnabled === 'true'
   const docRef = await db.collection('museum').add({
     name: data.name,
+    aliases: data.aliases,
     address: data.address,
     access: data.access,
     openingInformation: data.openingInformation,
@@ -77,6 +78,7 @@ export async function updateMuseum(prev: FormSubmitState, formData: FormData) {
     .doc(data.id)
     .update({
       name: data.name,
+      aliases: data.aliases,
       address: data.address,
       access: data.access,
       openingInformation: data.openingInformation,
