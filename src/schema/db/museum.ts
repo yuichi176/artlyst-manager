@@ -10,8 +10,11 @@ export type RawMuseum = {
   area: Area
   region: Region
   officialUrl: string
-  scrapeUrl: string
-  scrapeEnabled: boolean
+  scrape: {
+    enabled: boolean
+    scrapeUrls: string[]
+    lastScrapedAt?: Timestamp
+  }
   createdAt?: Timestamp
   updatedAt?: Timestamp
 }

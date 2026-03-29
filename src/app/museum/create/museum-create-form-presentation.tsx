@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { Button } from '@/components/shadcn-ui/button'
 import { Input } from '@/components/shadcn-ui/input'
 import { createMuseum } from '@/lib/actions/museum'
@@ -29,6 +29,7 @@ import { venueTypeOptions, areaOptions, regionOptions } from '@/schema/ui'
 
 export function MuseumCreateFormPresentation() {
   const router = useRouter()
+  const [scrapeEnabled, setScrapeEnabled] = useState(true)
 
   const [formState, create, isPending] = useActionState<FormSubmitState, FormData>(createMuseum, {
     status: 'pending',
@@ -207,31 +208,17 @@ export function MuseumCreateFormPresentation() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="scrapeUrl" className="flex items-center text-sm font-medium">
-              <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
-              スクレイプURL
-              <span className="ml-1 text-destructive">*</span>
-            </label>
-            <Input
-              id="scrapeUrl"
-              name="scrapeUrl"
-              type="url"
-              placeholder="https://example.com/exhibitions"
-              required
-              className="text-base"
-            />
-            <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.scrapeUrl}
-            </p>
-          </div>
-
-          <div className="space-y-2">
             <label htmlFor="scrapeEnabled" className="flex items-center text-sm font-medium">
               <ToggleRight className="mr-2 h-4 w-4 text-muted-foreground" />
               スクレイピング
+              <span className="ml-1 text-destructive">*</span>
             </label>
             <div className="flex items-center gap-3">
-              <Select name="scrapeEnabled" defaultValue="true">
+              <Select
+                name="scrapeEnabled"
+                defaultValue="true"
+                onValueChange={(value) => setScrapeEnabled(value === 'true')}
+              >
                 <SelectTrigger className="min-w-[160px]">
                   <SelectValue />
                 </SelectTrigger>
@@ -241,6 +228,27 @@ export function MuseumCreateFormPresentation() {
                 </SelectContent>
               </Select>
             </div>
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.scrapeEnabled}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="scrapeUrls" className="flex items-center text-sm font-medium">
+              <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
+              スクレイプURL
+            </label>
+            <textarea
+              id="scrapeUrls"
+              name="scrapeUrls"
+              placeholder="https://example.com/exhibitions"
+              disabled={!scrapeEnabled}
+              className="border-input bg-transparent focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive min-h-24 w-full rounded-md border px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            />
+            <p className="text-sm text-muted-foreground">1行に1URLずつ入力します。</p>
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.scrapeUrls}
+            </p>
           </div>
         </CardContent>
 

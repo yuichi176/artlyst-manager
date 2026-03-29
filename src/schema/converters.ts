@@ -53,8 +53,11 @@ export function convertRawMuseumToMuseum(id: string, raw: RawMuseum): Museum {
     area: raw.area,
     region: raw.region,
     officialUrl: raw.officialUrl,
-    scrapeUrl: raw.scrapeUrl,
-    scrapeEnabled: raw.scrapeEnabled,
+    scrape: {
+      enabled: raw.scrape?.enabled ?? false,
+      scrapeUrls: raw.scrape?.scrapeUrls ?? [],
+      lastScrapedAt: raw.scrape?.lastScrapedAt?.toDate().toISOString().split('T')[0],
+    },
     createdAt: raw.createdAt?.toDate().toISOString().split('T')[0],
     updatedAt: raw.updatedAt?.toDate().toISOString().split('T')[0],
   }

@@ -23,6 +23,7 @@ export async function createMuseum(prev: FormSubmitState, formData: FormData) {
   }
 
   const data = parsed.data
+  const scrapeEnabled = data.scrapeEnabled === 'true'
   const docRef = await db.collection('museum').add({
     name: data.name,
     address: data.address,
@@ -32,8 +33,10 @@ export async function createMuseum(prev: FormSubmitState, formData: FormData) {
     area: data.area,
     region: data.region,
     officialUrl: data.officialUrl,
-    scrapeUrl: data.scrapeUrl,
-    scrapeEnabled: data.scrapeEnabled === 'true',
+    scrape: {
+      enabled: scrapeEnabled,
+      scrapeUrls: scrapeEnabled ? data.scrapeUrls : [],
+    },
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   })
@@ -68,6 +71,7 @@ export async function updateMuseum(prev: FormSubmitState, formData: FormData) {
   }
 
   const data = parsed.data
+  const scrapeEnabled = data.scrapeEnabled === 'true'
   await db
     .collection('museum')
     .doc(data.id)
@@ -80,8 +84,8 @@ export async function updateMuseum(prev: FormSubmitState, formData: FormData) {
       area: data.area,
       region: data.region,
       officialUrl: data.officialUrl,
-      scrapeUrl: data.scrapeUrl,
-      scrapeEnabled: data.scrapeEnabled === 'true',
+      'scrape.enabled': scrapeEnabled,
+      'scrape.scrapeUrls': scrapeEnabled ? data.scrapeUrls : [],
       updatedAt: Timestamp.now(),
     })
   console.log('Successfully updated museum with ID:', data.id)

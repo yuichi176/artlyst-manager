@@ -30,15 +30,36 @@ export const museumSchema = z.object({
   area: areaSchema,
   region: regionSchema,
   officialUrl: z.string(),
-  scrapeUrl: z.string(),
-  scrapeEnabled: z.boolean(),
+  scrape: z.object({
+    enabled: z.boolean(),
+    scrapeUrls: z.array(z.string()),
+    lastScrapedAt: z.string().optional(),
+  }),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 })
 export type Museum = z.infer<typeof museumSchema>
 
-export const museumFormDataSchema = z.object({
-  id: z.string(),
+const scrapeEnabledFormSchema = z.preprocess(
+  (value) => (typeof value === 'string' ? value : ''),
+  z.string().refine((value) => value === 'true' || value === 'false', {
+    message: 'スクレイピング設定は必須項目です。',
+  }),
+)
+
+export function parseScrapeUrls(value: string): string[] {
+  return value
+    .split(/\r?\n/)
+    .map((url) => url.trim())
+    .filter(Boolean)
+}
+
+const scrapeUrlsFormSchema = z.preprocess(
+  (value) => (typeof value === 'string' ? value : ''),
+  z.string(),
+).transform(parseScrapeUrls)
+
+const museumFormDataBaseSchema = z.object({
   name: z.string().min(1, { message: '美術館名は必須項目です。' }),
   address: z.string().min(1, { message: '住所は必須項目です。' }),
   access: z.string().min(1, { message: 'アクセス情報は必須項目です。' }),
@@ -47,8 +68,12 @@ export const museumFormDataSchema = z.object({
   area: areaSchema,
   region: regionSchema,
   officialUrl: z.string().min(1, { message: '公式URLは必須項目です。' }),
-  scrapeUrl: z.string().min(1, { message: 'スクレイピングURLは必須項目です。' }),
-  scrapeEnabled: z.string(),
+  scrapeEnabled: scrapeEnabledFormSchema,
+  scrapeUrls: scrapeUrlsFormSchema,
 })
 
-export const museumCreateFormDataSchema = museumFormDataSchema.omit({ id: true })
+export const museumFormDataSchema = museumFormDataBaseSchema.extend({
+  id: z.string(),
+})
+
+export const museumCreateFormDataSchema = museumFormDataBaseSchema

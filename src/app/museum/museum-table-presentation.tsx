@@ -140,7 +140,7 @@ export function MuseumTablePresentation({ museums }: MuseumTableProps) {
                 <TableCell className="pl-5">{museum.venueType}</TableCell>
                 <TableCell className="pl-5">{museum.area}</TableCell>
                 <TableCell className="pl-5">{museum.region}</TableCell>
-                <TableCell className="text-center">{museum.scrapeEnabled ? '⚪︎' : '×'}</TableCell>
+                <TableCell className="text-center">{museum.scrape.enabled ? '⚪︎' : '×'}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { Museum, venueTypeOptions, areaOptions, regionOptions } from '@/schema/ui'
 import { Button } from '@/components/shadcn-ui/button'
 import { Input } from '@/components/shadcn-ui/input'
@@ -34,6 +34,7 @@ interface MuseumEditFormProps {
 
 export function MuseumEditFormPresentation({ museum }: MuseumEditFormProps) {
   const router = useRouter()
+  const [scrapeEnabled, setScrapeEnabled] = useState(museum.scrape.enabled)
 
   const [formState, update, isPending] = useActionState<FormSubmitState, FormData>(updateMuseum, {
     status: 'pending',
@@ -222,31 +223,18 @@ export function MuseumEditFormPresentation({ museum }: MuseumEditFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="scrapeUrl" className="flex items-center text-sm font-medium">
-              <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
-              スクレイプURL
-            </label>
-            <Input
-              id="scrapeUrl"
-              name="scrapeUrl"
-              type="url"
-              defaultValue={museum.scrapeUrl}
-              placeholder="https://example.com/exhibitions"
-              className="text-base"
-            />
-            <p aria-live="polite" className="text-sm text-destructive">
-              {formState?.errors?.scrapeUrl}
-            </p>
-          </div>
-
-          <div className="space-y-2">
             <label htmlFor="scrapeEnabled" className="flex items-center text-sm font-medium">
               <ToggleRight className="mr-2 h-4 w-4 text-muted-foreground" />
               スクレイピング
+              <span className="ml-1 text-destructive">*</span>
             </label>
             <div className="flex items-center gap-3">
-              <Select name="scrapeEnabled" defaultValue={String(museum.scrapeEnabled)}>
-                <SelectTrigger className="min-w-[160px]">
+              <Select
+                name="scrapeEnabled"
+                defaultValue={String(museum.scrape.enabled)}
+                onValueChange={(value) => setScrapeEnabled(value === 'true')}
+              >
+                <SelectTrigger className="min-w-40">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -255,6 +243,28 @@ export function MuseumEditFormPresentation({ museum }: MuseumEditFormProps) {
                 </SelectContent>
               </Select>
             </div>
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.scrapeEnabled}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="scrapeUrls" className="flex items-center text-sm font-medium">
+              <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
+              スクレイプURL
+            </label>
+            <textarea
+              id="scrapeUrls"
+              name="scrapeUrls"
+              defaultValue={museum.scrape.scrapeUrls.join('\n')}
+              placeholder="https://example.com/exhibitions"
+              disabled={!scrapeEnabled}
+              className="border-input bg-transparent focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive min-h-24 w-full rounded-md border px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+            />
+            <p className="text-sm text-muted-foreground">1行に1URLずつ入力します。</p>
+            <p aria-live="polite" className="text-sm text-destructive">
+              {formState?.errors?.scrapeUrls}
+            </p>
           </div>
 
           <input type="hidden" name="id" value={museum.id} />
