@@ -26,7 +26,7 @@ export function EditableUrlCell({ exhibition }: EditableUrlCellProps) {
 
         const result = await updateExhibitionOfficialUrl(
           { status: 'pending', errors: undefined },
-          formData
+          formData,
         )
 
         if (result.status === 'success') {
@@ -65,7 +65,7 @@ export function EditableUrlCell({ exhibition }: EditableUrlCellProps) {
             variant="ghost"
             onClick={handleSave}
             disabled={isPending}
-            className="h-8 w-8 p-0 flex-shrink-0"
+            className="h-8 w-8 p-0 shrink-0"
           >
             {isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -78,7 +78,7 @@ export function EditableUrlCell({ exhibition }: EditableUrlCellProps) {
             variant="ghost"
             onClick={handleCancel}
             disabled={isPending}
-            className="h-8 w-8 p-0 flex-shrink-0"
+            className="h-8 w-8 p-0 shrink-0"
           >
             <X className="h-4 w-4 text-red-600" />
           </Button>
@@ -106,7 +106,7 @@ export function EditableUrlCell({ exhibition }: EditableUrlCellProps) {
         size="sm"
         variant="ghost"
         onClick={() => setIsEditing(true)}
-        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
       >
         <Pencil className="h-3 w-3" />
       </Button>

@@ -25,11 +25,7 @@ export function StatusUpdateCell({ exhibition }: StatusUpdateCellProps) {
   })
 
   return (
-    <form
-      action={updateStatus}
-      className="flex items-center"
-      ref={formRef}
-    >
+    <form action={updateStatus} className="flex items-center" ref={formRef}>
       <input type="hidden" name="id" value={exhibition.id} />
       <Select
         name="status"
@@ -38,7 +34,7 @@ export function StatusUpdateCell({ exhibition }: StatusUpdateCellProps) {
           formRef.current?.requestSubmit()
         }}
       >
-        <SelectTrigger className="min-w-[160px]">
+        <SelectTrigger className="min-w-40">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

@@ -17,14 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/shadcn-ui/dropdown-menu'
 import { Button } from '@/components/shadcn-ui/button'
-import {
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  MoreHorizontal,
-  Trash2,
-  RotateCcw,
-} from 'lucide-react'
+import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, Trash2, RotateCcw } from 'lucide-react'
 import { DeleteExhibitionModal } from '@/app/exhibition/_components/modal/delete-exhibition-modal'
 import { RestoreExhibitionModal } from './_components/modal/RestoreExhibitionModal'
 import { useTableSort } from '@/hooks/useTableSort'
@@ -137,7 +130,7 @@ export function ExcludedExhibitionTablePresentation({ exhibitions }: ExcludedExh
               </Button>
             </TableHead>
             <TableHead className="text-center">Origin</TableHead>
-            <TableHead className="w-[50px]"></TableHead>
+            <TableHead className="w-12.5"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
