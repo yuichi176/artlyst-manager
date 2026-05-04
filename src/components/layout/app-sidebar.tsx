@@ -7,11 +7,28 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/shadcn-ui/sidebar'
 import { GalleryHorizontal, Ban, Building2 } from 'lucide-react'
 import Link from 'next/link'
+import { unstable_noStore as noStore } from 'next/cache'
+import db from '@/lib/firestore'
+import { convertRawMuseumToMuseum } from '@/schema/converters'
+import type { RawMuseum } from '@/schema/db'
 
-export function AppSidebar() {
+export async function AppSidebar() {
+  noStore()
+
+  const museumsSnapshot = await db.collection('museum').get()
+  const museums = museumsSnapshot.docs
+    .map((doc) => {
+      const data = doc.data() as RawMuseum
+      return convertRawMuseumToMuseum(doc.id, data)
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, 'ja'))
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -42,6 +59,19 @@ export function AppSidebar() {
                     <span>美術館管理</span>
                   </Link>
                 </SidebarMenuButton>
+                {museums.length > 0 && (
+                  <SidebarMenuSub>
+                    {museums.map((museum) => (
+                      <SidebarMenuSubItem key={museum.id}>
+                        <SidebarMenuSubButton asChild>
+                          <Link href={`/museum/${museum.id}`}>
+                            <span>{museum.name}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                )}
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
