@@ -59,6 +59,18 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   museums: Museum[]
   meta?: TableMeta<TData>
+  emptyMessage?: string
+  searchFields?: Array<{
+    columnId: string
+    placeholder: string
+  }>
+  showMuseumFilter?: boolean
+  showEventStatusFilter?: boolean
+  showStatusFilter?: boolean
+  eventStatusFilterColumnId?: string
+  statusFilterColumnId?: string
+  initialColumnVisibility?: Record<string, boolean>
+  pinnedLeftColumns?: string[]
 }
 
 export function DataTable<TData, TValue>({
@@ -66,10 +78,22 @@ export function DataTable<TData, TValue>({
   data,
   museums,
   meta,
+  emptyMessage = 'No exhibitions found.',
+  searchFields = [
+    { columnId: 'title', placeholder: '展覧会名で検索...' },
+    { columnId: 'venue', placeholder: '会場で検索...' },
+  ],
+  showMuseumFilter = true,
+  showEventStatusFilter = true,
+  showStatusFilter = true,
+  eventStatusFilterColumnId = 'startDate',
+  statusFilterColumnId = 'status',
+  initialColumnVisibility = { museumId: false },
+  pinnedLeftColumns = ['title'],
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility] = useState<Record<string, boolean>>({ museumId: false })
+  const [columnVisibility] = useState<Record<string, boolean>>(initialColumnVisibility)
 
   // Museum filter state
   const [selectedMuseumIds, setSelectedMuseumIds] = useState<string[]>([])
@@ -82,6 +106,15 @@ export function DataTable<TData, TValue>({
 
   // Collapsible state for filters
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(true)
+  const filterSectionCount = [showMuseumFilter, showEventStatusFilter, showStatusFilter].filter(
+    Boolean,
+  ).length
+  const filterGridClass =
+    filterSectionCount <= 1
+      ? 'md:grid-cols-1'
+      : filterSectionCount === 2
+        ? 'md:grid-cols-2'
+        : 'md:grid-cols-3'
 
   const table = useReactTable({
     data,
@@ -95,7 +128,7 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
       columnVisibility,
-      columnPinning: { left: ['title'] },
+      columnPinning: { left: pinnedLeftColumns },
     },
     meta,
     filterFns: {
@@ -134,144 +167,162 @@ export function DataTable<TData, TValue>({
       : selectedEventStatuses.filter((s) => s !== status)
 
     setSelectedEventStatuses(newSelectedEventStatuses)
-    table.getColumn('startDate')?.setFilterValue(newSelectedEventStatuses)
+    table.getColumn(eventStatusFilterColumnId)?.setFilterValue(newSelectedEventStatuses)
   }
 
   // Update status filter
   const handleStatusFilterChange = (value: string) => {
     setSelectedStatus(value)
-    table.getColumn('status')?.setFilterValue(value)
+    table.getColumn(statusFilterColumnId)?.setFilterValue(value)
   }
 
   return (
     <div className="space-y-4">
       {/* Search filters */}
       <div className="flex items-center gap-4">
-        <Input
-          placeholder="展覧会名で検索..."
-          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="会場で検索..."
-          value={(table.getColumn('venue')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('venue')?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
+        {searchFields.map((searchField) => (
+          <Input
+            key={searchField.columnId}
+            placeholder={searchField.placeholder}
+            value={(table.getColumn(searchField.columnId)?.getFilterValue() as string) ?? ''}
+            onChange={(event) =>
+              table.getColumn(searchField.columnId)?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        ))}
       </div>
 
       {/* Advanced filters */}
-      <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-semibold">詳細フィルター</h3>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="w-9 p-0">
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  isFilterOpen ? 'transform rotate-180' : ''
-                }`}
-              />
-              <span className="sr-only">Toggle filters</span>
-            </Button>
-          </CollapsibleTrigger>
-        </div>
-        <CollapsibleContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 border rounded-lg bg-muted/20">
-            {/* Museum filter */}
-            <div className="space-y-3">
-              <h3 className="font-semibold text-sm">会場名</h3>
-              <div className="space-y-2 max-h-60 overflow-y-auto">
-                {museums.map((museum) => (
-                  <div key={museum.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`museum-${museum.id}`}
-                      checked={selectedMuseumIds.includes(museum.id)}
-                      onCheckedChange={(checked) =>
-                        handleMuseumFilterChange(museum.id, checked === true)
-                      }
-                    />
-                    <Label
-                      htmlFor={`museum-${museum.id}`}
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      {museum.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Event status filter */}
-            <div className="space-y-3">
-              <h3 className="font-semibold text-sm">開催ステータス</h3>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="status-ongoing"
-                    checked={selectedEventStatuses.includes('ongoing')}
-                    onCheckedChange={(checked) =>
-                      handleEventStatusFilterChange('ongoing', checked === true)
-                    }
-                  />
-                  <Label htmlFor="status-ongoing" className="text-sm font-normal cursor-pointer">
-                    開催中
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="status-upcoming"
-                    checked={selectedEventStatuses.includes('upcoming')}
-                    onCheckedChange={(checked) =>
-                      handleEventStatusFilterChange('upcoming', checked === true)
-                    }
-                  />
-                  <Label htmlFor="status-upcoming" className="text-sm font-normal cursor-pointer">
-                    開催前
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="status-ended"
-                    checked={selectedEventStatuses.includes('ended')}
-                    onCheckedChange={(checked) =>
-                      handleEventStatusFilterChange('ended', checked === true)
-                    }
-                  />
-                  <Label htmlFor="status-ended" className="text-sm font-normal cursor-pointer">
-                    終了
-                  </Label>
-                </div>
-              </div>
-            </div>
-
-            {/* Status filter */}
-            <div className="space-y-3">
-              <h3 className="font-semibold text-sm">ステータス</h3>
-              <RadioGroup value={selectedStatus} onValueChange={handleStatusFilterChange}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="all" id="status-all" />
-                  <Label htmlFor="status-all" className="text-sm font-normal cursor-pointer">
-                    すべて
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="active" id="status-active" />
-                  <Label htmlFor="status-active" className="text-sm font-normal cursor-pointer">
-                    Active
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="pending" id="status-pending" />
-                  <Label htmlFor="status-pending" className="text-sm font-normal cursor-pointer">
-                    Pending
-                  </Label>
-                </div>
-              </RadioGroup>
-            </div>
+      {filterSectionCount > 0 && (
+        <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold">詳細フィルター</h3>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" size="sm" className="w-9 p-0">
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-200 ${
+                    isFilterOpen ? 'transform rotate-180' : ''
+                  }`}
+                />
+                <span className="sr-only">Toggle filters</span>
+              </Button>
+            </CollapsibleTrigger>
           </div>
-        </CollapsibleContent>
-      </Collapsible>
+          <CollapsibleContent>
+            <div
+              className={cn(
+                'grid grid-cols-1 gap-6 rounded-lg border bg-muted/20 p-4',
+                filterGridClass,
+              )}
+            >
+              {showMuseumFilter && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-sm">会場名</h3>
+                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                    {museums.map((museum) => (
+                      <div key={museum.id} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`museum-${museum.id}`}
+                          checked={selectedMuseumIds.includes(museum.id)}
+                          onCheckedChange={(checked) =>
+                            handleMuseumFilterChange(museum.id, checked === true)
+                          }
+                        />
+                        <Label
+                          htmlFor={`museum-${museum.id}`}
+                          className="text-sm font-normal cursor-pointer"
+                        >
+                          {museum.name}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {showEventStatusFilter && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-sm">開催ステータス</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="status-ongoing"
+                        checked={selectedEventStatuses.includes('ongoing')}
+                        onCheckedChange={(checked) =>
+                          handleEventStatusFilterChange('ongoing', checked === true)
+                        }
+                      />
+                      <Label
+                        htmlFor="status-ongoing"
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        開催中
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="status-upcoming"
+                        checked={selectedEventStatuses.includes('upcoming')}
+                        onCheckedChange={(checked) =>
+                          handleEventStatusFilterChange('upcoming', checked === true)
+                        }
+                      />
+                      <Label
+                        htmlFor="status-upcoming"
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        開催前
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="status-ended"
+                        checked={selectedEventStatuses.includes('ended')}
+                        onCheckedChange={(checked) =>
+                          handleEventStatusFilterChange('ended', checked === true)
+                        }
+                      />
+                      <Label htmlFor="status-ended" className="text-sm font-normal cursor-pointer">
+                        終了
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {showStatusFilter && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-sm">ステータス</h3>
+                  <RadioGroup value={selectedStatus} onValueChange={handleStatusFilterChange}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="all" id="status-all" />
+                      <Label htmlFor="status-all" className="text-sm font-normal cursor-pointer">
+                        すべて
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="active" id="status-active" />
+                      <Label htmlFor="status-active" className="text-sm font-normal cursor-pointer">
+                        Active
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="pending" id="status-pending" />
+                      <Label
+                        htmlFor="status-pending"
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        Pending
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      )}
 
       {/* Table */}
 
@@ -319,7 +370,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No exhibitions found.
+                  {emptyMessage}
                 </TableCell>
               </TableRow>
             )}

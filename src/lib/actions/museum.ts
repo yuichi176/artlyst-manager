@@ -44,6 +44,7 @@ export async function createMuseum(prev: FormSubmitState, formData: FormData) {
   console.log('Successfully created museum with ID:', docRef.id)
 
   revalidatePath('/')
+  revalidatePath('/museum')
 
   redirect('/museum')
 }
@@ -53,6 +54,9 @@ export async function deleteMuseum(id: string) {
   console.log('Successfully deleted museum with ID:', id)
 
   revalidatePath('/')
+  revalidatePath('/museum')
+  revalidatePath(`/museum/${id}`)
+  revalidatePath(`/museum/${id}/edit`)
 }
 
 export async function updateMuseum(prev: FormSubmitState, formData: FormData) {
@@ -93,6 +97,8 @@ export async function updateMuseum(prev: FormSubmitState, formData: FormData) {
   console.log('Successfully updated museum with ID:', data.id)
 
   revalidatePath('/')
+  revalidatePath('/museum')
+  revalidatePath(`/museum/${data.id}`)
   revalidatePath(`/museum/${data.id}/edit`)
 
   return {

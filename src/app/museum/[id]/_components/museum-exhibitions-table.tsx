@@ -1,8 +1,20 @@
 'use client'
 
-import { ColumnDef, Column } from '@tanstack/react-table'
+import { useState } from 'react'
+import { Column, ColumnDef } from '@tanstack/react-table'
+import { ArrowDown, ArrowUp, ArrowUpDown, Ban, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import Link from 'next/link'
 import type { Exhibition, Museum } from '@/schema/ui'
+import { DataTable } from '@/app/exhibition/_components/data-table'
+import { EditableGenreCell } from '@/app/exhibition/_components/editable-genre-cell'
+import { EditableUrlCell } from '@/app/exhibition/_components/editable-url-cell'
+import { type ExhibitionTableMeta } from '@/app/exhibition/_components/columns'
+import { StatusUpdateCell } from '@/app/exhibition/_components/status-update-cell'
+import { DeleteExhibitionModal } from '@/app/exhibition/_components/modal/delete-exhibition-modal'
+import { ExcludeExhibitionModal } from '@/app/exhibition/_components/modal/exclude-exhibition-modal'
+import { TruncatedText } from '@/components'
 import { Button } from '@/components/shadcn-ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn-ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,37 +27,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/shadcn-ui/tooltip'
-import {
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-  Ban,
-  ExternalLink,
-} from 'lucide-react'
-import Link from 'next/link'
-import { TruncatedText } from '@/components'
-import { StatusUpdateCell } from './status-update-cell'
-import { EditableUrlCell } from './editable-url-cell'
-import { EditableGenreCell } from './editable-genre-cell'
 
-// Type for table meta to pass callbacks
-export interface ExhibitionTableMeta {
-  onDelete: (exhibition: Exhibition) => void
-  onExclude: (exhibition: Exhibition) => void
-  museums: Museum[]
+interface MuseumExhibitionsTableProps {
+  museum: Museum
+  exhibitions: Exhibition[]
 }
 
-// Helper to check if exhibition is publicly visible
 const isPubliclyVisible = (exhibition: Exhibition): boolean => {
   const now = new Date()
   const endDate = new Date(exhibition.endDate)
   return exhibition.status === 'active' && endDate > now
 }
 
-// Helper to render sort icon
 const SortButton = ({
   column,
   children,
@@ -71,14 +64,7 @@ const SortButton = ({
   )
 }
 
-export const columns: ColumnDef<Exhibition>[] = [
-  {
-    accessorKey: 'museumId',
-    header: () => null,
-    cell: () => null,
-    filterFn: 'museumFilter',
-    enableSorting: false,
-  },
+const museumExhibitionColumns: ColumnDef<Exhibition>[] = [
   {
     accessorKey: 'title',
     header: ({ column }) => <SortButton column={column}>展覧会</SortButton>,
@@ -88,7 +74,7 @@ export const columns: ColumnDef<Exhibition>[] = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 flex-shrink-0">
+                <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
                   公開中
                 </span>
               </TooltipTrigger>
@@ -103,43 +89,20 @@ export const columns: ColumnDef<Exhibition>[] = [
     ),
   },
   {
-    accessorKey: 'venue',
-    header: ({ column }) => <SortButton column={column}>会場</SortButton>,
-    cell: ({ row, table }) => {
-      const meta = table.options.meta as ExhibitionTableMeta | undefined
-      const museum = meta?.museums.find((m) => m.id === row.original.museumId)
-      const venue = row.getValue('venue') as string
-
-      if (museum) {
-        return (
-          <div className="pl-5 inline-flex items-center gap-2">
-            <Link href={`/museum/${museum.id}`} className="font-medium hover:underline">
-              {museum.name}
-            </Link>
-            {museum.officialUrl && (
-              <a
-                href={museum.officialUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline inline-flex items-center gap-1"
-                aria-label={`${museum.name} の公式サイトを開く`}
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            )}
-          </div>
-        )
-      }
-
-      return <div className="pl-5">{venue}</div>
-    },
+    id: 'period',
+    accessorFn: (row) => `${row.startDate} - ${row.endDate}`,
+    header: ({ column }) => <SortButton column={column}>開催期間</SortButton>,
+    cell: ({ row }) => (
+      <div className="pl-5 whitespace-nowrap">
+        {row.original.startDate} - {row.original.endDate}
+      </div>
+    ),
+    filterFn: 'eventStatusFilter',
   },
   {
     accessorKey: 'officialUrl',
     header: () => <div className="pl-5 text-left">公式サイトURL</div>,
-    cell: ({ row }) => {
-      return <EditableUrlCell exhibition={row.original} />
-    },
+    cell: ({ row }) => <EditableUrlCell exhibition={row.original} />,
   },
   {
     accessorKey: 'genre',
@@ -158,33 +121,9 @@ export const columns: ColumnDef<Exhibition>[] = [
     filterFn: 'statusFilter',
   },
   {
-    accessorKey: 'startDate',
-    header: ({ column }) => <SortButton column={column}>開始日</SortButton>,
-    cell: ({ row }) => <div className="pl-5">{row.getValue('startDate')}</div>,
-    filterFn: 'eventStatusFilter',
-  },
-  {
-    accessorKey: 'endDate',
-    header: ({ column }) => <SortButton column={column}>終了日</SortButton>,
-    cell: ({ row }) => <div className="pl-5">{row.getValue('endDate')}</div>,
-  },
-  {
     accessorKey: 'updatedAt',
     header: ({ column }) => <SortButton column={column}>更新日</SortButton>,
-    cell: ({ row }) => <div className="pl-5">{row.getValue('updatedAt')}</div>,
-  },
-  {
-    accessorKey: 'createdAt',
-    header: ({ column }) => <SortButton column={column}>作成日</SortButton>,
-    cell: ({ row }) => <div className="pl-5">{row.getValue('createdAt')}</div>,
-  },
-  {
-    accessorKey: 'origin',
-    header: () => <div className="pl-5">Origin</div>,
-    cell: ({ row }) => {
-      const origin = row.getValue('origin') as string | undefined
-      return <div className="pl-5">{origin ?? '-'}</div>
-    },
+    cell: ({ row }) => <div className="pl-5 whitespace-nowrap">{row.getValue('updatedAt')}</div>,
   },
   {
     id: 'actions',
@@ -227,3 +166,55 @@ export const columns: ColumnDef<Exhibition>[] = [
     enableHiding: false,
   },
 ]
+
+export function MuseumExhibitionsTable({ museum, exhibitions }: MuseumExhibitionsTableProps) {
+  const [deletingExhibition, setDeletingExhibition] = useState<Exhibition | undefined>(undefined)
+  const [excludingExhibition, setExcludingExhibition] = useState<Exhibition | undefined>(undefined)
+
+  const tableMeta: ExhibitionTableMeta = {
+    onDelete: setDeletingExhibition,
+    onExclude: setExcludingExhibition,
+    museums: [museum],
+  }
+
+  return (
+    <>
+      <Card>
+        <CardHeader className="border-b">
+          <CardTitle>展覧会一覧</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <DataTable
+            columns={museumExhibitionColumns}
+            data={exhibitions}
+            museums={[museum]}
+            meta={tableMeta}
+            emptyMessage="この美術館に紐づく展覧会はありません。"
+            searchFields={[
+              { columnId: 'title', placeholder: '展覧会名で検索...' },
+              { columnId: 'officialUrl', placeholder: '公式URLで検索...' },
+            ]}
+            showMuseumFilter={false}
+            eventStatusFilterColumnId="period"
+          />
+        </CardContent>
+      </Card>
+
+      <DeleteExhibitionModal
+        exhibition={deletingExhibition}
+        open={deletingExhibition !== undefined}
+        onOpenChange={(open) => {
+          if (!open) setDeletingExhibition(undefined)
+        }}
+      />
+
+      <ExcludeExhibitionModal
+        exhibition={excludingExhibition}
+        open={excludingExhibition !== undefined}
+        onOpenChange={(open) => {
+          if (!open) setExcludingExhibition(undefined)
+        }}
+      />
+    </>
+  )
+}

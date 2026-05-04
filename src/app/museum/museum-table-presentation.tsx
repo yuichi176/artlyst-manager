@@ -22,6 +22,7 @@ import {
   ArrowUp,
   ArrowDown,
   MoreHorizontal,
+  FileText,
   Pencil,
   ExternalLink,
   Trash2,
@@ -114,19 +115,22 @@ export function MuseumTablePresentation({ museums }: MuseumTableProps) {
             sortedMuseums.map((museum) => (
               <TableRow key={museum.id}>
                 <TableCell className="pl-5">
-                  {museum.officialUrl ? (
-                    <a
-                      href={museum.officialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline inline-flex items-center gap-1"
-                    >
+                  <div className="inline-flex items-center gap-2">
+                    <Link href={`/museum/${museum.id}`} className="font-medium hover:underline">
                       {museum.name}
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  ) : (
-                    museum.name
-                  )}
+                    </Link>
+                    {museum.officialUrl && (
+                      <a
+                        href={museum.officialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline inline-flex items-center gap-1"
+                        aria-label={`${museum.name} の公式サイトを開く`}
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                  </div>
                 </TableCell>
                 {/*<TableCell>*/}
                 {/*  <TruncatedText text={museum.address} maxLength={35} />*/}
@@ -150,6 +154,12 @@ export function MuseumTablePresentation({ museums }: MuseumTableProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      <Link href={`/museum/${museum.id}`}>
+                        <DropdownMenuItem>
+                          <FileText className="mr-2 h-4 w-4" />
+                          詳細
+                        </DropdownMenuItem>
+                      </Link>
                       <Link href={`/museum/${museum.id}/edit`}>
                         <DropdownMenuItem>
                           <Pencil className="mr-2 h-4 w-4" />
