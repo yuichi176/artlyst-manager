@@ -159,8 +159,8 @@
 
 ### Prerequisites
 
-- Node.js 22+
-- pnpm 10+
+- Node.js 24.15+
+- pnpm 11.0.9
 - Firestore に接続できる Google Cloud Application Default Credentials
 
 ### Common Commands

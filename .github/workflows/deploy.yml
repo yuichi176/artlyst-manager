@@ -19,8 +19,8 @@ jobs:
     uses: ./.github/workflows/test-and-build.yml
     with:
       RUNNER: ubuntu-latest
-      NODE_VERSION: "22"
-      PNPM_VERSION: "10"
+      NODE_VERSION: "24.15"
+      PNPM_VERSION: "11.0.9"
 
   deploy:
     needs: test-and-build

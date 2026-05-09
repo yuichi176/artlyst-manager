@@ -1,0 +1,6 @@
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  protobufjs: true
+  sharp: true
+  unrs-resolver: true
